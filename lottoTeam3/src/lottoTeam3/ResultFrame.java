@@ -99,6 +99,12 @@ public class ResultFrame extends JDialog {
 		
 	}
 	
+	//	0~9 : 노란색
+	//	10~19: 파란색
+	//	20~29: 빨간색
+	//	30~39: 검은색
+	//	40~45: 초록색
+	// 임시로 버튼으로 채워둔 상태
 	private JButton makeNumCircle(int selectedNum) {
 		JButton btn = new JButton();
 		btn.setText(String.valueOf(selectedNum));
