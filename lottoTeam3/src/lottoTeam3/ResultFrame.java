@@ -75,7 +75,9 @@ public class ResultFrame extends JDialog {
 		winMoney.setVerticalAlignment(SwingConstants.CENTER);
 		add(winMoney);
 		
-		setShowMyNum("A", "당첨");
+		for (int i = 0; i < 6; i++) {
+			setShowMyNum("A", "당첨");
+		}
 		
 		setModal(true);
 		setSize(500, 500);
@@ -84,7 +86,7 @@ public class ResultFrame extends JDialog {
 	// 내가 정한 번호 보여주는 패널 (복권 갯수에 따라 다르니까 5개로 분리)
 	private void setShowMyNum(String s, String result){
 		JPanel pnl = new JPanel();
-		pnl.setPreferredSize(new Dimension(400, 60));
+		pnl.setPreferredSize(new Dimension(500, 60));
 		JLabel lbl = new JLabel();
 		lbl.setText(s + " " + result);
 		pnl.add(lbl);
@@ -92,6 +94,7 @@ public class ResultFrame extends JDialog {
 			btnNum = makeNumCircle(i);
 			pnl.add(btnNum);
 		}
+		ResultFrame.this.add(pnl);
 		
 	}
 	
