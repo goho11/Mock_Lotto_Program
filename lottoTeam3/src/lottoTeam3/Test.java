@@ -6,6 +6,6 @@ public class Test {
 		
 		System.out.println("각자 브랜치 만들어서 master 브랜치에 푸쉬해주세요");
 		
-		System.out.println("푸쉬 확인 1번이요");
+		System.out.println("푸쉬 브랜치 확인");
 	}
 }
