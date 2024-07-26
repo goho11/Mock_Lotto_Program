@@ -41,7 +41,7 @@ class tempFrame extends JFrame {
 }
 
 public class ResultFrame extends JDialog {
-	private String resultMoney;
+	private String resultMoney = String.valueOf(0);
 	private JButton btnNum;
 
 
@@ -102,7 +102,7 @@ public class ResultFrame extends JDialog {
 	private JButton makeNumCircle(int selectedNum) {
 		JButton btn = new JButton();
 		btn.setText(String.valueOf(selectedNum));
-		btn.setPreferredSize(new Dimension(50, 50));
+		btn.setPreferredSize(new Dimension(60, 60));
 		return btn;
 	}
 	
