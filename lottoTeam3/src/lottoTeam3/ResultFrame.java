@@ -41,7 +41,7 @@ class tempFrame extends JFrame {
 }
 
 public class ResultFrame extends JDialog {
-	private String resultMoney;
+	private String resultMoney = String.valueOf(0);
 	private JButton btnNum;
 
 
