@@ -88,6 +88,7 @@ public class ResultFrame extends JDialog {
 		JPanel pnl = new JPanel();
 		pnl.setPreferredSize(new Dimension(500, 60));
 		JLabel lbl = new JLabel();
+		lbl.setPreferredSize(new Dimension(50, 60));
 		lbl.setText(s + " " + result);
 		pnl.add(lbl);
 		for (int i = 10; i < 61; i += 10) {
