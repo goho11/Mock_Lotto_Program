@@ -1,6 +1,7 @@
 package lottoTeam3;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -89,9 +90,14 @@ public class NumberChoose extends JDialog implements ActionListener {
 		for (int i = 0; i < btns.length; i++) {
 			// 오브젝트안에 equals가 있다 - btns[i]번째와 같은지 비교해라
 			if (o.equals(btns[i])) {
-				if (count < 6) {
-					btns[i].setEnabled(false);
-					count++;
+				if (btns[i].getBackground().equals(Color.RED)) {
+					btns[i].setBackground(null);
+					count--;
+				} else {
+					if (count < 6) {
+						btns[i].setBackground(Color.RED);
+						count++;
+					}
 				}
 				// void라서 리턴값 없음
 				// 선택된 버튼만 누르고 끝남
@@ -131,8 +137,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 	}
 	// 나중에 '확인'클릭시 선택된 6개 번호가 로또데이터로 넘어가는 발판
 	/*
-	 * public static LottoData showDialog(){ NumberChoose nc=new NumberChoose();
-	 * nc.setVisible(true); return lottoData; }
+	 * public static LottoData showDialog(){ NumberChoose nc=new NumberChoose(); nc.setVisible(true); return lottoData; }
 	 */
 
 	public static void main(String[] args) {
