@@ -14,7 +14,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,6 +21,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * @author GGG
+ *
+ */
 public class MainFrame extends JFrame implements ActionListener {
 	private JLabel[][] lblNums = new JLabel[5][6];
 	private JLabel[][] lblCircles = new JLabel[5][6];
@@ -39,8 +42,6 @@ public class MainFrame extends JFrame implements ActionListener {
 		JPanel pnlNorth = initNorth();
 		JPanel pnlCenter = initCenter();
 		JPanel pnlSouth = initSouth();
-
-//		test();
 
 		add(pnlCenter);
 		add(pnlNorth, "North");
@@ -73,26 +74,6 @@ public class MainFrame extends JFrame implements ActionListener {
 		btnExit = createMyButton("종료", new Rectangle(525, 25, 50, 30), pnlSouth);
 
 		return pnlSouth;
-	}
-
-	private void test() {
-		price = 5000;
-		lblPrice.setText("총 가격: " + price + "원");
-		for (int i = 0; i < lottoDatas.length; i++) {
-			lottoDatas[i] = new LottoData(new int[] {}, true);
-		}
-
-		for (int i = 0; i < lblCircles.length; i++) {
-			for (int j = 0; j < lblCircles[i].length; j++) {
-				lblCircles[i][j].setIcon(LottoCircle.RED.getImageIcon());
-			}
-		}
-
-		for (int i = 0; i < lblNums.length; i++) {
-			for (int j = 0; j < lblNums[i].length; j++) {
-				lblNums[i][j].setText("45");
-			}
-		}
 	}
 
 	private JPanel initCenter() {
@@ -166,7 +147,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-		for (int i = 0; i < btnAmend.length; i++) {
+		for (int i = 0; i < btnAmend.length; i++) { // 수정 버튼
 			if (o.equals(btnAmend[i])) {
 				LottoData input = new LottoData(randomLotto(), new Random().nextBoolean());
 //								  NumberChoose.showDailog();
@@ -196,7 +177,7 @@ public class MainFrame extends JFrame implements ActionListener {
 				return;
 			}
 		}
-		for (int i = 0; i < btnDelete.length; i++) {
+		for (int i = 0; i < btnDelete.length; i++) { // 삭제 버튼
 			if (o.equals(btnDelete[i])) {
 				if (lottoDatas[i] == null)
 					return;
@@ -215,10 +196,9 @@ public class MainFrame extends JFrame implements ActionListener {
 				return;
 			}
 		}
-		if (o.equals(btnResult)) {
-			// 결과 다이알로그 출력 lottoDatas 넘겨줌
-//			 ResultDialog.showDialog(lottoDatas);
-		} else if (o.equals(btnReset)) {
+		if (o.equals(btnResult)) { // 결과 버튼
+			ResultDialog.showDialog(lottoDatas);
+		} else if (o.equals(btnReset)) { // 초기화 버튼
 			for (int i = 0; i < lblNums.length; i++) {
 				for (int j = 0; j < lblNums[i].length; j++) {
 					lblNums[i][j].setText("");
@@ -232,7 +212,7 @@ public class MainFrame extends JFrame implements ActionListener {
 			Arrays.fill(lottoDatas, null);
 			price = 0;
 			lblPrice.setText("총 가격: " + price + "원");
-		} else if (o.equals(btnExit)) {
+		} else if (o.equals(btnExit)) { // 종료 버튼
 			frameClose();
 		}
 	}
