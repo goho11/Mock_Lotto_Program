@@ -20,12 +20,12 @@ class tempFrame extends JFrame {
 		super("임시 창");
 		JPanel pnl = new JPanel();
 		JButton callResult = new JButton("결과창 호출");
-		
+
 		add(pnl);
 		pnl.add(callResult);
-		
+
 		callResultDialog(callResult);
-		
+
 		setSize(700, 500);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -47,7 +47,7 @@ public class ResultDialog extends JDialog {
 	private FontHolder fontHolder = new FontHolder();
 	private JLabel[][] lblNums = new JLabel[5][6];
 	private JLabel[][] lblCircles = new JLabel[5][6];
-
+//	private LottoData lottoData = new LottoData(nums, buy);
 
 	public ResultDialog() {
 //		public ResultDialog(LottoData[] lottoDatas) {
@@ -56,8 +56,7 @@ public class ResultDialog extends JDialog {
 		// 요소들 끼리 간격 설정 (중앙정렬, hgap, vgap)
 		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 5));
 		getContentPane().setBackground(Color.WHITE);
-		
-		
+
 		// 당첨 번호
 		JLabel winNumber = new JLabel("1000회");
 		winNumber.setPreferredSize(new Dimension(100, 30));
@@ -65,13 +64,13 @@ public class ResultDialog extends JDialog {
 		winNumber.setHorizontalAlignment(SwingConstants.CENTER);
 		winNumber.setVerticalAlignment(SwingConstants.CENTER);
 		add(winNumber);
-		
+
 		// 당첨 번호 아이콘 6개 + 1
 		JPanel showWinNumPnl = new JPanel();
 		showWinNumPnl.setPreferredSize(new Dimension(500, 50));
 		showWinNumPnl.setBorder(BorderFactory.createLineBorder(Color.GREEN, 2));
 		add(showWinNumPnl);
-		
+
 		// 당첨 금액
 		JLabel winMoney = new JLabel();
 		winMoney.setText("당첨금액: " + resultMoney + "원");
@@ -80,21 +79,21 @@ public class ResultDialog extends JDialog {
 		winMoney.setHorizontalAlignment(SwingConstants.CENTER);
 		winMoney.setVerticalAlignment(SwingConstants.CENTER);
 		add(winMoney);
-		
+
 		// 결과창 추가
 		JPanel pnlCenter = initCenter();
 		add(pnlCenter);
-		
+
 		setModal(true);
 		setSize(550, 500);
 	}
-	
+
 	// lottoDatas를 받아서 다이얼로그를 보여주는 메소드
 	public static void showDialog(LottoData[] lottoDatas) {
 //		ResultDialog resultDialog = new ResultDialog(lottoDatas);
 //		resultDialog.setVisible(true);
 	}
-	
+
 	private JPanel initCenter() {
 		JPanel pnlCenter = new JPanel(null);
 		pnlCenter.setPreferredSize(new Dimension(540, 300));
@@ -119,11 +118,7 @@ public class ResultDialog extends JDialog {
 				pnlCenter.add(lblNums[i][j]);
 			}
 		}
-		//	0~9 : 노란색
-		//	10~19: 파란색
-		//	20~29: 빨간색
-		//	30~39: 검은색
-		//	40~45: 초록색
+
 		for (int i = 0; i < lblCircles.length; i++) {
 			for (int j = 0; j < lblCircles[i].length; j++) {
 				lblCircles[i][j] = new JLabel(LottoCircle.YELLOW.getImageIcon());
@@ -140,7 +135,27 @@ public class ResultDialog extends JDialog {
 		}
 		return pnlCenter;
 	}
-	
+
+	// 0~9 : 노란색
+	// 10~19: 파란색
+	// 20~29: 빨간색
+	// 30~39: 검은색
+	// 40~45: 초록색
+	public static JLabel numToColor(int n) {
+		JLabel lbl = new JLabel();
+		if (n < 10) {
+			lbl.setIcon(LottoCircle.YELLOW.getImageIcon());
+		} else if (10 <= n && n < 20) {
+			lbl.setIcon(LottoCircle.BLUE.getImageIcon());
+		} else if (20 <= n && n < 30) {
+			lbl.setIcon(LottoCircle.RED.getImageIcon());
+		} else if (30 <= n && n < 40) {
+			lbl.setIcon(LottoCircle.BLACK.getImageIcon());
+		} else if (40 <= n && n < 50) {
+			lbl.setIcon(LottoCircle.GRAY.getImageIcon());
+		}
+		return lbl;
+	}
 
 	public static void main(String[] args) {
 		new tempFrame().setVisible(true);
