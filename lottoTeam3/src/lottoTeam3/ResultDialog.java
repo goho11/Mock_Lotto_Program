@@ -46,6 +46,7 @@ public class ResultDialog extends JDialog {
 
 
 	public ResultDialog() {
+//		public ResultDialog(LottoData[] lottoDatas) {
 		// 창 제일 위에 이름 어떻게 하지
 		setTitle("로또 결과창");
 		// 요소들 끼리 간격 설정 (중앙정렬, hgap, vgap)
@@ -112,6 +113,10 @@ public class ResultDialog extends JDialog {
 		return lbl;
 	}
 	
+	public static void showDialog(LottoData[] lottoDatas) {
+//		ResultDialog resultDialog = new ResultDialog(lottoDatas);
+//		resultDialog.setVisible(true);
+	}
 	
 
 	public static void main(String[] args) {
