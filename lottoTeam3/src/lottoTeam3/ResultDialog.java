@@ -227,5 +227,6 @@ public class ResultDialog extends JDialog {
 
 	public static void main(String[] args) {
 		new tempFrame().setVisible(true);
+		// 29일 작업본까지 적용
 	}
 }
