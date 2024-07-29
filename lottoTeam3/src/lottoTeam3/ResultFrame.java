@@ -14,8 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-// home에서 kangho1 브랜치로 푸쉬 되는지 확인
-
 class tempFrame extends JFrame {
 	public tempFrame() {
 		super("임시 창");
