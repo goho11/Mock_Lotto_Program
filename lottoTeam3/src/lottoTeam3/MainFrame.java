@@ -7,12 +7,15 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Arrays;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class MainFrame extends JFrame implements ActionListener {
@@ -26,15 +29,24 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JButton btnResult;
 	private JButton btnReset;
 	private JButton btnExit;
+	private int[][] nums = new int[5][6];
+	private boolean[] buy = new boolean[5];
 
 	public MainFrame() {
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
 		JPanel pnlNorth = initNorth();
 
 		JPanel pnlCenter = initCenter();
 
 		JPanel pnlSouth = initSouth();
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				frameClose();
+			}
+		});
 
 		add(pnlCenter);
 		add(pnlNorth, "North");
@@ -112,6 +124,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		btn.setMargin(new Insets(0, 0, 0, 0));
 		btn.setFocusable(false);
 		btn.setFont(fontHolder.getDeriveFont(Font.PLAIN, 20));
+		btn.addActionListener(this);
 		pnl.add(btn);
 		return btn;
 	}
@@ -132,19 +145,45 @@ public class MainFrame extends JFrame implements ActionListener {
 		Object o = e.getSource();
 		for (int i = 0; i < btnAmend.length; i++) {
 			if (o.equals(btnAmend[i])) {
-
+				// 수정 다이알로그 출력
 				return;
 			}
 		}
 		for (int i = 0; i < btnDelete.length; i++) {
 			if (o.equals(btnDelete[i])) {
+				if (!buy[i])
+					return;
+				buy[i] = false;
 
 				return;
 			}
 		}
 		if (o.equals(btnResult)) {
+			// 결과 다이알로그 출력 nums 넘겨줌
 		} else if (o.equals(btnReset)) {
+			for (int i = 0; i < lblNums.length; i++) {
+				for (int j = 0; j < lblNums[i].length; j++) {
+					lblNums[i][j].setText("");
+				}
+			}
+			for (int i = 0; i < lblCircles.length; i++) {
+				for (int j = 0; j < lblCircles[i].length; j++) {
+					lblCircles[i][j].setIcon(LottoCircle.BLACK.getImageIcon());
+				}
+			}
+			Arrays.fill(buy, false);
+			price = 0;
+			lblPrice.setText("총 가격: " + price + "원");
 		} else if (o.equals(btnExit)) {
+			frameClose();
+		}
+	}
+
+	private void frameClose() {
+		int input = JOptionPane.showOptionDialog(MainFrame.this, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION,
+				JOptionPane.ERROR_MESSAGE, null, null, null);
+		if (input == JOptionPane.YES_OPTION) {
+			dispose();
 		}
 	}
 
