@@ -33,19 +33,19 @@ class tempFrame extends JFrame {
 		callResult.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ResultFrame resultD = new ResultFrame();
+				ResultDialog resultD = new ResultDialog();
 				resultD.setVisible(true);
 			}
 		});
 	}
 }
 
-public class ResultFrame extends JDialog {
+public class ResultDialog extends JDialog {
 	private String resultMoney = String.valueOf(0);
-	private JButton btnNum;
+	private JLabel lblNum;
 
 
-	public ResultFrame() {
+	public ResultDialog() {
 		// 창 제일 위에 이름 어떻게 하지
 		setTitle("로또 결과창");
 		// 요소들 끼리 간격 설정 (중앙정렬, hgap, vgap)
@@ -83,7 +83,7 @@ public class ResultFrame extends JDialog {
 		setSize(500, 500);
 	}
 	
-	// 내가 정한 번호 보여주는 패널 (복권 갯수에 따라 다르니까 5개로 분리)
+	// 내가 정한 번호 보여주는 패널 (복권 갯수에 따라 다르니까 5개로 분리해야함)
 	private void setShowMyNum(String s, String result){
 		JPanel pnl = new JPanel();
 		pnl.setPreferredSize(new Dimension(500, 60));
@@ -92,10 +92,10 @@ public class ResultFrame extends JDialog {
 		lbl.setText(s + " " + result);
 		pnl.add(lbl);
 		for (int i = 10; i < 61; i += 10) {
-			btnNum = makeNumCircle(i);
-			pnl.add(btnNum);
+			lblNum = makeNumCircle(i);
+			pnl.add(lblNum);
 		}
-		ResultFrame.this.add(pnl);
+		ResultDialog.this.add(pnl);
 		
 	}
 	
@@ -105,11 +105,11 @@ public class ResultFrame extends JDialog {
 	//	30~39: 검은색
 	//	40~45: 초록색
 	// 임시로 버튼으로 채워둔 상태
-	private JButton makeNumCircle(int selectedNum) {
-		JButton btn = new JButton();
-		btn.setText(String.valueOf(selectedNum));
-		btn.setPreferredSize(new Dimension(60, 60));
-		return btn;
+	private JLabel makeNumCircle(int selectedNum) {
+		JLabel lbl = new JLabel();
+		lbl.setText(String.valueOf(selectedNum));
+		lbl.setPreferredSize(new Dimension(60, 60));
+		return lbl;
 	}
 	
 
