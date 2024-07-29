@@ -106,19 +106,24 @@ public class NumberChoose extends JDialog implements ActionListener {
 			count = 0;
 
 			// 자동 : 클릭시 랜덤 번호 최대 6개 선택(비활성화)
-			// 6개 선택되었을 때 클릭하면, 선택된 번호가 있음을 안내
 			// 중복번호가 나타나지 않게 설정하기
 		} else if (o.equals(auto)) {
 			Random r = new Random();
 			int n;
 			for (; count < 6; count++) {
 				n = r.nextInt(45);
-				btns[n].setEnabled(false);
-				System.out.print(n + " ");
-				// 카운트 줄이기, btns[n].isEnabled
-			}
+				// 미완성) 6개 선택되었을 때 클릭하면, 선택된 번호가 있음을 안내
+				// 버튼이 비활성화이면 카운트를 감소해라
+				// 활성화 true, 비활성화 false를 반환 - 버튼을 체크하면 비활성화 상태
+				// 카운트 줄이기
+				if (btns[n].isEnabled() == false) {
+					count--;
+				} else {
+					// 현재 활성화(true)이니깐 랜덤 선택 걸리면 비활성화(flase)로 돌리기
+					btns[n].setEnabled(false);
 
-			System.out.println();
+				}
+			}
 			// 확인
 		} else if (o.equals(check)) {
 
