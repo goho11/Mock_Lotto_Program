@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class createResult {
+public class CreateResult {
 	public static void main(String[] args) {
 		Random random = new Random();
 		Set<Integer> set = new TreeSet<>();
