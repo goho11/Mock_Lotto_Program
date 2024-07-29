@@ -1,16 +1,13 @@
 package lottoTeam3;
 
 import java.awt.BorderLayout;
-<<<<<<< HEAD
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-=======
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
->>>>>>> branch 'gugu2' of https://github.com/LeeKangHo1/lottoTeam3.git
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
