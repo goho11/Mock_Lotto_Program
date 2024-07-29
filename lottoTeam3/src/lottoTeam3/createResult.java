@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class LottoResult {
+public class createResult {
 	public static void main(String[] args) {
 		Random random = new Random();
 		Set<Integer> set = new TreeSet<>();
