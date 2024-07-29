@@ -12,9 +12,9 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-// ** 버튼 6개 미선택후 확인 누르면 안내메세지 뜨기?
 class TestFrame extends JFrame {
 	public TestFrame() {
 		JButton btn = new JButton("테스트");
@@ -38,6 +38,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 	private JButton reset;
 	private JButton check;
 	private JButton auto;
+	private boolean buy = false;
 
 	public NumberChoose() {
 		setTitle("로또 번호 선택");
@@ -76,6 +77,8 @@ public class NumberChoose extends JDialog implements ActionListener {
 
 		add(pnl);
 		setSize(421, 280);
+		// 모달 대화상자 만듬. 사용자가 대화상자를 닫기 전까지 다른 창과 상호작용 불가
+		setModal(true);
 	}
 
 	@Override
@@ -92,6 +95,8 @@ public class NumberChoose extends JDialog implements ActionListener {
 				if (count < 6) {
 					btns[i].setEnabled(false);
 					count++;
+				} else {
+					JOptionPane.showMessageDialog(NumberChoose.this, "번호 6개를 선택했습니다");
 				}
 				// void라서 리턴값 없음
 				// 선택된 버튼만 누르고 끝남
@@ -108,32 +113,65 @@ public class NumberChoose extends JDialog implements ActionListener {
 			// 자동 : 클릭시 랜덤 번호 최대 6개 선택(비활성화)
 			// 중복번호가 나타나지 않게 설정하기
 		} else if (o.equals(auto)) {
+			// 번호 6개 선택되면, 선택불가 안내
+			if (count == 6) {
+				JOptionPane.showMessageDialog(NumberChoose.this, "번호 6개를 선택했습니다");
+				return;
+			}
 			Random r = new Random();
-			int n;
 			for (; count < 6; count++) {
-				n = r.nextInt(45);
-				// 미완성) 6개 선택되었을 때 클릭하면, 선택된 번호가 있음을 안내
+				int n = r.nextInt(45);
 				// 버튼이 비활성화이면 카운트를 감소해라
 				// 활성화 true, 비활성화 false를 반환 - 버튼을 체크하면 비활성화 상태
 				// 카운트 줄이기
-				if (btns[n].isEnabled() == false) {
-					count--;
-				} else {
-					// 현재 활성화(true)이니깐 랜덤 선택 걸리면 비활성화(flase)로 돌리기
+				if (btns[n].isEnabled()) {
+					// 기본이 true임.현재 활성화(true)이니깐 랜덤 선택 걸리면 비활성화(flase)로 돌리기
 					btns[n].setEnabled(false);
-
+				} else {
+					count--;
 				}
 			}
 			// 확인
+			// 확인 버튼 누르면
 		} else if (o.equals(check)) {
-
+			if (count != 6) {
+				JOptionPane.showMessageDialog(NumberChoose.this, "번호 6개를 선택해주세요");
+				return; // void에 return이 있으면 해당 함수를 빠져 나온다. break와 비슷한 기능
+			}
+			// buy가 true로 변경
+			buy = true;
+			// 번호 선택 해당 창 닫기
+			dispose();
 		}
 	}
-	// 나중에 '확인'클릭시 선택된 6개 번호가 로또데이터로 넘어가는 발판
-	/*
-	 * public static LottoData showDialog(){ NumberChoose nc=new NumberChoose();
-	 * nc.setVisible(true); return lottoData; }
-	 */
+
+	// '확인'클릭시 선택된 6개 번호가 로또데이터로 넘어가는 발판
+	public static LottoData showDialog() {
+		NumberChoose nc = new NumberChoose();
+		nc.setVisible(true);
+		LottoData lottoData = nc.getLottoData();
+		return lottoData;
+	}
+
+	private LottoData getLottoData() {
+		// 창이 꺼질때 비활성화된 숫자를 전달
+		int[] nums = new int[6];
+		// 비활성화 숫자를 nums에 넣어라
+		// nums 0~5을. true일때만
+		if (buy) { // buy는 boolean이라 따로 지정할 필요가 없다
+			// 모든 버튼을 for문 돈다
+			// isEnabled이 false이면 nums에 값을 넣어라
+			int j = 0;
+			for (int i = 0; i < btns.length; i++) {
+				if (btns[i].isEnabled() == false) {
+					// i가 1일 때 해결법?
+					nums[j] = i + 1;
+					j++;
+				}
+			}
+		}
+		return new LottoData(nums, buy);
+	}
 
 	public static void main(String[] args) {
 		new TestFrame().setVisible(true);

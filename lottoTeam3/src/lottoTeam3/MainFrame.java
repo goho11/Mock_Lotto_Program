@@ -149,8 +149,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		Object o = e.getSource();
 		for (int i = 0; i < btnAmend.length; i++) { // 수정 버튼
 			if (o.equals(btnAmend[i])) {
-				LottoData input = new LottoData(randomLotto(), new Random().nextBoolean());
-//								  NumberChoose.showDailog();
+//				LottoData input = new LottoData(randomLotto(), new Random().nextBoolean());
+				LottoData input = NumberChoose.showDialog();
 				if (!input.isBuy())
 					return;
 				boolean prev = lottoDatas[i] != null && lottoDatas[i].isBuy();
