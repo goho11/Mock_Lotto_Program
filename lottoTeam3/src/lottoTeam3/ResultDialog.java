@@ -41,7 +41,7 @@ class tempFrame extends JFrame {
 		callResult.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ResultDialog resultD = new ResultDialog(lottoDatas);
+				ResultDialog resultD = new ResultDialog(lottoDatas, tempFrame.this);
 				resultD.setVisible(true);
 			}
 		});
@@ -62,10 +62,10 @@ public class ResultDialog extends JDialog {
 	private int[] lottoArr = new int[6];
 	private Set<Integer> testSet;
 
-	public ResultDialog(LottoData[] lottoData) {
+	public ResultDialog(LottoData[] lottoData, JFrame mainFrame) {
 
 		// 배포용으로 만들 경우
-//		this.lottoDatas = lottoData;
+		this.lottoDatas = lottoData;
 
 		// equalsNum 메서드 수정
 //		if (resultTreeSet.contains(lottoArr[i])) {
@@ -74,7 +74,7 @@ public class ResultDialog extends JDialog {
 //		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
 
 		// 테스트용 로또 데이터 설정
-		this.lottoDatas = testLotto();
+//		this.lottoDatas = testLotto();
 		testSet = new TreeSet<>();
 		testSet.add(1);
 		testSet.add(5);
@@ -83,7 +83,7 @@ public class ResultDialog extends JDialog {
 		testSet.add(22);
 		testSet.add(33);
 
-		setLocationRelativeTo(tempFrame);
+		setLocationRelativeTo(mainFrame);
 
 		// FlawLayout.CENTER
 		resultDialogSetting();
@@ -137,9 +137,9 @@ public class ResultDialog extends JDialog {
 		showWinNumPnl.setBackground(Color.WHITE);
 		add(showWinNumPnl);
 
-//		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
+		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
 
-		Integer[] resultArray = testSet.toArray(new Integer[6]);
+//		Integer[] resultArray = testSet.toArray(new Integer[6]);
 
 		for (int i = 0; i < resultArray.length; i++) {
 			JLabel lblResultNum = new JLabel("" + resultArray[i]);
@@ -217,6 +217,9 @@ public class ResultDialog extends JDialog {
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 6; j++) {
 				if (lottoDatas[i] != null) {
+					// 로또 데이터에서 배열 추출
+					lottoArr = lottoDatas[i].getNums();
+					
 					lblCircles[i][j] = numToColor(lottoArr[j]);
 					lblCircles[i][j].setBounds(j * 60 + 110, i * 60, 60, 60);
 					lblCircles[i][j].setText("" + lottoArr[j]);
@@ -246,10 +249,10 @@ public class ResultDialog extends JDialog {
 	private int equalsNum(int[] lottoArr) {
 		int count = 0;
 		for (int i = 0; i < lottoArr.length; i++) {
-//			if (resultTreeSet.contains(lottoArr[i])) {
+			if (resultTreeSet.contains(lottoArr[i])) {
 
-			// 테스트 세팅
-			if (testSet.contains(lottoArr[i])) {
+				// 테스트 세팅
+//			if (testSet.contains(lottoArr[i])) {
 				count++;
 			}
 		}
@@ -322,14 +325,14 @@ public class ResultDialog extends JDialog {
 		do {
 			bonus = random.nextInt(45) + 1;
 		} while (set.contains(bonus));
-		System.out.println(set + " + " + bonus);
+//		System.out.println(set + " + " + bonus);
 
 		return set;
 	}
 
 	// lottoDatas를 받아서 결과 다이얼로그를 보여주는 메소드
-	public static void showDialog(LottoData[] lottoDatas) {
-		ResultDialog resultDialog = new ResultDialog(lottoDatas);
+	public static void showDialog(LottoData[] lottoData, JFrame mainFrame) {
+		ResultDialog resultDialog = new ResultDialog(lottoData, mainFrame);
 		resultDialog.setVisible(true);
 	}
 
