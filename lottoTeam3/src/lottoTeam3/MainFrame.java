@@ -224,7 +224,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		while (set.size() < 6) {
 			set.add(random.nextInt(45) + 1);
 		}
-		return new LottoData(set.stream().mapToInt(Integer::intValue).toArray(), true);
+		return new LottoData(set.stream().mapToInt(Integer::intValue).toArray(), true, Mode.AUTO);
 	}
 
 	private void reset() {

@@ -370,10 +370,10 @@ public class ResultDialog extends JDialog {
 		LottoData[] lottoDatas = new LottoData[5];
 
 		int[] arr = new int[] { 1, 5, 6, 10, 20, 30 };
-		LottoData testData = new LottoData(arr, true);
+		LottoData testData = new LottoData(arr, true, Mode.AUTO);
 
 		int[] arr2 = new int[] { 2, 12, 22, 32, 42, 43 };
-		LottoData testData2 = new LottoData(arr2, true);
+		LottoData testData2 = new LottoData(arr2, true, Mode.MANUAL);
 
 		lottoDatas[0] = testData;
 		lottoDatas[1] = testData;
