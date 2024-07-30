@@ -60,7 +60,7 @@ public class ResultDialog extends JDialog {
 	private Set<Integer> resultTreeSet = RandomResult();
 	private LottoData[] lottoDatas;
 	private int[] lottoArr = new int[6];
-	
+
 	// 테스트용 필드
 	private Set<Integer> testSet;
 	private static JFrame tempFrame = new tempFrame();
@@ -68,16 +68,20 @@ public class ResultDialog extends JDialog {
 	public ResultDialog(LottoData[] lottoData, JFrame mainFrame) {
 
 		// 배포용으로 만들 경우
-		this.lottoDatas = lottoData;
+//		this.lottoDatas = lottoData;
 
 		// equalsNum 메서드 수정
 //		if (resultTreeSet.contains(lottoArr[i])) {
 
-		// showLottoResultNum() 메서드 수정
+		// showLottoResultNum 메서드 수정
 //		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
+		
+		// 아이콘 라벨 설정 수정
+//		if (resultTreeSet.contains(lottoArr[j])) {
 
+		
 		// 테스트용 로또 데이터 설정
-//		this.lottoDatas = testLotto();
+		this.lottoDatas = testLotto();
 		testSet = new TreeSet<>();
 		testSet.add(1);
 		testSet.add(5);
@@ -85,7 +89,6 @@ public class ResultDialog extends JDialog {
 		testSet.add(11);
 		testSet.add(22);
 		testSet.add(33);
-
 
 		// 다이얼로그 세팅 (FlowLayout.CENTER)
 		resultDialogSetting();
@@ -139,12 +142,12 @@ public class ResultDialog extends JDialog {
 		showWinNumPnl.setLayout(null);
 		showWinNumPnl.setBackground(Color.WHITE);
 		add(showWinNumPnl);
-		
+
 		// 배포용
-		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
-		
+//		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
+
 		// 테스트용
-//		Integer[] resultArray = testSet.toArray(new Integer[6]);
+		Integer[] resultArray = testSet.toArray(new Integer[6]);
 
 		for (int i = 0; i < resultArray.length; i++) {
 			JLabel lblResultNum = new JLabel("" + resultArray[i]);
@@ -196,13 +199,16 @@ public class ResultDialog extends JDialog {
 		for (int i = 0; i < lblCode.length; i++) {
 			if (lottoDatas[i] != null) {
 				char c = (char) ('A' + i);
+
+				autoString[i] = " (반자동) ";
 				lblCode[i] = new JLabel(String.valueOf(c) + autoString[i]);
-				lblCode[i].setBounds(35, i * 60 - 3, 120, 60);
+				lblCode[i].setBounds(20, i * 60 - 3, 120, 60);
 				lblCode[i].setFont(fontHolder.getDeriveFont(Font.PLAIN, 20));
 				pnlCenter.add(lblCode[i]);
 			}
 		}
 
+		// 번호 라벨
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 6; j++) {
 				if (lottoDatas[i] != null) {
@@ -219,16 +225,27 @@ public class ResultDialog extends JDialog {
 			}
 		}
 
+		// 아이콘 라벨
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 6; j++) {
 				if (lottoDatas[i] != null) {
 					// 로또 데이터에서 배열 추출
 					lottoArr = lottoDatas[i].getNums();
 					
-					lblCircles[i][j] = numToColor(lottoArr[j]);
-					lblCircles[i][j].setBounds(j * 60 + 110, i * 60, 60, 60);
-					lblCircles[i][j].setText("" + lottoArr[j]);
-					pnlCenter.add(lblCircles[i][j]);
+					// 배포용
+//					if (resultTreeSet.contains(lottoArr[j])) {
+					
+					// 테스트용
+					if (testSet.contains(lottoArr[j])) {
+						
+						lblCircles[i][j] = numToColor(lottoArr[j]);
+						lblCircles[i][j].setBounds(j * 60 + 110, i * 60, 60, 60);
+						pnlCenter.add(lblCircles[i][j]);
+					} else {
+						lblCircles[i][j] = numToBlack(lottoArr[j]);
+						lblCircles[i][j].setBounds(j * 60 + 110, i * 60, 60, 60);
+						pnlCenter.add(lblCircles[i][j]);
+					}
 				}
 			}
 		}
@@ -254,11 +271,11 @@ public class ResultDialog extends JDialog {
 	private int equalsNum(int[] lottoArr) {
 		int count = 0;
 		for (int i = 0; i < lottoArr.length; i++) {
-			// 배포용 
-			if (resultTreeSet.contains(lottoArr[i])) {
+			// 배포용
+//			if (resultTreeSet.contains(lottoArr[i])) {
 
 			// 테스트 세팅
-//			if (testSet.contains(lottoArr[i])) {
+			if (testSet.contains(lottoArr[i])) {
 				count++;
 			}
 		}
@@ -319,6 +336,12 @@ public class ResultDialog extends JDialog {
 		} else if (40 < n && n <= 50) {
 			lbl.setIcon(LottoCircle.GREEN.getImageIcon());
 		}
+		return lbl;
+	}
+	
+	public static JLabel numToBlack(int n) {
+		JLabel lbl = new JLabel();
+		lbl.setIcon(LottoCircle.BLACK.getImageIcon());
 		return lbl;
 	}
 
