@@ -33,6 +33,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JButton btnExit; // 종료 버튼
 	private LottoData[] lottoDatas = new LottoData[5]; // 로또 정보
 	private JButton btnAuto;
+	private JLabel[] lblModes;
 
 	public MainFrame() {
 		JPanel pnlNorth = new JPanel(); // 플로우 레이아웃으로
@@ -79,13 +80,13 @@ public class MainFrame extends JFrame implements ActionListener {
 		pnl.setPreferredSize(new Dimension(600, 300)); // 중앙 패널 크기 설정
 		pnl.setBackground(Color.WHITE); // 배경 흰색으로 설정
 
-		JLabel[] lblCode = new JLabel[5]; // 로또 A~E까지 표시해주는 라벨
-		for (int i = 0; i < lblCode.length; i++) { // 5번 반복
+		lblModes = new JLabel[5];
+		for (int i = 0; i < lblModes.length; i++) { // 5번 반복
 			char c = (char) ('A' + i); // A문자를 i씩 증가시켜서 A~E까지 char에 대입
-			lblCode[i] = new JLabel(String.valueOf(c)); // 문자 c로 라벨 생성
-			lblCode[i].setBounds(35, i * 60 - 3, 60, 60); // 라벨 바운드 설정
-			lblCode[i].setFont(fontHolder.getDeriveFont(Font.PLAIN, 20)); // 폰트 설정
-			pnl.add(lblCode[i]); // 라벨 추가
+			lblModes[i] = new JLabel(String.valueOf(c)); // 문자 c로 라벨 생성
+			lblModes[i].setBounds(35, i * 60 - 3, 60, 60); // 라벨 바운드 설정
+			lblModes[i].setFont(fontHolder.getDeriveFont(Font.PLAIN, 20)); // 폰트 설정
+			pnl.add(lblModes[i]); // 라벨 추가
 		}
 
 		// 로또 숫자 라벨 배열 전체 초기화 및 설정
@@ -153,14 +154,16 @@ public class MainFrame extends JFrame implements ActionListener {
 				LottoData input = NumberChoose.showDialog(lottoDatas[i], this);
 				if (!input.isBuy())
 					return;
-				boolean newBuy = lottoDatas[i] == null; // 로또를 수정인지 추가인지 확인하기 위한 불린값
-				lottoDatas[i] = input; // 받은 로또 정보 배열에 넣어주기
-				changeLottoLabels(i); // i번째 로또 라벨들 모두 변경
-				if (newBuy) { // 로또 추가라면
-					btnResEnable(); // 결과 리셋 버튼 활성화
+				if (lottoDatas[i] == null) { // 로또 추가라면
+					if (buyCount == 0) { // 로또 처음 살 때
+						btnResEnable(); // 결과 리셋 버튼 활성화
+					}
 					buyCount++; // 구매 갯수 증가
 					setPriceLabel(); // 가격 라벨 변경
 				}
+				lottoDatas[i] = input; // 받은 로또 정보 배열에 넣어주기
+				changeLottoLabels(i); // i번째 로또 라벨들 모두 변경
+				lblModes[i].setText("A");
 				btnAmend[i].setText("수정"); // 수정 버튼 텍스트 변경
 				btnDelete[i].setEnabled(true); // 삭제 버튼 활성화
 				if (i + 1 < btnAmend.length) {
