@@ -50,24 +50,20 @@ public class ResultDialog extends JDialog {
 	private FontHolder fontHolder = new FontHolder();
 	private JLabel[][] lblNums = new JLabel[5][6];
 	private JLabel[][] lblCircles = new JLabel[5][6];
-	private LottoData lottoData;
+	private LottoData[] lottoData;
 
 	private Set<Integer> resultTreeSet;
 	private int[] lottoArray = testLotto().getNums();
 	private static int bonus;
-
-	public static LottoData testLotto() {
-		int[] arr = new int[] { 1, 11, 22, 33, 44, 45 };
-
-		LottoData testData = new LottoData(arr, true);
-
-		return testData;
-	}
+	private static JFrame tempFrame = new tempFrame();;
 
 	public ResultDialog() {
 //		public ResultDialog(LottoData[] lottoDatas) {
+		setLocationRelativeTo(tempFrame);
+
+		// FlawLayout.CENTER
 		resultDialogSetting();
-		
+
 		// 당첨 회차 라벨
 		showRound();
 
@@ -83,9 +79,16 @@ public class ResultDialog extends JDialog {
 		winMoney.setVerticalAlignment(SwingConstants.CENTER);
 		add(winMoney);
 
+		calculateMoney();
+
 		// 당첨 결과 패널
-		JPanel pnlCenter = initCenter();
-		add(pnlCenter);
+		JPanel resultPanel = setResultPanel();
+		add(resultPanel);
+	}
+
+	private void calculateMoney() {
+		// TODO Auto-generated method stub
+
 	}
 
 	private void resultDialogSetting() {
@@ -105,6 +108,7 @@ public class ResultDialog extends JDialog {
 		roundNow.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		roundNow.setHorizontalAlignment(SwingConstants.CENTER);
 		roundNow.setVerticalAlignment(SwingConstants.CENTER);
+		roundNow.setFont(fontHolder.getDeriveFont(Font.PLAIN, 20));
 		add(roundNow);
 	}
 
@@ -114,7 +118,7 @@ public class ResultDialog extends JDialog {
 //		resultDialog.setVisible(true);
 	}
 
-	private JPanel initCenter() {
+	private JPanel setResultPanel() {
 		JPanel pnlCenter = new JPanel(null);
 		pnlCenter.setPreferredSize(new Dimension(540, 300));
 		pnlCenter.setBackground(Color.WHITE);
@@ -122,7 +126,7 @@ public class ResultDialog extends JDialog {
 		JLabel[] lblCode = new JLabel[5];
 		for (int i = 0; i < lblCode.length; i++) {
 			char c = (char) ('A' + i);
-			lblCode[i] = new JLabel(String.valueOf(c) + " (자동) ");
+			lblCode[i] = new JLabel(String.valueOf(c));
 			lblCode[i].setBounds(35, i * 60 - 3, 120, 60);
 			lblCode[i].setFont(fontHolder.getDeriveFont(Font.PLAIN, 20));
 			pnlCenter.add(lblCode[i]);
@@ -140,10 +144,17 @@ public class ResultDialog extends JDialog {
 			}
 		}
 
+		// 아이콘 위에 텍스트 입히려 했으니 아이콘이 정중앙이 아니라서 실패
+//				lblCircles[i][j].setForeground(Color.WHITE);
+//				lblCircles[i][j].setHorizontalTextPosition(JLabel.CENTER);
+//				lblCircles[i][j].setVerticalTextPosition(JLabel.CENTER);
+//				lblCircles[i][j].setFont(fontHolder.getDeriveFont(Font.PLAIN, 17));
+		
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 6; j++) {
 				lblCircles[i][j] = numToColor(lottoArray[j]);
 				lblCircles[i][j].setBounds(j * 60 + 110, i * 60, 60, 60);
+				lblCircles[i][j].setText("" + lottoArray[j]);
 				pnlCenter.add(lblCircles[i][j]);
 			}
 		}
@@ -186,6 +197,14 @@ public class ResultDialog extends JDialog {
 		System.out.println(set + " + " + bonus);
 
 		return set;
+	}
+
+	public static LottoData testLotto() {
+		int[] arr = new int[] { 1, 11, 22, 33, 44, 45 };
+
+		LottoData testData = new LottoData(arr, true);
+
+		return testData;
 	}
 
 	private void showLottoResult() {
@@ -236,7 +255,7 @@ public class ResultDialog extends JDialog {
 	}
 
 	public static void main(String[] args) {
-		new tempFrame().setVisible(true);
+		tempFrame.setVisible(true);
 		// 30일
 	}
 }
