@@ -112,7 +112,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 
 		for (int i = 0; i < btnDelete.length; i++) {
-			btnDelete[i] = createMyButton("삭제", new Rectangle(525, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 삭제 버튼 생성 및 설정
+			btnDelete[i] = createMyButton("삭제", new Rectangle(525, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 삭제 버튼 생성 및
+																								// 설정
 			btnDelete[i].setEnabled(false); // 모든 삭제 버튼 비활성화
 		}
 	}
@@ -144,7 +145,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < btnAmend.length; i++) { // 수정 버튼
 			if (o.equals(btnAmend[i])) {
 //				LottoData input = new LottoData(randomLotto(), new Random().nextBoolean());
-				LottoData input = NumberChoose.showDialog(this); // 로또 번호 입력
+				LottoData input = NumberChoose.showDialog(lottoDatas[i], this);
 				if (!input.isBuy())
 					return;
 				boolean newBuy = lottoDatas[i] == null; // 로또를 수정인지 추가인지 확인하기 위한 불린값
@@ -188,16 +189,21 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 		if (o.equals(btnResult)) { // 결과 버튼
 			ResultDialog.showDialog(lottoDatas, MainFrame.this); // 결과 다이얼로그 출력
+			reset();
 		} else if (o.equals(btnReset)) { // 초기화 버튼
-			for (int i = 0; i < buyCount; i++) { // 구매한 수만큼
-				deleteLottoLine(i); // 로또 한줄 지우기
-			}
-			buyCount = 0; // 구매 갯수 초기화
-			setPriceLabel(); // 가격 라벨 변경
-			btnResDisable(); // 초기화 결과 버튼 비활성화
+			reset();
 		} else if (o.equals(btnExit)) { // 종료 버튼
 			frameClose(); // 종료 다이얼로그 메서드 실행
 		}
+	}
+
+	private void reset() {
+		for (int i = 0; i < buyCount; i++) { // 구매한 수만큼
+			deleteLottoLine(i); // 로또 한줄 지우기
+		}
+		buyCount = 0; // 구매 갯수 초기화
+		setPriceLabel(); // 가격 라벨 변경
+		btnResDisable(); // 초기화 결과 버튼 비활성화
 	}
 
 	private void deleteLottoLine(int line) {
