@@ -75,11 +75,10 @@ public class ResultDialog extends JDialog {
 
 		// showLottoResultNum 메서드 수정
 //		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
-		
+
 		// 아이콘 라벨 설정 수정
 //		if (resultTreeSet.contains(lottoArr[j])) {
 
-		
 		// 테스트용 로또 데이터 설정
 //		this.lottoDatas = testLotto();
 		testSet = new TreeSet<>();
@@ -183,7 +182,7 @@ public class ResultDialog extends JDialog {
 		resultMoney = calculateMoney();
 
 		winMoney.setText("당첨금액: " + resultMoney + "원");
-		
+
 		setColorCenterFont(winMoney, Color.BLACK, JLabel.CENTER, fontHolder.getDeriveFont(Font.PLAIN, 17));
 		winMoney.setPreferredSize(new Dimension(150, 30));
 		winMoney.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -200,7 +199,9 @@ public class ResultDialog extends JDialog {
 			if (lottoDatas[i] != null) {
 				char c = (char) ('A' + i);
 
-				autoString[i] = " (반자동) ";
+				// 로또 데이터의 mode 내용을 받아와서 autoString[]배열에 내용을 집어 넣는 작업
+				setAutoString(i);
+				
 				lblCode[i] = new JLabel(String.valueOf(c) + autoString[i]);
 				lblCode[i].setBounds(20, i * 60 - 3, 120, 60);
 				lblCode[i].setFont(fontHolder.getDeriveFont(Font.PLAIN, 20));
@@ -231,13 +232,13 @@ public class ResultDialog extends JDialog {
 				if (lottoDatas[i] != null) {
 					// 로또 데이터에서 배열 추출
 					lottoArr = lottoDatas[i].getNums();
-					
+
 					// 배포용
 					if (resultTreeSet.contains(lottoArr[j])) {
-					
-					// 테스트용
+
+						// 테스트용
 //					if (testSet.contains(lottoArr[j])) {
-						
+
 						lblCircles[i][j] = numToColor(lottoArr[j]);
 						lblCircles[i][j].setBounds(j * 60 + 110, i * 60, 60, 60);
 						pnlCenter.add(lblCircles[i][j]);
@@ -261,6 +262,16 @@ public class ResultDialog extends JDialog {
 		return pnlCenter;
 	}
 
+	private void setAutoString(int i) {
+		if (lottoDatas[i].getMode() == Mode.AUTO) {
+			autoString[i] = " (자동) ";
+		} else if (lottoDatas[i].getMode() == Mode.MANUAL) {
+			autoString[i] = " (수동) ";
+		} else if (lottoDatas[i].getMode() == Mode.SEMI) {
+			autoString[i] = " (반자동) ";
+		}
+	}
+
 	private void setColorCenterFont(JLabel lbl, Color color, int alignment, Font font) {
 		lbl.setForeground(color);
 		lbl.setHorizontalAlignment(alignment);
@@ -274,7 +285,7 @@ public class ResultDialog extends JDialog {
 			// 배포용
 			if (resultTreeSet.contains(lottoArr[i])) {
 
-			// 테스트 세팅
+				// 테스트 세팅
 //			if (testSet.contains(lottoArr[i])) {
 				count++;
 			}
@@ -338,7 +349,7 @@ public class ResultDialog extends JDialog {
 		}
 		return lbl;
 	}
-	
+
 	public static JLabel numToBlack(int n) {
 		JLabel lbl = new JLabel();
 		lbl.setIcon(LottoCircle.BLACK.getImageIcon());
