@@ -177,7 +177,7 @@ public class MainFrame extends JFrame implements ActionListener {
 					changeLottoLabels(j); // 로또 정보에 맞게 라벨 변경
 				}
 				deleteLottoLine(buyCount); // 로또 한줄 지우기
-//테스트
+
 				if (buyCount == 0) {
 					btnResDisable(); // 결과 초기화 버튼 비활성화
 				}
