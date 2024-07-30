@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,6 +32,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JButton btnReset; // 초기화 버튼
 	private JButton btnExit; // 종료 버튼
 	private LottoData[] lottoDatas = new LottoData[5]; // 로또 정보
+	private JButton btnAuto;
 
 	public MainFrame() {
 		JPanel pnlNorth = new JPanel(); // 플로우 레이아웃으로
@@ -64,6 +68,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		lblPrice.setFont(fontHolder.getDeriveFont(Font.PLAIN, 20)); // 가격 라벨 폰트설정
 		pnl.add(lblPrice); // 가격 라벨 추가
 
+		btnAuto = createMyButton("자동", new Rectangle(310, 25, 50, 30), pnl); // 메서드를 사용하여 자동 버튼 생성
 		btnResult = createMyButton("결과", new Rectangle(375, 25, 50, 30), pnl); // 메서드를 사용하여 결과 버튼 생성
 		btnReset = createMyButton("초기화", new Rectangle(440, 25, 70, 30), pnl); // 메서드를 사용하여 초기화 버튼 생성
 		btnExit = createMyButton("종료", new Rectangle(525, 25, 50, 30), pnl); // 메서드를 사용하여 종료 버튼 생성
@@ -152,10 +157,7 @@ public class MainFrame extends JFrame implements ActionListener {
 				lottoDatas[i] = input; // 받은 로또 정보 배열에 넣어주기
 				changeLottoLabels(i); // i번째 로또 라벨들 모두 변경
 				if (newBuy) { // 로또 추가라면
-					if (buyCount == 0) { // 최초 구매일 때
-						btnReset.setEnabled(true); // 리셋 버튼 활성화
-						btnResult.setEnabled(true); // 결과 버튼 활성화
-					}
+					btnResEnable(); // 결과 리셋 버튼 활성화
 					buyCount++; // 구매 갯수 증가
 					setPriceLabel(); // 가격 라벨 변경
 				}
@@ -177,7 +179,7 @@ public class MainFrame extends JFrame implements ActionListener {
 					changeLottoLabels(j); // 로또 정보에 맞게 라벨 변경
 				}
 				deleteLottoLine(buyCount); // 로또 한줄 지우기
-//테스트
+
 				if (buyCount == 0) {
 					btnResDisable(); // 결과 초기화 버튼 비활성화
 				}
@@ -187,7 +189,19 @@ public class MainFrame extends JFrame implements ActionListener {
 				return;
 			}
 		}
-		if (o.equals(btnResult)) { // 결과 버튼
+		if (o.equals(btnAuto)) { // 자동 버튼
+			btnResEnable(); // 결과 리셋 버튼 활성화
+			while (buyCount < 5) {
+				lottoDatas[buyCount] = createRandomLottoData();
+				changeLottoLabels(buyCount);
+				btnAmend[buyCount].setText("수정"); // 수정 버튼 텍스트 변경
+				btnDelete[buyCount].setEnabled(true); // 삭제 버튼 활성화
+				if (++buyCount < btnAmend.length) {
+					btnAmend[buyCount].setEnabled(true); // 다음 수정 버튼 활성화
+				}
+			}
+			setPriceLabel(); // 가격 라벨 변경
+		} else if (o.equals(btnResult)) { // 결과 버튼
 			ResultDialog.showDialog(lottoDatas, MainFrame.this); // 결과 다이얼로그 출력
 			reset();
 		} else if (o.equals(btnReset)) { // 초기화 버튼
@@ -195,6 +209,22 @@ public class MainFrame extends JFrame implements ActionListener {
 		} else if (o.equals(btnExit)) { // 종료 버튼
 			frameClose(); // 종료 다이얼로그 메서드 실행
 		}
+	}
+
+	private void btnResEnable() {
+		if (buyCount == 0) {
+			btnReset.setEnabled(true); // 리셋 버튼 활성화
+			btnResult.setEnabled(true); // 결과 버튼 활성화
+		}
+	}
+
+	private LottoData createRandomLottoData() {
+		Random random = new Random();
+		Set<Integer> set = new TreeSet<>();
+		while (set.size() < 6) {
+			set.add(random.nextInt(45) + 1);
+		}
+		return new LottoData(set.stream().mapToInt(Integer::intValue).toArray(), true);
 	}
 
 	private void reset() {
