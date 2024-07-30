@@ -187,7 +187,7 @@ public class MainFrame extends JFrame implements ActionListener {
 			}
 		}
 		if (o.equals(btnResult)) { // 결과 버튼
-			ResultDialog.showDialog(lottoDatas); // 결과 다이얼로그 출력
+			ResultDialog.showDialog(lottoDatas, MainFrame.this); // 결과 다이얼로그 출력
 		} else if (o.equals(btnReset)) { // 초기화 버튼
 			for (int i = 0; i < buyCount; i++) { // 구매한 수만큼
 				deleteLottoLine(i); // 로또 한줄 지우기
