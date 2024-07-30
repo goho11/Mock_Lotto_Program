@@ -34,6 +34,9 @@ public class NumberChoose extends JDialog implements ActionListener {
 
 	public NumberChoose(JFrame frame) {
 		setTitle("로또 번호 선택");
+		// 모달 대화상자 만듬. 사용자가 대화상자를 닫기 전까지 다른 창과 상호작용 불가
+		setModal(true);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		JPanel pnl = new JPanel(new BorderLayout());
 		// 패널A : 1~45 숫자범위
@@ -86,6 +89,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 
 		add(pnl);
 		setSize(421, 280);
+
 		// setModal 대화상자를 닫기 전까지 다른 상호작용 불가
 		setModal(true);
 		// 다이얼로그 창을 닫아라
