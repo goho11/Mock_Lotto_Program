@@ -58,10 +58,12 @@ public class ResultDialog extends JDialog {
 	private String[] resultString = new String[5];
 	private String[] autoString = new String[5];
 	private Set<Integer> resultTreeSet = RandomResult();
-	private static JFrame tempFrame = new tempFrame();
 	private LottoData[] lottoDatas;
 	private int[] lottoArr = new int[6];
+	
+	// 테스트용 필드
 	private Set<Integer> testSet;
+	private static JFrame tempFrame = new tempFrame();
 
 	public ResultDialog(LottoData[] lottoData, JFrame mainFrame) {
 
@@ -84,10 +86,10 @@ public class ResultDialog extends JDialog {
 		testSet.add(22);
 		testSet.add(33);
 
-		setLocationRelativeTo(mainFrame);
 
 		// 다이얼로그 세팅 (FlowLayout.CENTER)
 		resultDialogSetting();
+		setLocationRelativeTo(mainFrame);
 
 		// 당첨 회차 라벨
 		showRound();
