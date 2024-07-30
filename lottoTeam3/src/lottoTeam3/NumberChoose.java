@@ -30,6 +30,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 	private JButton check;
 	private JButton auto;
 	private boolean buy = false;
+	private FontHolder fontHolder = new FontHolder();
 
 	public NumberChoose(JFrame frame) {
 		setTitle("로또 번호 선택");
@@ -52,16 +53,33 @@ public class NumberChoose extends JDialog implements ActionListener {
 		auto.addActionListener(this);
 
 		// 배열은 같다고 하면 안됨. 마지막 번호를 추가하고 싶으면 -1
-		Font font = new Font("맑은 고딕", Font.BOLD, 18);
 		for (int i = 0; i < btns.length; i++) {
 			pnlA.add(btns[i] = new JButton(String.valueOf(i + 1)));
 			btns[i].setPreferredSize(new Dimension(35, 35));
-			btns[i].setFont(font);
+			btns[i].setFont(fontHolder.getDeriveFont(Font.PLAIN, 20));
 			// setMargin 왼쪽 정렬
 			btns[i].setMargin(new Insets(0, 0, 0, 0));
+			btns[i].setBackground(Color.WHITE);
 			// i값이 for문에 돌아감. 배열값
 			btns[i].addActionListener(this); // 버튼 누르면 비활성화됨(로또 번호 선택)
+			// 버튼 선택시 가운데 네모 박스 안뜨게
+			btns[i].setFocusable(false);
 		}
+		pnlA.setBackground(Color.WHITE);
+		pnlB.setBackground(Color.WHITE);
+		reset.setBackground(Color.WHITE);
+		check.setBackground(Color.WHITE);
+		auto.setBackground(Color.WHITE);
+		// 버튼 여백 제거 (위, 왼, 아래, 오)
+		reset.setFocusable(false);
+		reset.setMargin(new Insets(0, 2, 0, 2));
+		reset.setFont(fontHolder.getDeriveFont(Font.PLAIN, 17));
+		check.setFocusable(false);
+		check.setMargin(new Insets(0, 2, 0, 2));
+		check.setFont(fontHolder.getDeriveFont(Font.PLAIN, 17));
+		auto.setFocusable(false);
+		auto.setMargin(new Insets(0, 2, 0, 2));
+		auto.setFont(fontHolder.getDeriveFont(Font.PLAIN, 17));
 
 		pnlB.add(check);
 		pnlB.add(reset);
@@ -74,8 +92,10 @@ public class NumberChoose extends JDialog implements ActionListener {
 
 		// setModal 대화상자를 닫기 전까지 다른 상호작용 불가
 		setModal(true);
+		// 다이얼로그 창을 닫아라
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		// JFrame 위치 지정하기
+		// JFrame 위치 지정 - frame은 메인창 위치를 의미한다
 		int x = frame.getX();
 		int y = frame.getY();
 		int width = frame.getWidth();
@@ -93,26 +113,28 @@ public class NumberChoose extends JDialog implements ActionListener {
 		for (int i = 0; i < btns.length; i++) {
 			// 오브젝트안에 equals가 있다 - btns[i]번째와 같은지 비교해라
 			if (o.equals(btns[i])) {
-				if (btns[i].getBackground().equals(Color.red)) {
-					btns[i].setBackground(null);
-					count--;
-				} else {
+				// 버튼 선택 안함 - 화이트
+				if (btns[i].getBackground().equals(Color.WHITE)) {
 					if (count < 6) {
-						btns[i].setBackground(Color.red);
+						// 버튼 선택 - 그레이
+						btns[i].setBackground(Color.GRAY);
 						count++;
 					} else {
 						JOptionPane.showMessageDialog(NumberChoose.this, "번호 6개를 선택했습니다");
 					}
+				} else { // 버튼 선택된걸 취소시 화이트로 변경. 카운터 빼기
+					btns[i].setBackground(Color.WHITE);
+					count--;
 				}
 				// void라서 리턴값 없음
-				// 선택된 버튼만 누르고 끝남
+				// 선택된 버튼 누르면 끝남
 				return;
 			}
 		}
 		// 리셋 : 비활성화된 버튼이 활성화됨
 		if (o.equals(reset)) {
 			for (int i = 0; i < btns.length; i++) {
-				if (btns[i].getBackground().equals(Color.red)) {
+				if (btns[i].getBackground().equals(Color.GRAY)) {
 					btns[i].setBackground(null);
 				}
 			}
@@ -131,12 +153,12 @@ public class NumberChoose extends JDialog implements ActionListener {
 				// 버튼이 비활성화이면 카운트를 감소해라
 				// 활성화 true, 비활성화 false를 반환 - 버튼을 체크하면 비활성화 상태
 				// 카운트 줄이기
-				if (btns[n].getBackground().equals(Color.red)) {
+				if (btns[n].getBackground().equals(Color.GRAY)) {
 					// 기본이 true임.현재 활성화(true)이니깐 랜덤 선택 걸리면 비활성화(flase)로 돌리기
 					// set을 해야 빨강값을 보낸다
 					count--;
 				} else {
-					btns[n].setBackground(Color.red);
+					btns[n].setBackground(Color.GRAY);
 				}
 			}
 			// 확인
@@ -172,7 +194,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 			int j = 0;
 			for (int i = 0; i < btns.length; i++) {
 				// 버튼 배경색을 가져와서 레드와 비교해라
-				if (btns[i].getBackground().equals(Color.red)) {
+				if (btns[i].getBackground().equals(Color.GRAY)) {
 					nums[j] = i + 1;
 					j++;
 				}
