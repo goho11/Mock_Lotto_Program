@@ -68,7 +68,7 @@ public class ResultDialog extends JDialog {
 	public ResultDialog(LottoData[] lottoData, JFrame mainFrame) {
 
 		// 배포용으로 만들 경우
-//		this.lottoDatas = lottoData;
+		this.lottoDatas = lottoData;
 
 		// equalsNum 메서드 수정
 //		if (resultTreeSet.contains(lottoArr[i])) {
@@ -81,7 +81,7 @@ public class ResultDialog extends JDialog {
 
 		
 		// 테스트용 로또 데이터 설정
-		this.lottoDatas = testLotto();
+//		this.lottoDatas = testLotto();
 		testSet = new TreeSet<>();
 		testSet.add(1);
 		testSet.add(5);
@@ -127,7 +127,7 @@ public class ResultDialog extends JDialog {
 	}
 
 	private void showRound() {
-		JLabel roundNow = new JLabel("1000회");
+		JLabel roundNow = new JLabel("777회");
 		roundNow.setPreferredSize(new Dimension(100, 30));
 		roundNow.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		setColorCenterFont(roundNow, Color.BLACK, JLabel.CENTER, fontHolder.getDeriveFont(Font.PLAIN, 20));
@@ -144,10 +144,10 @@ public class ResultDialog extends JDialog {
 		add(showWinNumPnl);
 
 		// 배포용
-//		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
+		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
 
 		// 테스트용
-		Integer[] resultArray = testSet.toArray(new Integer[6]);
+//		Integer[] resultArray = testSet.toArray(new Integer[6]);
 
 		for (int i = 0; i < resultArray.length; i++) {
 			JLabel lblResultNum = new JLabel("" + resultArray[i]);
@@ -183,10 +183,10 @@ public class ResultDialog extends JDialog {
 		resultMoney = calculateMoney();
 
 		winMoney.setText("당첨금액: " + resultMoney + "원");
+		
+		setColorCenterFont(winMoney, Color.BLACK, JLabel.CENTER, fontHolder.getDeriveFont(Font.PLAIN, 17));
 		winMoney.setPreferredSize(new Dimension(150, 30));
 		winMoney.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		winMoney.setHorizontalAlignment(JLabel.CENTER);
-		winMoney.setVerticalAlignment(JLabel.CENTER);
 		add(winMoney);
 	}
 
@@ -233,10 +233,10 @@ public class ResultDialog extends JDialog {
 					lottoArr = lottoDatas[i].getNums();
 					
 					// 배포용
-//					if (resultTreeSet.contains(lottoArr[j])) {
+					if (resultTreeSet.contains(lottoArr[j])) {
 					
 					// 테스트용
-					if (testSet.contains(lottoArr[j])) {
+//					if (testSet.contains(lottoArr[j])) {
 						
 						lblCircles[i][j] = numToColor(lottoArr[j]);
 						lblCircles[i][j].setBounds(j * 60 + 110, i * 60, 60, 60);
@@ -272,10 +272,10 @@ public class ResultDialog extends JDialog {
 		int count = 0;
 		for (int i = 0; i < lottoArr.length; i++) {
 			// 배포용
-//			if (resultTreeSet.contains(lottoArr[i])) {
+			if (resultTreeSet.contains(lottoArr[i])) {
 
 			// 테스트 세팅
-			if (testSet.contains(lottoArr[i])) {
+//			if (testSet.contains(lottoArr[i])) {
 				count++;
 			}
 		}
