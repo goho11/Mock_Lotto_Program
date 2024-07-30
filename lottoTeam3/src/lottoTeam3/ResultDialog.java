@@ -67,8 +67,7 @@ public class ResultDialog extends JDialog {
 
 		// 테스트용 로또 데이터 설정
 //		lottoDatas = testLotto();
-		LottoData[] getLottoData = lottoData;
-		lottoDatas = lottoData;
+		this.lottoDatas = lottoData;
 		testSet = new TreeSet<>();
 		testSet.add(1);
 		testSet.add(5);
