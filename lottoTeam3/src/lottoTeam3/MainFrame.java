@@ -112,7 +112,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 
 		for (int i = 0; i < btnDelete.length; i++) {
-			btnDelete[i] = createMyButton("삭제", new Rectangle(525, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 삭제 버튼 생성 및 설정
+			btnDelete[i] = createMyButton("삭제", new Rectangle(525, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 삭제 버튼 생성 및
+																								// 설정
 			btnDelete[i].setEnabled(false); // 모든 삭제 버튼 비활성화
 		}
 	}
@@ -144,7 +145,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < btnAmend.length; i++) { // 수정 버튼
 			if (o.equals(btnAmend[i])) {
 //				LottoData input = new LottoData(randomLotto(), new Random().nextBoolean());
-				LottoData input = NumberChoose.showDialog(this);
+				LottoData input = NumberChoose.showDialog(lottoDatas[i], this);
 				if (!input.isBuy())
 					return;
 				boolean newBuy = lottoDatas[i] == null; // 로또를 수정인지 추가인지 확인하기 위한 불린값
