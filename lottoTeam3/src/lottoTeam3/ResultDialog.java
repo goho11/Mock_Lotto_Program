@@ -63,7 +63,7 @@ public class ResultDialog extends JDialog {
 	private int[] lottoArr = new int[6];
 	private Set<Integer> testSet;
 
-	public ResultDialog(LottoData[] lottoDatas) {
+	public ResultDialog(LottoData[] lottoData) {
 
 		// 테스트용 로또 데이터 설정
 		this.lottoDatas = lottoDatas;
@@ -309,9 +309,9 @@ public class ResultDialog extends JDialog {
 		showWinNumPnl.setBackground(Color.WHITE);
 		add(showWinNumPnl);
 
-//		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
+		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
 
-		Integer[] resultArray = testSet.toArray(new Integer[6]);
+//		Integer[] resultArray = testSet.toArray(new Integer[6]);
 
 		for (int i = 0; i < resultArray.length; i++) {
 			JLabel lblResultNum = new JLabel("" + resultArray[i]);
