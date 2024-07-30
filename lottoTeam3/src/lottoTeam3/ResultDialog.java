@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+// modal 설정 체크 및 종료 시 console 종료를 위한 임시 프레임
 class tempFrame extends JFrame {
 	public tempFrame() {
 		super("임시 창");
@@ -65,20 +66,12 @@ public class ResultDialog extends JDialog {
 
 	public ResultDialog() {
 //		public ResultDialog(LottoData[] lottoDatas) {
-		// 창 제일 위에 이름 어떻게 하지
-		setTitle("로또 결과창");
-		// 요소들 끼리 간격 설정 (중앙정렬, hgap, vgap)
-		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 5));
-		getContentPane().setBackground(Color.WHITE);
+		resultDialogSetting();
+		
+		// 당첨 회차 라벨
+		showRound();
 
-		// 당첨 번호
-		JLabel winNumber = new JLabel("1000회");
-		winNumber.setPreferredSize(new Dimension(100, 30));
-		winNumber.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-		winNumber.setHorizontalAlignment(SwingConstants.CENTER);
-		winNumber.setVerticalAlignment(SwingConstants.CENTER);
-		add(winNumber);
-
+		// 이번 회차 랜덤으로 당첨 결과 보여주는 패널
 		showLottoResult();
 
 		// 당첨 금액
@@ -90,12 +83,29 @@ public class ResultDialog extends JDialog {
 		winMoney.setVerticalAlignment(SwingConstants.CENTER);
 		add(winMoney);
 
-		// 결과창 추가
+		// 당첨 결과 패널
 		JPanel pnlCenter = initCenter();
 		add(pnlCenter);
+	}
+
+	private void resultDialogSetting() {
+		// 창 제일 위에 이름 어떻게 하지
+		setTitle("로또 결과창");
+		// 요소들 끼리 간격 설정 (중앙정렬, hgap, vgap)
+		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 5));
+		getContentPane().setBackground(Color.WHITE);
 
 		setModal(true);
 		setSize(550, 500);
+	}
+
+	private void showRound() {
+		JLabel roundNow = new JLabel("1000회");
+		roundNow.setPreferredSize(new Dimension(100, 30));
+		roundNow.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		roundNow.setHorizontalAlignment(SwingConstants.CENTER);
+		roundNow.setVerticalAlignment(SwingConstants.CENTER);
+		add(roundNow);
 	}
 
 	// lottoDatas를 받아서 다이얼로그를 보여주는 메소드
@@ -227,6 +237,6 @@ public class ResultDialog extends JDialog {
 
 	public static void main(String[] args) {
 		new tempFrame().setVisible(true);
-		// 29일 작업본까지 적용
+		// 30일
 	}
 }
