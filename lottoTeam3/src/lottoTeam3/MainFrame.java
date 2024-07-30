@@ -144,16 +144,16 @@ public class MainFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < btnAmend.length; i++) { // 수정 버튼
 			if (o.equals(btnAmend[i])) {
 //				LottoData input = new LottoData(randomLotto(), new Random().nextBoolean());
-				LottoData input = NumberChoose.showDialog(this);
+				LottoData input = NumberChoose.showDialog(this); // 로또 번호 입력
 				if (!input.isBuy())
 					return;
 				boolean newBuy = lottoDatas[i] == null; // 로또를 수정인지 추가인지 확인하기 위한 불린값
 				lottoDatas[i] = input; // 받은 로또 정보 배열에 넣어주기
 				changeLottoLabels(i); // i번째 로또 라벨들 모두 변경
 				if (newBuy) { // 로또 추가라면
-					if (buyCount == 0) {
-						btnReset.setEnabled(true);
-						btnResult.setEnabled(true);
+					if (buyCount == 0) { // 최초 구매일 때
+						btnReset.setEnabled(true); // 리셋 버튼 활성화
+						btnResult.setEnabled(true); // 결과 버튼 활성화
 					}
 					buyCount++; // 구매 갯수 증가
 					setPriceLabel(); // 가격 라벨 변경
