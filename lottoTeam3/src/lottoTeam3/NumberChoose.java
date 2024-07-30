@@ -28,9 +28,10 @@ public class NumberChoose extends JDialog implements ActionListener {
 	private JButton auto;
 	private boolean buy = false;
 	private FontHolder fontHolder = new FontHolder();
+	private Mode mode = Mode.AUTO; // 기본은 자동모드
 
 	public NumberChoose(LottoData inputlotto, JFrame frame) {
-		setTitle("로또 번호 선택");
+		setTitle("번호 선택");
 		// 대화상자 닫기 전까지 다른 상호작용 불가
 		setModal(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -76,15 +77,17 @@ public class NumberChoose extends JDialog implements ActionListener {
 			btns[i].addActionListener(this); // 기능 추가
 			btns[i].setFocusable(false); // 선택시 네모 박스 안뜨게
 		}
-		// 로또 번호 수정 기능
+		// 로또 번호 수정
 		if (inputlotto != null) {
 			int nums[] = inputlotto.getNums();
 			for (int i = 0; i < nums.length; i++) {
 				btns[nums[i] - 1].setBackground(Color.GRAY);
 			}
+			// count 6은 자동 모드(기본모드)
+			mode = inputlotto.getMode();
 			count = 6;
 		}
- 
+
 		pnlB.add(check);
 		pnlB.add(reset);
 		pnlB.add(auto);
@@ -123,6 +126,11 @@ public class NumberChoose extends JDialog implements ActionListener {
 					if (count < 6) {
 						btns[i].setBackground(Color.GRAY);
 						count++;
+						if (count < 6) {
+							mode = Mode.SEMI;
+						} else {
+							mode = Mode.MANUAL; // 수동 : 번호 전부 선택 클릭
+						}
 					} else {
 						JOptionPane.showMessageDialog(NumberChoose.this, "번호 6개를 선택했습니다");
 					}
@@ -130,6 +138,11 @@ public class NumberChoose extends JDialog implements ActionListener {
 					// 버튼 선택취소 - 그레이>화이트, count 감소
 					btns[i].setBackground(Color.WHITE);
 					count--;
+					if (count == 0) {
+						mode = Mode.AUTO;
+					} else {
+						mode = Mode.SEMI;
+					}
 				}
 				// void return : 해당 함수 빠져 나오기(break와 비슷함)
 				return;
@@ -144,6 +157,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 				}
 			}
 			count = 0;
+			mode = Mode.AUTO;
 			// 랜덤 번호 6개 자동 선택
 			// 번호 6개 이상 선택시 - 선택불가 메세지 출력
 		} else if (o.equals(auto)) {
@@ -161,6 +175,10 @@ public class NumberChoose extends JDialog implements ActionListener {
 					btns[n].setBackground(Color.GRAY);
 				}
 			}
+			// 자동으로 바로 들어감
+			buy = true;
+			dispose();
+
 			// 확인 - 선택된 숫자가 6개 이면 빠져나옴
 		} else if (o.equals(check)) {
 			if (count != 6) {
@@ -194,6 +212,6 @@ public class NumberChoose extends JDialog implements ActionListener {
 				}
 			}
 		}
-		return new LottoData(nums, buy);
+		return new LottoData(nums, buy, mode);
 	}
 }
