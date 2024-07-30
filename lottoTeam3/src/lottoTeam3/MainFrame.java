@@ -84,8 +84,9 @@ public class MainFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < lblModes.length; i++) { // 5번 반복
 			char c = (char) ('A' + i); // A문자를 i씩 증가시켜서 A~E까지 char에 대입
 			lblModes[i] = new JLabel(String.valueOf(c)); // 문자 c로 라벨 생성
-			lblModes[i].setBounds(35, i * 60 - 3, 60, 60); // 라벨 바운드 설정
+			lblModes[i].setBounds(10, i * 60 - 3, 90, 60); // 라벨 바운드 설정
 			lblModes[i].setFont(fontHolder.getDeriveFont(Font.PLAIN, 20)); // 폰트 설정
+			lblModes[i].setHorizontalAlignment(JLabel.CENTER);
 			pnl.add(lblModes[i]); // 라벨 추가
 		}
 
@@ -93,7 +94,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < lblNums.length; i++) {
 			for (int j = 0; j < lblNums[i].length; j++) {
 				lblNums[i][j] = new JLabel("");
-				lblNums[i][j].setBounds(j * 60 + 69, i * 60 - 3, 60, 60); // 라벨 바운드 설정
+				lblNums[i][j].setBounds(j * 60 + 99, i * 60 - 3, 60, 60); // 라벨 바운드 설정
 //				lblNums[i][j].setBorder(BorderFactory.createLineBorder(Color.RED)); // 테두리 테스트
 				lblNums[i][j].setForeground(Color.WHITE); // 폰트 색상 흰색으로 설정
 				lblNums[i][j].setHorizontalAlignment(JLabel.CENTER); // 라벨 안의 글자 가운데 정렬
@@ -106,19 +107,19 @@ public class MainFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < lblCircles.length; i++) {
 			for (int j = 0; j < lblCircles[i].length; j++) {
 				lblCircles[i][j] = new JLabel(LottoCircle.BLACK.getImageIcon()); // 라벨 검은 원으로 생성
-				lblCircles[i][j].setBounds(j * 60 + 70, i * 60, 60, 60); // 라벨 바운드 설정
+				lblCircles[i][j].setBounds(j * 60 + 100, i * 60, 60, 60); // 라벨 바운드 설정
 				pnl.add(lblCircles[i][j]); // 라벨 추가
 			}
 		}
 
 		for (int i = 0; i < btnAmend.length; i++) {
-			btnAmend[i] = createMyButton("추가", new Rectangle(460, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 수정 버튼 생성 및 설정
+			btnAmend[i] = createMyButton("추가", new Rectangle(475, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 수정 버튼 생성 및 설정
 			if (i != 0)
 				btnAmend[i].setEnabled(false); // 첫번째 추가 버튼을 제외하고 모두 비활성화
 		}
 
 		for (int i = 0; i < btnDelete.length; i++) {
-			btnDelete[i] = createMyButton("삭제", new Rectangle(525, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 삭제 버튼 생성 및
+			btnDelete[i] = createMyButton("삭제", new Rectangle(535, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 삭제 버튼 생성 및
 																								// 설정
 			btnDelete[i].setEnabled(false); // 모든 삭제 버튼 비활성화
 		}
@@ -162,8 +163,7 @@ public class MainFrame extends JFrame implements ActionListener {
 					setPriceLabel(); // 가격 라벨 변경
 				}
 				lottoDatas[i] = input; // 받은 로또 정보 배열에 넣어주기
-				changeLottoLabels(i); // i번째 로또 라벨들 모두 변경
-				lblModes[i].setText("A");
+				changeLabels(i);
 				btnAmend[i].setText("수정"); // 수정 버튼 텍스트 변경
 				btnDelete[i].setEnabled(true); // 삭제 버튼 활성화
 				if (i + 1 < btnAmend.length) {
@@ -179,7 +179,7 @@ public class MainFrame extends JFrame implements ActionListener {
 				buyCount--; // 구매 갯수 감소
 				for (int j = i; j < buyCount; j++) {
 					lottoDatas[j] = lottoDatas[j + 1]; // i+1번째 로또 정보를 i번째 로또 정보로 이동
-					changeLottoLabels(j); // 로또 정보에 맞게 라벨 변경
+					changeLabels(j);
 				}
 				deleteLottoLine(buyCount); // 로또 한줄 지우기
 
@@ -196,7 +196,7 @@ public class MainFrame extends JFrame implements ActionListener {
 			btnResEnable(); // 결과 리셋 버튼 활성화
 			while (buyCount < 5) {
 				lottoDatas[buyCount] = createRandomLottoData();
-				changeLottoLabels(buyCount);
+				changeLabels(buyCount);
 				btnAmend[buyCount].setText("수정"); // 수정 버튼 텍스트 변경
 				btnDelete[buyCount].setEnabled(true); // 삭제 버튼 활성화
 				if (++buyCount < btnAmend.length) {
@@ -211,6 +211,33 @@ public class MainFrame extends JFrame implements ActionListener {
 			reset();
 		} else if (o.equals(btnExit)) { // 종료 버튼
 			frameClose(); // 종료 다이얼로그 메서드 실행
+		}
+	}
+
+	private void changeLabels(int line) {
+		char c = (char) ('A' + line);
+		if (lottoDatas[line] == null) {
+			for (int j = 0; j < 6; j++) {
+				lblNums[line][j].setText(""); // 숫자 라벨 비우기
+				lblCircles[line][j].setIcon(LottoCircle.BLACK.getImageIcon()); // 원 라벨 모두 검정으로 설정
+			}
+			lblModes[line].setText(String.valueOf(c));
+		} else {
+			int[] nums = lottoDatas[line].getNums(); // 로또 정보에서 숫자 배열 받아오기
+			for (int j = 0; j < nums.length; j++) {
+				lblNums[line][j].setText(String.valueOf(nums[j])); // 숫자 라벨 텍스트 입력한 숫자로 설정
+				if (nums[j] <= 10)
+					lblCircles[line][j].setIcon(LottoCircle.YELLOW.getImageIcon()); // 10보다 작거나 같을 때 노랑
+				else if (nums[j] <= 20)
+					lblCircles[line][j].setIcon(LottoCircle.BLUE.getImageIcon()); // 20보다 작거나 같을 때 파랑
+				else if (nums[j] <= 30)
+					lblCircles[line][j].setIcon(LottoCircle.RED.getImageIcon()); // 30보다 작거나 같을 때 빨강
+				else if (nums[j] <= 40)
+					lblCircles[line][j].setIcon(LottoCircle.GRAY.getImageIcon()); // 40보다 작거나 같을 때 회색
+				else
+					lblCircles[line][j].setIcon(LottoCircle.GREEN.getImageIcon()); // 나머지 초록
+			}
+			lblModes[line].setText(c + " (" + lottoDatas[line].getMode().getKorean() + ")");
 		}
 	}
 
@@ -240,13 +267,10 @@ public class MainFrame extends JFrame implements ActionListener {
 	}
 
 	private void deleteLottoLine(int line) {
-		for (int j = 0; j < 6; j++) {
-			lblNums[line][j].setText(""); // 숫자 라벨 비우기
-			lblCircles[line][j].setIcon(LottoCircle.BLACK.getImageIcon()); // 원 라벨 모두 검정으로 설정
-		}
 		lottoDatas[line] = null; // 로또 정보 없애기
 		btnAmend[line].setText("추가"); // 로또 버튼 수정으로 변경
 		btnDelete[line].setEnabled(false); // 삭제 버튼 비활성화
+		changeLabels(line);
 		if (line + 1 < btnAmend.length)
 			btnAmend[line + 1].setEnabled(false); // 다음 수정 버튼 비활성화
 	}
@@ -258,23 +282,6 @@ public class MainFrame extends JFrame implements ActionListener {
 	private void btnResDisable() {
 		btnReset.setEnabled(false); // 초기화 버튼 비활성화
 		btnResult.setEnabled(false); // 결과 버튼 비활성화
-	}
-
-	private void changeLottoLabels(int i) {
-		int[] nums = lottoDatas[i].getNums(); // 로또 정보에서 숫자 배열 받아오기
-		for (int j = 0; j < nums.length; j++) {
-			lblNums[i][j].setText(String.valueOf(nums[j])); // 숫자 라벨 텍스트 입력한 숫자로 설정
-			if (nums[j] <= 10)
-				lblCircles[i][j].setIcon(LottoCircle.YELLOW.getImageIcon()); // 10보다 작거나 같을 때 노랑
-			else if (nums[j] <= 20)
-				lblCircles[i][j].setIcon(LottoCircle.BLUE.getImageIcon()); // 20보다 작거나 같을 때 파랑
-			else if (nums[j] <= 30)
-				lblCircles[i][j].setIcon(LottoCircle.RED.getImageIcon()); // 30보다 작거나 같을 때 빨강
-			else if (nums[j] <= 40)
-				lblCircles[i][j].setIcon(LottoCircle.GRAY.getImageIcon()); // 40보다 작거나 같을 때 회색
-			else
-				lblCircles[i][j].setIcon(LottoCircle.GREEN.getImageIcon()); // 나머지 초록
-		}
 	}
 
 	private void frameClose() {
