@@ -66,7 +66,7 @@ public class ResultDialog extends JDialog {
 	public ResultDialog(LottoData[] lottoDatas) {
 
 		// 테스트용 로또 데이터 설정
-		lottoDatas = testLotto();
+		this.lottoDatas = lottoDatas;
 		testSet = new TreeSet<>();
 		testSet.add(1);
 		testSet.add(5);
@@ -74,7 +74,7 @@ public class ResultDialog extends JDialog {
 		testSet.add(11);
 		testSet.add(22);
 		testSet.add(33);
-		
+
 		for (int i = 0; i < resultString.length; i++) {
 			resultString[i] = "꽝";
 		}
@@ -140,13 +140,13 @@ public class ResultDialog extends JDialog {
 					// 3등, 5개 번호 일치
 					money += 3_000_000;
 					resultString[i] = "3등";
-					
+
 					// 2등, 5개 번호 일치 + 보너스 볼과 번호 일치
 					for (int j = 0; j < lottoArr.length; j++) {
 						if (lottoArr[j] == bonus) {
 							money += 17_000_000;
 							resultString[i] = "2등";
-						} 
+						}
 					}
 					// 4등, 4개 번호 일치
 				} else if (count == 4) {
@@ -187,8 +187,8 @@ public class ResultDialog extends JDialog {
 
 	// lottoDatas를 받아서 다이얼로그를 보여주는 메소드
 	public static void showDialog(LottoData[] lottoDatas) {
-//		ResultDialog resultDialog = new ResultDialog(lottoDatas);
-//		resultDialog.setVisible(true);
+		ResultDialog resultDialog = new ResultDialog(lottoDatas);
+		resultDialog.setVisible(true);
 	}
 
 	private JPanel setResultPanel() {
