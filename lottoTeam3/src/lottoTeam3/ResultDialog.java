@@ -66,7 +66,7 @@ public class ResultDialog extends JDialog {
 	public ResultDialog(LottoData[] lottoData) {
 
 		// 테스트용 로또 데이터 설정
-		this.lottoDatas = lottoDatas;
+		this.lottoDatas = lottoData;
 		testSet = new TreeSet<>();
 		testSet.add(1);
 		testSet.add(5);
@@ -172,6 +172,7 @@ public class ResultDialog extends JDialog {
 		getContentPane().setBackground(Color.WHITE);
 
 		setModal(true);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(550, 500);
 	}
 
