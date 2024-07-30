@@ -66,7 +66,7 @@ public class ResultDialog extends JDialog {
 	public ResultDialog(LottoData[] lottoData, JFrame mainFrame) {
 
 		// 배포용으로 만들 경우
-//		this.lottoDatas = lottoData;
+		this.lottoDatas = lottoData;
 
 		// equalsNum 메서드 수정
 //		if (resultTreeSet.contains(lottoArr[i])) {
@@ -75,7 +75,7 @@ public class ResultDialog extends JDialog {
 //		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
 
 		// 테스트용 로또 데이터 설정
-		this.lottoDatas = testLotto();
+//		this.lottoDatas = testLotto();
 		testSet = new TreeSet<>();
 		testSet.add(1);
 		testSet.add(5);
@@ -139,10 +139,10 @@ public class ResultDialog extends JDialog {
 		add(showWinNumPnl);
 		
 		// 배포용
-//		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
+		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
 		
 		// 테스트용
-		Integer[] resultArray = testSet.toArray(new Integer[6]);
+//		Integer[] resultArray = testSet.toArray(new Integer[6]);
 
 		for (int i = 0; i < resultArray.length; i++) {
 			JLabel lblResultNum = new JLabel("" + resultArray[i]);
@@ -253,10 +253,10 @@ public class ResultDialog extends JDialog {
 		int count = 0;
 		for (int i = 0; i < lottoArr.length; i++) {
 			// 배포용 
-//			if (resultTreeSet.contains(lottoArr[i])) {
+			if (resultTreeSet.contains(lottoArr[i])) {
 
 			// 테스트 세팅
-			if (testSet.contains(lottoArr[i])) {
+//			if (testSet.contains(lottoArr[i])) {
 				count++;
 			}
 		}
