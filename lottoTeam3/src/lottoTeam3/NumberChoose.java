@@ -84,7 +84,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 			}
 			count = 6;
 		}
-
+ 
 		pnlB.add(check);
 		pnlB.add(reset);
 		pnlB.add(auto);
