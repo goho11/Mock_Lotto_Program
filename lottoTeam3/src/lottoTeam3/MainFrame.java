@@ -188,16 +188,21 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 		if (o.equals(btnResult)) { // 결과 버튼
 			ResultDialog.showDialog(lottoDatas); // 결과 다이얼로그 출력
+			reset();
 		} else if (o.equals(btnReset)) { // 초기화 버튼
-			for (int i = 0; i < buyCount; i++) { // 구매한 수만큼
-				deleteLottoLine(i); // 로또 한줄 지우기
-			}
-			buyCount = 0; // 구매 갯수 초기화
-			setPriceLabel(); // 가격 라벨 변경
-			btnResDisable(); // 초기화 결과 버튼 비활성화
+			reset();
 		} else if (o.equals(btnExit)) { // 종료 버튼
 			frameClose(); // 종료 다이얼로그 메서드 실행
 		}
+	}
+
+	private void reset() {
+		for (int i = 0; i < buyCount; i++) { // 구매한 수만큼
+			deleteLottoLine(i); // 로또 한줄 지우기
+		}
+		buyCount = 0; // 구매 갯수 초기화
+		setPriceLabel(); // 가격 라벨 변경
+		btnResDisable(); // 초기화 결과 버튼 비활성화
 	}
 
 	private void deleteLottoLine(int line) {
