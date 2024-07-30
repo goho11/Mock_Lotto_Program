@@ -13,23 +13,12 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-// ** 버튼 6개 미선택후 확인 누르면 안내메세지 뜨기?
-class TestFrame extends JFrame {
-	public TestFrame() {
-		JButton btn = new JButton("테스트");
-		add(btn);
-		btn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				new NumberChoose().setVisible(true);
-			}
-		});
-		setSize(500, 500);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-	}
-}
+// Q. 번호 선택 대화상자에서, 실수로 선택된 번호 하나를 선택 취소 하고 싶어요
+// A. enable을 setcolor로 변경하기. 바뀐 색상 클릭시 원래 색상 돌아옴
+// enable 활성화, enable(true)하면 클릭이 되는 식
 
 public class NumberChoose extends JDialog implements ActionListener {
 	// 지역변수를 필드로 바꿔 괄호 밖에도 사용가능하게(컨트롤 1)
@@ -39,9 +28,13 @@ public class NumberChoose extends JDialog implements ActionListener {
 	private JButton reset;
 	private JButton check;
 	private JButton auto;
+	private boolean buy = false;
 
 	public NumberChoose() {
 		setTitle("로또 번호 선택");
+		// 모달 대화상자 만듬. 사용자가 대화상자를 닫기 전까지 다른 창과 상호작용 불가
+		setModal(true);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		JPanel pnl = new JPanel(new BorderLayout());
 		// 패널A : 1~45 숫자범위
@@ -90,13 +83,15 @@ public class NumberChoose extends JDialog implements ActionListener {
 		for (int i = 0; i < btns.length; i++) {
 			// 오브젝트안에 equals가 있다 - btns[i]번째와 같은지 비교해라
 			if (o.equals(btns[i])) {
-				if (btns[i].getBackground().equals(Color.RED)) {
+				if (btns[i].getBackground().equals(Color.red)) {
 					btns[i].setBackground(null);
 					count--;
 				} else {
 					if (count < 6) {
-						btns[i].setBackground(Color.RED);
+						btns[i].setBackground(Color.red);
 						count++;
+					} else {
+						JOptionPane.showMessageDialog(NumberChoose.this, "번호 6개를 선택했습니다");
 					}
 				}
 				// void라서 리턴값 없음
@@ -107,40 +102,72 @@ public class NumberChoose extends JDialog implements ActionListener {
 		// 리셋 : 비활성화된 버튼이 활성화됨
 		if (o.equals(reset)) {
 			for (int i = 0; i < btns.length; i++) {
-				btns[i].setEnabled(true);
+				if (btns[i].getBackground().equals(Color.red)) {
+					btns[i].setBackground(null);
+				}
 			}
 			count = 0;
-
 			// 자동 : 클릭시 랜덤 번호 최대 6개 선택(비활성화)
 			// 중복번호가 나타나지 않게 설정하기
 		} else if (o.equals(auto)) {
+			// 번호 6개 선택되면, 선택불가 안내
+			if (count == 6) {
+				JOptionPane.showMessageDialog(NumberChoose.this, "번호 6개를 선택했습니다");
+				return;
+			}
 			Random r = new Random();
-			int n;
 			for (; count < 6; count++) {
-				n = r.nextInt(45);
-				// 미완성) 6개 선택되었을 때 클릭하면, 선택된 번호가 있음을 안내
+				int n = r.nextInt(45);
 				// 버튼이 비활성화이면 카운트를 감소해라
 				// 활성화 true, 비활성화 false를 반환 - 버튼을 체크하면 비활성화 상태
 				// 카운트 줄이기
-				if (btns[n].isEnabled() == false) {
+				if (btns[n].getBackground().equals(Color.red)) {
+					// 기본이 true임.현재 활성화(true)이니깐 랜덤 선택 걸리면 비활성화(flase)로 돌리기
+					// set을 해야 빨강값을 보낸다
 					count--;
 				} else {
-					// 현재 활성화(true)이니깐 랜덤 선택 걸리면 비활성화(flase)로 돌리기
-					btns[n].setEnabled(false);
-
+					btns[n].setBackground(Color.red);
 				}
 			}
 			// 확인
+			// 확인 버튼 누르면
 		} else if (o.equals(check)) {
-
+			if (count != 6) {
+				JOptionPane.showMessageDialog(NumberChoose.this, "번호 6개를 선택해주세요");
+				return; // void에 return이 있으면 해당 함수를 빠져 나온다. break와 비슷한 기능
+			}
+			// buy가 true로 변경
+			buy = true;
+			// 번호 선택 해당 창 닫기
+			dispose();
 		}
 	}
-	// 나중에 '확인'클릭시 선택된 6개 번호가 로또데이터로 넘어가는 발판
-	/*
-	 * public static LottoData showDialog(){ NumberChoose nc=new NumberChoose(); nc.setVisible(true); return lottoData; }
-	 */
 
-	public static void main(String[] args) {
-		new TestFrame().setVisible(true);
+	// '확인'클릭시 선택된 6개 번호가 로또데이터로 넘어가는 발판
+	public static LottoData showDialog() {
+		NumberChoose nc = new NumberChoose();
+		nc.setVisible(true);
+		LottoData lottoData = nc.getLottoData();
+		return lottoData;
+	}
+
+	private LottoData getLottoData() {
+		// 창이 꺼질때 비활성화된 숫자를 전달
+		int[] nums = new int[6];
+		// 비활성화 숫자를 nums에 넣어라
+		// nums 0~5을. true일때만
+		if (buy) { // buy는 boolean이라 따로 지정할 필요가 없다
+			// 모든 버튼을 for문 돈다
+			// isEnabled이 false이면 nums에 값을 넣어라
+			int j = 0;
+			for (int i = 0; i < btns.length; i++) {
+				// 버튼 배경색을 가져와서 레드와 비교해라
+				if (btns[i].getBackground().equals(Color.red)) {
+					nums[j] = i + 1;
+					j++;
+				}
+			}
+		}
+		return new LottoData(nums, buy);
 	}
 }
