@@ -67,7 +67,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 
 		add(pnl);
 		setSize(421, 280);
-		// 모달 대화상자 만듬. 사용자가 대화상자를 닫기 전까지 다른 창과 상호작용 불가
+		// setModal 사용자가 대화상자를 닫기 전까지 다른 창과 상호작용 불가
 		setModal(true);
 	}
 
