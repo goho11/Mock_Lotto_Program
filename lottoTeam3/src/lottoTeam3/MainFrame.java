@@ -142,9 +142,10 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) { // 액션 리스너 구현 메서드
 		Object o = e.getSource(); // 액션 이벤트에서 클릭된 객체 가져오기
 		for (int i = 0; i < btnAmend.length; i++) { // 수정 버튼
-			if (o.equals(btnAmend[i])) { // 클릭된 버튼이 i번째 수정 버튼일 때
-				LottoData input = NumberChoose.showDialog(); // 숫자 선택 다이알로그에서 로또 정보 받아오기
-				if (!input.isBuy()) // 로또 정보가 취소 일 때
+			if (o.equals(btnAmend[i])) {
+//				LottoData input = new LottoData(randomLotto(), new Random().nextBoolean());
+				LottoData input = NumberChoose.showDialog(this);
+				if (!input.isBuy())
 					return;
 				boolean newBuy = lottoDatas[i] == null; // 로또를 수정인지 추가인지 확인하기 위한 불린값
 				lottoDatas[i] = input; // 받은 로또 정보 배열에 넣어주기

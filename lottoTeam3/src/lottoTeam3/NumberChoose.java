@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,7 +31,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 	private JButton auto;
 	private boolean buy = false;
 
-	public NumberChoose() {
+	public NumberChoose(JFrame frame) {
 		setTitle("로또 번호 선택");
 		// 모달 대화상자 만듬. 사용자가 대화상자를 닫기 전까지 다른 창과 상호작용 불가
 		setModal(true);
@@ -39,7 +40,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 		JPanel pnl = new JPanel(new BorderLayout());
 		// 패널A : 1~45 숫자범위
 		JPanel pnlA = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		// 패너류 : 기능 안내 버튼
+		// 패널B : 기능 안내 버튼
 		JPanel pnlB = new JPanel();
 		btns = new JButton[45];
 		check = new JButton("확인");
@@ -70,6 +71,15 @@ public class NumberChoose extends JDialog implements ActionListener {
 
 		add(pnl);
 		setSize(421, 280);
+
+		// setModal 대화상자를 닫기 전까지 다른 상호작용 불가
+		setModal(true);
+
+		// JFrame 위치 지정하기
+		int x = frame.getX();
+		int y = frame.getY();
+		int width = frame.getWidth();
+		setLocation(x + width, y);
 	}
 
 	@Override
@@ -144,8 +154,8 @@ public class NumberChoose extends JDialog implements ActionListener {
 	}
 
 	// '확인'클릭시 선택된 6개 번호가 로또데이터로 넘어가는 발판
-	public static LottoData showDialog() {
-		NumberChoose nc = new NumberChoose();
+	public static LottoData showDialog(JFrame frame) {
+		NumberChoose nc = new NumberChoose(frame);
 		nc.setVisible(true);
 		LottoData lottoData = nc.getLottoData();
 		return lottoData;
