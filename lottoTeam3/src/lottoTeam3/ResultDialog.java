@@ -251,9 +251,10 @@ public class ResultDialog extends JDialog {
 	private int equalsNum(int[] lottoArr) {
 		int count = 0;
 		for (int i = 0; i < lottoArr.length; i++) {
+			// 배포용 
 //			if (resultTreeSet.contains(lottoArr[i])) {
 
-				// 테스트 세팅
+			// 테스트 세팅
 			if (testSet.contains(lottoArr[i])) {
 				count++;
 			}
