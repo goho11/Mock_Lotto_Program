@@ -56,7 +56,6 @@ public class ResultDialog extends JDialog {
 	private static int bonus;
 
 	private String[] resultString = new String[5];
-	private String[] autoString = new String[5];
 	private Set<Integer> resultTreeSet = RandomResult();
 	private LottoData[] lottoDatas;
 	private int[] lottoArr = new int[6];
@@ -198,11 +197,9 @@ public class ResultDialog extends JDialog {
 		for (int i = 0; i < lblCode.length; i++) {
 			if (lottoDatas[i] != null) {
 				char c = (char) ('A' + i);
-
-				// 로또 데이터의 mode 내용을 받아와서 autoString[]배열에 내용을 집어 넣는 작업
-				setAutoString(i);
 				
-				lblCode[i] = new JLabel(String.valueOf(c) + autoString[i]);
+				// 로또 데이터의 mode 내용을 받아와서 자동 반자동 수동 출력
+				lblCode[i] = new JLabel(String.valueOf(c) + " (" + lottoDatas[i].getMode().getKorean() + ")");
 				lblCode[i].setBounds(20, i * 60 - 3, 120, 60);
 				lblCode[i].setFont(fontHolder.getDeriveFont(Font.PLAIN, 20));
 				pnlCenter.add(lblCode[i]);
@@ -260,16 +257,6 @@ public class ResultDialog extends JDialog {
 			}
 		}
 		return pnlCenter;
-	}
-
-	private void setAutoString(int i) {
-		if (lottoDatas[i].getMode() == Mode.AUTO) {
-			autoString[i] = " (자동) ";
-		} else if (lottoDatas[i].getMode() == Mode.MANUAL) {
-			autoString[i] = " (수동) ";
-		} else if (lottoDatas[i].getMode() == Mode.SEMI) {
-			autoString[i] = " (반자동) ";
-		}
 	}
 
 	private void setColorCenterFont(JLabel lbl, Color color, int alignment, Font font) {
