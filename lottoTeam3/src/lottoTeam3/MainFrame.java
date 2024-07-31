@@ -151,7 +151,6 @@ public class MainFrame extends JFrame implements ActionListener {
 		Object o = e.getSource(); // 액션 이벤트에서 클릭된 객체 가져오기
 		for (int i = 0; i < btnAmend.length; i++) { // 수정 버튼
 			if (o.equals(btnAmend[i])) {
-//				LottoData input = new LottoData(randomLotto(), new Random().nextBoolean());
 				LottoData input = NumberChooseDialog.showDialog(lottoDatas[i], this);
 				if (!input.isBuy())
 					return;
@@ -161,22 +160,21 @@ public class MainFrame extends JFrame implements ActionListener {
 					}
 					buyCount++; // 구매 갯수 증가
 					setPriceLabel(); // 가격 라벨 변경
+					btnAmend[i].setText("수정"); // 수정 버튼 텍스트 변경
+					btnDelete[i].setEnabled(true); // 삭제 버튼 활성화
+					if (i + 1 < 5) {
+						btnAmend[i + 1].setEnabled(true); // 다음 수정 버튼 활성화
+					}
 				}
 				lottoDatas[i] = input; // 받은 로또 정보 배열에 넣어주기
 				changeLabels(i);
-				btnAmend[i].setText("수정"); // 수정 버튼 텍스트 변경
-				btnDelete[i].setEnabled(true); // 삭제 버튼 활성화
-				if (i + 1 < btnAmend.length) {
-					btnAmend[i + 1].setEnabled(true); // 다음 수정 버튼 활성화
-				}
 				return;
 			}
 		}
 		for (int i = 0; i < btnDelete.length; i++) { // 삭제 버튼
 			if (o.equals(btnDelete[i])) { // 클릭된 버튼이 i번째 삭제 버튼일 때
-				if (lottoDatas[i] == null) // 로또 정보가 없을 때
-					return;
 				buyCount--; // 구매 갯수 감소
+				setPriceLabel(); // 가격 라벨 변경
 				for (int j = i; j < buyCount; j++) {
 					lottoDatas[j] = lottoDatas[j + 1]; // i+1번째 로또 정보를 i번째 로또 정보로 이동
 					changeLabels(j);
@@ -186,8 +184,6 @@ public class MainFrame extends JFrame implements ActionListener {
 				if (buyCount == 0) {
 					btnResDisable(); // 결과 초기화 버튼 비활성화
 				}
-
-				setPriceLabel(); // 가격 라벨 변경
 
 				return;
 			}
