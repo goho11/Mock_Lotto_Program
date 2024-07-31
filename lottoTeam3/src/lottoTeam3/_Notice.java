@@ -29,5 +29,8 @@ public class _Notice {
 //	건의사항 3번 해결(enum클래스 mode추가)
 	
 	
+	// 7월 31일 아침 잔업 병합
+	
+	
 		
 }
