@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 public class NumberChooseDialog extends JDialog implements ActionListener {
 	// 지역변수>필드. 어디서든 사용가능(Ctrl + 1)
@@ -41,13 +42,13 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 		settingPanelA(pnlA);
 		pnl.add(pnlA);
 
+		inputLottoData(prevLottoData);
+
 		// 패널B : 기능 버튼 모음
 		JPanel pnlB = new JPanel();
 		settingPanelB(pnlB);
 		pnl.add(pnlB, "South");
 		add(pnl);
-
-		inputLottoData(prevLottoData);
 
 		settingDailog(frame);
 	}
@@ -91,8 +92,12 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 
 	// 패널B 셋팅
 	private void settingPanelB(JPanel pnlB) {
-		countText = new JLabel("선택 개수: " + count);
-		countText.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		countText = new JLabel("개수: " + count);
+		countText.setBorder(new LineBorder(new Color(122, 138, 153), 1));
+		countText.setFont(fontHolder.getDeriveFont(Font.PLAIN, 17));
+		countText.setPreferredSize(new Dimension(54, 26));
+		countText.setHorizontalAlignment(JLabel.CENTER);
+
 		pnlB.add(countText);
 		pnlB.setBackground(Color.WHITE);
 		btnCheck = createMyButton("확인", new Insets(0, 2, 0, 2), pnlB, 17);
@@ -114,7 +119,7 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 
 	// 선택한 번호 개수 출력
 	private void setCount() {
-		countText.setText("선택 개수: " + count);
+		countText.setText("개수: " + count);
 	}
 
 	@Override
@@ -168,6 +173,7 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 			}
 			count = 0;
 			mode = Mode.AUTO;
+			setCount();
 			return;
 		}
 
