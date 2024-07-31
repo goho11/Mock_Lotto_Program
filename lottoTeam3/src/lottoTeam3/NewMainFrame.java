@@ -1,3 +1,4 @@
+package lottoTeam3;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -11,12 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import lottoTeam3.LottoData;
-import lottoTeam3.MainFrame;
-import lottoTeam3.Mode;
-import lottoTeam3.NumberChooseDialog;
-import lottoTeam3.ResultDialog;
 
 public class NewMainFrame extends JFrame {
 	private LottoData[] lottoDatas;
