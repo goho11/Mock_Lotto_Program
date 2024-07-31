@@ -53,12 +53,11 @@ public class ResultDialog extends JDialog {
 	private FontHolder fontHolder = new FontHolder();
 	private JLabel[][] lblNums = new JLabel[5][6];
 	private JLabel[][] lblCircles = new JLabel[5][6];
-	private static int bonus;
+	private int bonus;
 
 	private String[] resultString = new String[5];
-	private Set<Integer> resultTreeSet = RandomResult();
+	private Set<Integer> resultTreeSet;
 	private LottoData[] lottoDatas;
-	private int[] lottoArr = new int[6];
 
 	// 테스트용 필드
 	private Set<Integer> testSet;
@@ -87,7 +86,7 @@ public class ResultDialog extends JDialog {
 		testSet.add(11);
 		testSet.add(22);
 		testSet.add(33);
-
+		RandomResult();
 		// 다이얼로그 세팅 (FlowLayout.CENTER)
 		resultDialogSetting();
 		setLocationRelativeTo(mainFrame);
@@ -121,6 +120,13 @@ public class ResultDialog extends JDialog {
 		setModal(true);
 
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+//		int count = 0;
+//			if (ld == null)
+//		for (LottoData ld : lottoDatas) {
+//				break;
+//			count++;
+//		}
+//		200+count*70;
 		setSize(550, 500);
 	}
 
@@ -134,10 +140,9 @@ public class ResultDialog extends JDialog {
 
 	private void showLottoResultNum() {
 		// 당첨 번호 아이콘 6개 + 1
-		JPanel showWinNumPnl = new JPanel();
+		JPanel showWinNumPnl = new JPanel(null);
 		showWinNumPnl.setPreferredSize(new Dimension(490, 70));
 		showWinNumPnl.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-		showWinNumPnl.setLayout(null);
 		showWinNumPnl.setBackground(Color.WHITE);
 		add(showWinNumPnl);
 
@@ -153,8 +158,7 @@ public class ResultDialog extends JDialog {
 			lblResultNum.setBounds(i * 60 + 10, 6 - 3, 60, 60);
 			showWinNumPnl.add(lblResultNum);
 
-			JLabel lblResultCircle = new JLabel();
-			lblResultCircle = numToColor(resultArray[i]);
+			JLabel lblResultCircle = numToColor(resultArray[i]);
 			lblResultCircle.setBounds(i * 60 + 10, 6, 60, 60);
 			showWinNumPnl.add(lblResultCircle);
 		}
@@ -168,24 +172,23 @@ public class ResultDialog extends JDialog {
 		lblResultNum.setBounds(7 * 60, 6 - 3, 60, 60);
 		showWinNumPnl.add(lblResultNum);
 
-		JLabel lblResultCircle = new JLabel();
-		lblResultCircle = numToColor(bonus);
+		JLabel lblResultCircle = numToColor(bonus);
 		lblResultCircle.setBounds(7 * 60, 6, 60, 60);
 		showWinNumPnl.add(lblResultCircle);
 	}
 
 	private void showWinMoney() {
-		JLabel winMoney = new JLabel();
+		JLabel winMoneyLabel = new JLabel();
 
 		// 당첨금
-		resultMoney = calculateMoney();
+		calculateMoney();
 
-		winMoney.setText("당첨금액: " + resultMoney + "원");
+		winMoneyLabel.setText("당첨금액: " + resultMoney + "원");
 
-		setColorCenterFont(winMoney, Color.BLACK, JLabel.CENTER, fontHolder.getDeriveFont(Font.PLAIN, 17));
-		winMoney.setPreferredSize(new Dimension(150, 30));
-		winMoney.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		add(winMoney);
+		setColorCenterFont(winMoneyLabel, Color.BLACK, JLabel.CENTER, fontHolder.getDeriveFont(Font.PLAIN, 17));
+		winMoneyLabel.setPreferredSize(new Dimension(150, 30));
+		winMoneyLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		add(winMoneyLabel);
 	}
 
 	private JPanel setResultPanel() {
@@ -194,10 +197,11 @@ public class ResultDialog extends JDialog {
 		pnlCenter.setBackground(Color.WHITE);
 
 		JLabel[] lblCode = new JLabel[5];
+
 		for (int i = 0; i < lblCode.length; i++) {
 			if (lottoDatas[i] != null) {
 				char c = (char) ('A' + i);
-				
+
 				// 로또 데이터의 mode 내용을 받아와서 자동 반자동 수동 출력
 				lblCode[i] = new JLabel(String.valueOf(c) + " (" + lottoDatas[i].getMode().getKorean() + ")");
 				lblCode[i].setBounds(20, i * 60 - 3, 120, 60);
@@ -207,46 +211,30 @@ public class ResultDialog extends JDialog {
 		}
 
 		// 번호 라벨
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 6; j++) {
-				if (lottoDatas[i] != null) {
-					// 로또 데이터에서 배열 추출
-					lottoArr = lottoDatas[i].getNums();
-
-					lblNums[i][j] = new JLabel("");
-					lblNums[i][j].setBounds(j * 60 + 110, i * 60 - 3, 60, 60);
-					setColorCenterFont(lblNums[i][j], Color.WHITE, JLabel.CENTER,
-							fontHolder.getDeriveFont(Font.PLAIN, 17));
-					lblNums[i][j].setText("" + lottoArr[j]);
-					pnlCenter.add(lblNums[i][j]);
-				}
-			}
-		}
-
 		// 아이콘 라벨
 		for (int i = 0; i < 5; i++) {
+			if (lottoDatas[i] == null)
+				break;
 			for (int j = 0; j < 6; j++) {
-				if (lottoDatas[i] != null) {
-					// 로또 데이터에서 배열 추출
-					lottoArr = lottoDatas[i].getNums();
+				// 로또 데이터에서 배열 추출
+				int[] lottoArr = lottoDatas[i].getNums();
 
-					// 배포용
-					if (resultTreeSet.contains(lottoArr[j])) {
-
-						// 테스트용
-//					if (testSet.contains(lottoArr[j])) {
-
-						lblCircles[i][j] = numToColor(lottoArr[j]);
-						lblCircles[i][j].setBounds(j * 60 + 110, i * 60, 60, 60);
-						pnlCenter.add(lblCircles[i][j]);
-					} else {
-						lblCircles[i][j] = numToBlack(lottoArr[j]);
-						lblCircles[i][j].setBounds(j * 60 + 110, i * 60, 60, 60);
-						pnlCenter.add(lblCircles[i][j]);
-					}
+				lblNums[i][j] = new JLabel("" + lottoArr[j]);
+				lblNums[i][j].setBounds(j * 60 + 110, i * 60 - 3, 60, 60);
+				setColorCenterFont(lblNums[i][j], Color.WHITE, JLabel.CENTER, fontHolder.getDeriveFont(Font.PLAIN, 17));
+				pnlCenter.add(lblNums[i][j]);
+				if (resultTreeSet.contains(lottoArr[j])) {
+					// 테스트용
+//				if (testSet.contains(lottoArr[j])) {
+					lblCircles[i][j] = numToColor(lottoArr[j]);
+				} else {
+					pnlCenter.add(lblCircles[i][j]);
 				}
+				lblCircles[i][j].setBounds(j * 60 + 110, i * 60, 60, 60);
+				pnlCenter.add(lblCircles[i][j]);
 			}
 		}
+		
 		JLabel[] lblResult = new JLabel[5];
 		for (int i = 0; i < lblCode.length; i++) {
 			if (lottoDatas[i] != null) {
@@ -280,48 +268,43 @@ public class ResultDialog extends JDialog {
 		return count;
 	}
 
-	private int calculateMoney() {
-		int money = 0;
+	private void calculateMoney() {
 		for (int i = 0; i < 5; i++) {
 			if (lottoDatas[i] != null) {
-
-				lottoArr = lottoDatas[i].getNums();
+				int[] lottoArr = lottoDatas[i].getNums();
 				int count = equalsNum(lottoArr);
 
 				// 1등, 6개 번호 일치
 				if (count == 6) {
-					money += 100_000_000;
+					resultMoney += 100_000_000;
 					resultString[i] = "1등";
 				} else if (count == 5) {
 					// 3등, 5개 번호 일치
-					money += 3_000_000;
+					resultMoney += 3_000_000;
 					resultString[i] = "3등";
 
 					// 2등, 5개 번호 일치 + 보너스 볼과 번호 일치
 					for (int j = 0; j < lottoArr.length; j++) {
 						if (lottoArr[j] == bonus) {
-							money += 17_000_000;
+							resultMoney += 17_000_000;
 							resultString[i] = "2등";
 						}
 					}
 					// 4등, 4개 번호 일치
 				} else if (count == 4) {
-					money += 50_000;
+					resultMoney += 50_000;
 					resultString[i] = "4등";
 					// 5등, 3개 번호 일치
 				} else if (count == 3) {
-					money += 5_000;
+					resultMoney += 5_000;
 					resultString[i] = "5등";
 				}
-			} else if (lottoDatas[i] == null) {
-
 			}
 		}
-		return money;
 	}
 
 	// yellow blue red gray green 순서
-	public static JLabel numToColor(int n) {
+	public JLabel numToColor(int n) {
 		JLabel lbl = new JLabel();
 		if (n <= 10) {
 			lbl.setIcon(LottoCircle.YELLOW.getImageIcon());
@@ -337,24 +320,23 @@ public class ResultDialog extends JDialog {
 		return lbl;
 	}
 
-	public static JLabel numToBlack(int n) {
+	public JLabel numToBlack(int n) {
 		JLabel lbl = new JLabel();
 		lbl.setIcon(LottoCircle.BLACK.getImageIcon());
 		return lbl;
 	}
 
-	public static Set<Integer> RandomResult() {
+	public void RandomResult() {
 		Random random = new Random();
-		Set<Integer> set = new TreeSet<>();
-		while (set.size() < 6) {
-			set.add(random.nextInt(45) + 1);
+		resultTreeSet = new TreeSet<>();
+		while (resultTreeSet.size() < 6) {
+			resultTreeSet.add(random.nextInt(45) + 1);
 		}
 		do {
 			bonus = random.nextInt(45) + 1;
-		} while (set.contains(bonus));
+		} while (resultTreeSet.contains(bonus));
 //		System.out.println(set + " + " + bonus);
 
-		return set;
 	}
 
 	// lottoDatas를 받아서 결과 다이얼로그를 보여주는 메소드

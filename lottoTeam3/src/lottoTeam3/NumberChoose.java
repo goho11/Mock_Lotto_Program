@@ -97,11 +97,6 @@ public class NumberChoose extends JDialog implements ActionListener {
 		add(pnl);
 		setSize(421, 280);
 
-		// setModal 대화상자를 닫기 전까지 다른 상호작용 불가
-		setModal(true);
-		// 다이얼로그 창을 닫기
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
 		// JFrame 위치 지정 - frame은 메인창 위치를 의미한다
 		int x = frame.getX();
 		int y = frame.getY();
@@ -153,7 +148,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 		if (o.equals(reset)) {
 			for (int i = 0; i < btns.length; i++) {
 				if (btns[i].getBackground().equals(Color.GRAY)) {
-					btns[i].setBackground(null);
+					btns[i].setBackground(Color.WHITE);
 				}
 			}
 			count = 0;
@@ -176,7 +171,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 				}
 			}
 			// 자동으로 바로 들어감
-			buy = true;
+			buy = true; // 샀을때 버튼을 바꾸게 하기. true일때 로또를 구매함
 			dispose();
 
 			// 확인 - 선택된 숫자가 6개 이면 빠져나옴
@@ -201,6 +196,7 @@ public class NumberChoose extends JDialog implements ActionListener {
 
 	// 창을 끄면 선택된 숫자가 전달됨
 	// buy는 boolean. 따로 지정할 필요가 없다
+	// 회색 버튼이면 nums[]에 값을 넣고 리턴해라
 	private LottoData getLottoData() {
 		int[] nums = new int[6];
 		if (buy) {
