@@ -13,7 +13,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,6 +24,8 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JLabel[][] lblCircles = new JLabel[5][6]; // 로또 원 아이콘 라벨
 	private JButton[] btnAmend = new JButton[5]; // 수정 버튼
 	private JButton[] btnDelete = new JButton[5]; // 삭제 버튼
+	private JButton[] btnCopy = new JButton[5];
+	private JButton[] btnPaste = new JButton[5];
 	private FontHolder fontHolder = new FontHolder(); // 폰트 홀더
 	private JLabel lblPrice; // 가격 라벨
 	private int buyCount; // 구매 갯수
@@ -34,8 +35,10 @@ public class MainFrame extends JFrame implements ActionListener {
 	private LottoData[] lottoDatas = new LottoData[5]; // 로또 정보
 	private JButton btnAuto;
 	private JLabel[] lblModes;
+	private LottoData copyData;
 
 	public MainFrame() {
+		setTitle("로또 구매");
 		JPanel pnlNorth = new JPanel(); // 플로우 레이아웃으로
 		initNorth(pnlNorth); // 상단 패널 전체 생성
 		JPanel pnlCenter = new JPanel(null); // 앱솔루트 레이아웃으로
@@ -57,6 +60,7 @@ public class MainFrame extends JFrame implements ActionListener {
 				frameClose(); // 종료 확인 다이알로그를 처리하는 메서드
 			}
 		});
+		setLocation((1920 - getWidth()) / 2, (1080 - getHeight()) / 2);
 	}
 
 	private void initSouth(JPanel pnl) {
@@ -77,7 +81,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	}
 
 	private void initCenter(JPanel pnl) {
-		pnl.setPreferredSize(new Dimension(600, 300)); // 중앙 패널 크기 설정
+		pnl.setPreferredSize(new Dimension(740, 300)); // 중앙 패널 크기 설정
 		pnl.setBackground(Color.WHITE); // 배경 흰색으로 설정
 
 		lblModes = new JLabel[5];
@@ -113,15 +117,27 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 
 		for (int i = 0; i < btnAmend.length; i++) {
-			btnAmend[i] = createMyButton("추가", new Rectangle(475, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 수정 버튼 생성 및 설정
+			btnAmend[i] = createMyButton("추가", new Rectangle(470, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 수정 버튼 생성 및 설정
 			if (i != 0)
 				btnAmend[i].setEnabled(false); // 첫번째 추가 버튼을 제외하고 모두 비활성화
 		}
 
 		for (int i = 0; i < btnDelete.length; i++) {
-			btnDelete[i] = createMyButton("삭제", new Rectangle(535, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 삭제 버튼 생성 및
+			btnDelete[i] = createMyButton("삭제", new Rectangle(530, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 삭제 버튼 생성 및
 																								// 설정
 			btnDelete[i].setEnabled(false); // 모든 삭제 버튼 비활성화
+		}
+
+		for (int i = 0; i < btnCopy.length; i++) {
+			btnCopy[i] = createMyButton("복사", new Rectangle(590, i * 60 + 13, 50, 30), pnl); // 메서드를 사용하여 삭제 버튼 생성 및
+																								// 설정
+			btnCopy[i].setEnabled(false); // 모든 삭제 버튼 비활성화
+		}
+
+		for (int i = 0; i < btnPaste.length; i++) {
+			btnPaste[i] = createMyButton("붙여넣기", new Rectangle(650, i * 60 + 13, 80, 30), pnl); // 메서드를 사용하여 삭제 버튼 생성 및
+																								// 설정
+			btnPaste[i].setEnabled(false); // 모든 삭제 버튼 비활성화
 		}
 	}
 
@@ -139,11 +155,8 @@ public class MainFrame extends JFrame implements ActionListener {
 	}
 
 	private void initNorth(JPanel pnl) {
-		pnl.setPreferredSize(new Dimension(0, 90)); // 상단 패널 세로 크기 90으로 설정
+		pnl.setPreferredSize(new Dimension(0, 30)); // 상단 패널 세로 크기 90으로 설정
 		pnl.setBackground(Color.WHITE); // 패널 배경 흰색으로 설정
-
-		JLabel lblLotto = new JLabel(new ImageIcon(MainFrame.class.getResource("/resource/lotto.png"))); // 로또 아이콘 라벨 생성
-		pnl.add(lblLotto); // 라벨 추가
 	}
 
 	@Override
@@ -155,16 +168,7 @@ public class MainFrame extends JFrame implements ActionListener {
 				if (!input.isBuy())
 					return;
 				if (lottoDatas[i] == null) { // 로또 추가라면
-					if (buyCount == 0) { // 로또 처음 살 때
-						btnResEnable(); // 결과 리셋 버튼 활성화
-					}
-					buyCount++; // 구매 갯수 증가
-					setPriceLabel(); // 가격 라벨 변경
-					btnAmend[i].setText("수정"); // 수정 버튼 텍스트 변경
-					btnDelete[i].setEnabled(true); // 삭제 버튼 활성화
-					if (i + 1 < 5) {
-						btnAmend[i + 1].setEnabled(true); // 다음 수정 버튼 활성화
-					}
+					buyLottoSetting(i);
 				}
 				lottoDatas[i] = input; // 받은 로또 정보 배열에 넣어주기
 				changeLabels(i);
@@ -188,6 +192,27 @@ public class MainFrame extends JFrame implements ActionListener {
 				return;
 			}
 		}
+		for (int i = 0; i < btnCopy.length; i++) {
+			if (o.equals(btnCopy[i])) {
+				if (copyData == null) {
+					for (int j = 0; j <= buyCount && j < btnPaste.length; j++) {
+						btnPaste[j].setEnabled(true);
+					}
+				}
+				copyData = lottoDatas[i];
+				return;
+			}
+		}
+		for (int i = 0; i < btnPaste.length; i++) {
+			if (o.equals(btnPaste[i])) {
+				if (lottoDatas[i] == null) {
+					buyLottoSetting(i);
+				}
+				lottoDatas[i] = copyData;
+				changeLabels(i);
+				return;
+			}
+		}
 		if (o.equals(btnAuto)) { // 자동 버튼
 			btnResEnable(); // 결과 리셋 버튼 활성화
 			while (buyCount < 5) {
@@ -195,8 +220,11 @@ public class MainFrame extends JFrame implements ActionListener {
 				changeLabels(buyCount);
 				btnAmend[buyCount].setText("수정"); // 수정 버튼 텍스트 변경
 				btnDelete[buyCount].setEnabled(true); // 삭제 버튼 활성화
+				btnCopy[buyCount].setEnabled(true);
 				if (++buyCount < btnAmend.length) {
 					btnAmend[buyCount].setEnabled(true); // 다음 수정 버튼 활성화
+					if (copyData != null)
+						btnPaste[buyCount].setEnabled(true);
 				}
 			}
 			setPriceLabel(); // 가격 라벨 변경
@@ -207,6 +235,22 @@ public class MainFrame extends JFrame implements ActionListener {
 			reset();
 		} else if (o.equals(btnExit)) { // 종료 버튼
 			frameClose(); // 종료 다이얼로그 메서드 실행
+		}
+	}
+
+	private void buyLottoSetting(int i) {
+		if (buyCount == 0) { // 로또 처음 살 때
+			btnResEnable(); // 결과 리셋 버튼 활성화
+		}
+		buyCount++; // 구매 갯수 증가
+		setPriceLabel(); // 가격 라벨 변경
+		btnAmend[i].setText("수정"); // 수정 버튼 텍스트 변경
+		btnDelete[i].setEnabled(true); // 삭제 버튼 활성화
+		btnCopy[i].setEnabled(true);
+		if (i + 1 < 5) {
+			btnAmend[i + 1].setEnabled(true); // 다음 수정 버튼 활성화
+			if (copyData != null)
+				btnPaste[i + 1].setEnabled(true);
 		}
 	}
 
@@ -266,9 +310,13 @@ public class MainFrame extends JFrame implements ActionListener {
 		lottoDatas[line] = null; // 로또 정보 없애기
 		btnAmend[line].setText("추가"); // 로또 버튼 수정으로 변경
 		btnDelete[line].setEnabled(false); // 삭제 버튼 비활성화
+		btnCopy[line].setEnabled(false);
 		changeLabels(line);
-		if (line + 1 < btnAmend.length)
+		if (line + 1 < btnAmend.length) {
 			btnAmend[line + 1].setEnabled(false); // 다음 수정 버튼 비활성화
+			if (copyData != null)
+				btnPaste[line + 1].setEnabled(false);
+		}
 	}
 
 	private void setPriceLabel() {
