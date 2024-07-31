@@ -56,7 +56,7 @@ public class ResultDialog extends JDialog {
 	private static int bonus;
 
 	private String[] resultString = new String[5];
-	private Set<Integer> resultTreeSet = RandomResult();
+	private Set<Integer> resultTreeSet = RandomResult(); // 중복안되게
 	private LottoData[] lottoDatas;
 	private int[] lottoArr = new int[6];
 

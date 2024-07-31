@@ -152,7 +152,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < btnAmend.length; i++) { // 수정 버튼
 			if (o.equals(btnAmend[i])) {
 //				LottoData input = new LottoData(randomLotto(), new Random().nextBoolean());
-				LottoData input = NumberChoose.showDialog(lottoDatas[i], this);
+				LottoData input = NumberChooseDialog.showDialog(lottoDatas[i], this);
 				if (!input.isBuy())
 					return;
 				if (lottoDatas[i] == null) { // 로또 추가라면
