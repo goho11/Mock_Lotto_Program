@@ -174,6 +174,11 @@ public class ResultDialog extends JDialog {
 				} else {
 					lblCircles[i][j] = numToBlack(lottoArr[j]);
 				}
+				if (resultString[i].equals("2등")) {
+					if (lottoArr[j] == bonus) {
+						lblCircles[i][j] = numToColor(lottoArr[j]);
+					}
+				}
 				lblCircles[i][j].setBounds(j * 60 + 110, i * 60, 60, 60);
 				resultPanel.add(lblCircles[i][j]);
 			}
@@ -285,9 +290,9 @@ public class ResultDialog extends JDialog {
 		} while (resultTreeSet.contains(bonus));
 	}
 
-	// 테스트용 당첨 결과를 정해주는 메서드
+	// 테스트용 당첨 결과를 임의로 정해주는 메서드
 	private void ManualResult() {
-		resultTreeSet = new TreeSet<>(Arrays.asList(1, 2, 3, 4, 5, 6));
+		resultTreeSet = new TreeSet<>(Arrays.asList(1, 11, 21, 31, 41, 45));
 		bonus = 7;
 	}
 }
