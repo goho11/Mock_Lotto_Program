@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -90,9 +91,10 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 
 	// 패널B 셋팅
 	private void settingPanelB(JPanel pnlB) {
-		pnlB.setBackground(Color.WHITE);
-		countText = new JLabel("선택한 개수: " + count);
+		countText = new JLabel("선택 개수: " + count);
+		countText.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		pnlB.add(countText);
+		pnlB.setBackground(Color.WHITE);
 		btnCheck = createMyButton("확인", new Insets(0, 2, 0, 2), pnlB, 17);
 		btnReset = createMyButton("초기화", new Insets(0, 2, 0, 2), pnlB, 17);
 		btnAuto = createMyButton("자동", new Insets(0, 2, 0, 2), pnlB, 17);
