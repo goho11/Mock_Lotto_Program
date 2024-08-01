@@ -14,8 +14,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 public class NumberChooseDialog extends JDialog implements ActionListener {
 	// 지역변수>필드. 어디서든 사용가능(Ctrl + 1)
@@ -40,13 +40,13 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 		settingPanelA(pnlA);
 		pnl.add(pnlA);
 
+		inputLottoData(prevLottoData);
+
 		// 패널B : 기능 버튼 모음
 		JPanel pnlB = new JPanel();
 		settingPanelB(pnlB);
 		pnl.add(pnlB, "South");
 		add(pnl);
-
-		inputLottoData(prevLottoData);
 
 		settingDailog(frame);
 	}
@@ -90,12 +90,24 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 
 	// 패널B 셋팅
 	private void settingPanelB(JPanel pnlB) {
-		pnlB.setBackground(Color.WHITE);
-		countText = new JLabel("선택한 개수: " + count);
+		countText = new JLabel("개수: " + count);
+		countText.setBorder(new LineBorder(new Color(122, 138, 153), 1));
+		countText.setFont(fontHolder.getDeriveFont(Font.PLAIN, 17));
+		countText.setPreferredSize(new Dimension(54, 26));
+		countText.setHorizontalAlignment(JLabel.CENTER);
+
 		pnlB.add(countText);
+		pnlB.setBackground(Color.WHITE);
 		btnCheck = createMyButton("확인", new Insets(0, 2, 0, 2), pnlB, 17);
 		btnReset = createMyButton("초기화", new Insets(0, 2, 0, 2), pnlB, 17);
 		btnAuto = createMyButton("자동", new Insets(0, 2, 0, 2), pnlB, 17);
+		if (count == 6) {
+			btnAuto.setEnabled(false);
+			numberEnabled(false);
+		} else {
+			btnCheck.setEnabled(false);
+			btnReset.setEnabled(false);
+		}
 	}
 
 	// 버튼 설정 셋팅
@@ -112,7 +124,7 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 
 	// 선택한 번호 개수 출력
 	private void setCount() {
-		countText.setText("선택 개수: " + count);
+		countText.setText("개수: " + count);
 	}
 
 	@Override
@@ -126,19 +138,19 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 		for (int i = 0; i < btns.length; i++) {
 			if (o.equals(btns[i])) { // 클릭한 버튼일때
 				if (btns[i].getBackground().equals(Color.WHITE)) {
-					if (count < 6) { // 자동
-						btns[i].setBackground(Color.GRAY);
-						count++;
-						// 반자동 : 하나라도 선택된 상태
-						if (count == 1) {
-							mode = Mode.SEMI;
-							// 수동 : 모두 선택된 상태
-						} else if (count == 6) {
-							mode = Mode.MANUAL;
-						}
-					} else {
-						JOptionPane.showMessageDialog(NumberChooseDialog.this, "번호 6개를 선택했습니다");
+					// 자동
+					btns[i].setBackground(Color.GRAY);
+					count++;
+					// 반자동 : 하나라도 선택된 상태
+					if (count == 1) {
+						mode = Mode.SEMI;
+						btnReset.setEnabled(true);
+						// 수동 : 모두 선택된 상태
+					} else if (count == 6) {
+						mode = Mode.MANUAL;
+						settingBtnWhenSellectAll(true);
 					}
+
 					// 번호 선택 취소
 				} else {
 					btns[i].setBackground(Color.WHITE);
@@ -146,9 +158,11 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 					// 선택을 직접 안했으니 자동
 					if (count == 0) {
 						mode = Mode.AUTO;
+						btnReset.setEnabled(false);
 						// 5개가 선택되었고 1개가 남아있어 반자동
 					} else if (count == 5) {
 						mode = Mode.SEMI;
+						settingBtnWhenSellectAll(false);
 					}
 				}
 				setCount();
@@ -164,18 +178,18 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 					btns[i].setBackground(Color.WHITE);
 				}
 			}
+			if (count == 6) {
+				settingBtnWhenSellectAll(false);
+			}
+			btnReset.setEnabled(false);
 			count = 0;
 			mode = Mode.AUTO;
+			setCount();
 			return;
 		}
 
 		// 자동 모드 - 랜덤 번호 6개 선택됨
-		if (o.equals(btnAuto)) {
-			if (count == 6) {
-				JOptionPane.showMessageDialog(NumberChooseDialog.this, "번호 6개를 선택했습니다");
-				return;
-			}
-
+		if (o.equals(btnAuto)) {			
 			for (Random r = new Random(); count < 6;) {
 				int n = r.nextInt(45);
 				if (btns[n].getBackground().equals(Color.WHITE)) {
@@ -191,14 +205,25 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 
 		// 확인 - 선택된 숫자가 6개 이면 빠져나옴
 		if (o.equals(btnCheck)) {
-			if (count != 6) {
-				JOptionPane.showMessageDialog(NumberChooseDialog.this, "번호 6개를 선택해주세요");
-				return;
-			}
 			// 선택창 닫기 위해 만든 객체
 			buy = true;
 			dispose();
 			return;
+		}
+	}
+
+	private void settingBtnWhenSellectAll(boolean b) {
+		numberEnabled(!b);
+		btnCheck.setEnabled(b);
+		btnAuto.setEnabled(!b);
+	}
+
+	// 번호 6개 선택시 다른 번호 비활성화
+	private void numberEnabled(boolean b) {
+		for (int i = 0; i < btns.length; i++) {
+			if (btns[i].getBackground().equals(Color.WHITE)) {
+				btns[i].setEnabled(b);
+			}
 		}
 	}
 

@@ -162,6 +162,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) { // 액션 리스너 구현 메서드
 		Object o = e.getSource(); // 액션 이벤트에서 클릭된 객체 가져오기
+
 		for (int i = 0; i < btnAmend.length; i++) { // 수정 버튼
 			if (o.equals(btnAmend[i])) {
 				LottoData input = NumberChooseDialog.showDialog(lottoDatas[i], this);
@@ -175,6 +176,7 @@ public class MainFrame extends JFrame implements ActionListener {
 				return;
 			}
 		}
+
 		for (int i = 0; i < btnDelete.length; i++) { // 삭제 버튼
 			if (o.equals(btnDelete[i])) { // 클릭된 버튼이 i번째 삭제 버튼일 때
 				buyCount--; // 구매 갯수 감소
@@ -188,7 +190,6 @@ public class MainFrame extends JFrame implements ActionListener {
 				if (buyCount == 0) {
 					btnResDisable(); // 결과 초기화 버튼 비활성화
 				}
-
 				return;
 			}
 		}
