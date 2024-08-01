@@ -57,6 +57,7 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 		int width = dialog.getWidth();
 		setLocation(x + width, y);
 		setSize(421, 280);
+		setResizable(false);
 
 		setModal(true); // 대화상자 닫기 전까지 상호작용 불가
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE); // 다이얼로그 창 닫기

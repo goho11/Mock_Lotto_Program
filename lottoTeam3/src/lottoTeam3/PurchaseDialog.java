@@ -52,7 +52,12 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		add(pnlNorth, "North"); // 상단 패널 추가
 		add(pnlSouth, "South"); // 하단 패널 추가
 
+		dialogSetting(frame);
+	}
+
+	private void dialogSetting(JFrame frame) {
 		pack(); // 화면 크기를 패널 크기에 맞춤
+		setResizable(false);
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setModal(true);
 		setLocationRelativeTo(frame);

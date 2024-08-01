@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Random;
@@ -22,11 +23,11 @@ public class ResultDialog extends JDialog {
 	private int resultMoney;
 	private int bonus;
 
-	private LottoData[] lottoDatas;
+	private LottoRecord lottoRecord;
 	private JFrame mainFrame;
 
-	public ResultDialog(LottoData[] lottoData, JFrame mainFrame) {
-		this.lottoDatas = lottoData;
+	public ResultDialog(LottoRecord lottoRecord, JFrame mainFrame) {
+		this.lottoRecord = lottoRecord;
 		this.mainFrame = mainFrame;
 
 		// 결과 dialog 설정
@@ -63,13 +64,14 @@ public class ResultDialog extends JDialog {
 
 		// 구매한 로또 개수만큼 창 크기 조절
 		int count = 0;
-		for (LottoData lottoData : lottoDatas) {
+		for (LottoData lottoData : lottoRecord.getLottoDatas(0)) {
 			if (lottoData == null) {
 				break;
 			}
 			count++;
 		}
 		setSize(550, 190 + count * 60);
+		setResizable(false);
 		setLocationRelativeTo(mainFrame);
 	}
 
@@ -93,6 +95,8 @@ public class ResultDialog extends JDialog {
 		// 테스트용
 //		ManualResult();
 		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
+		lottoRecord.SetLottery(Arrays.asList(resultArray), bonus);
+		writeCurLottoRecord();
 
 		for (int i = 0; i < resultArray.length; i++) {
 			JLabel lblResultNum = new JLabel("" + resultArray[i]);
@@ -144,9 +148,9 @@ public class ResultDialog extends JDialog {
 		// A (반자동) 출력
 		JLabel[] lblCode = new JLabel[5];
 		for (int i = 0; i < lblCode.length; i++) {
-			if (lottoDatas[i] != null) {
+			if (lottoRecord.getLottoDatas(0)[i] != null) {
 				char c = (char) ('A' + i);
-				lblCode[i] = new JLabel(String.valueOf(c) + " (" + lottoDatas[i].getMode().getKorean() + ")");
+				lblCode[i] = new JLabel(String.valueOf(c) + " (" + lottoRecord.getLottoDatas(0)[i].getMode().getKorean() + ")");
 				lblCode[i].setBounds(5, i * 60 - 3, 120, 60);
 				setColorCenterFont(lblCode[i], Color.BLACK, JLabel.CENTER, 20);
 				resultPanel.add(lblCode[i]);
@@ -154,11 +158,11 @@ public class ResultDialog extends JDialog {
 		}
 		// 번호 라벨,아이콘 라벨
 		for (int i = 0; i < 5; i++) {
-			if (lottoDatas[i] == null)
+			if (lottoRecord.getLottoDatas(0)[i] == null)
 				break;
 			for (int j = 0; j < 6; j++) {
 				// 로또 데이터에서 배열 추출
-				int[] lottoArr = lottoDatas[i].getNums();
+				int[] lottoArr = lottoRecord.getLottoDatas(0)[i].getNums();
 
 				JLabel[][] lblNums = new JLabel[5][6];
 				lblNums[i][j] = new JLabel("" + lottoArr[j]);
@@ -186,7 +190,7 @@ public class ResultDialog extends JDialog {
 		// 1등, 2등, 3등, 4등, 5등, 꽝(디폴트) cnffur
 		JLabel[] lblResult = new JLabel[5];
 		for (int i = 0; i < lblCode.length; i++) {
-			if (lottoDatas[i] != null) {
+			if (lottoRecord.getLottoDatas(0)[i] != null) {
 				lblResult[i] = new JLabel(resultString[i]);
 				lblResult[i].setBounds(460, i * 60 - 3, 60, 60);
 				setColorCenterFont(lblResult[i], Color.BLACK, JLabel.CENTER, 20);
@@ -216,8 +220,8 @@ public class ResultDialog extends JDialog {
 
 	private void calculateMoney() {
 		for (int i = 0; i < 5; i++) {
-			if (lottoDatas[i] != null) {
-				int[] lottoArr = lottoDatas[i].getNums();
+			if (lottoRecord.getLottoDatas(0)[i] != null) {
+				int[] lottoArr = lottoRecord.getLottoDatas(0)[i].getNums();
 				int count = equalsNum(lottoArr);
 
 				// 1등, 6개 번호 일치
@@ -273,8 +277,8 @@ public class ResultDialog extends JDialog {
 	}
 
 	// lottoDatas를 받아서 결과 다이얼로그를 보여주는 메소드
-	public static void showDialog(LottoData[] lottoData, JFrame mainFrame) {
-		ResultDialog resultDialog = new ResultDialog(lottoData, mainFrame);
+	public static void showDialog(LottoRecord lottoRecord, JFrame mainFrame) {
+		ResultDialog resultDialog = new ResultDialog(lottoRecord, mainFrame);
 		resultDialog.setVisible(true);
 	}
 
@@ -287,6 +291,13 @@ public class ResultDialog extends JDialog {
 		do {
 			bonus = random.nextInt(45) + 1;
 		} while (resultTreeSet.contains(bonus));
+	}
+
+	public void writeCurLottoRecord() {
+		File file = new File(".//lotto.txt");
+		boolean success = LottoRecordIO.writeLottoRecords(file, lottoRecord);
+		if (!success)
+			System.out.println("기록 실패");
 	}
 
 	// 테스트용 당첨 결과를 임의로 정해주는 메서드
