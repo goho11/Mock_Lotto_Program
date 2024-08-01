@@ -37,7 +37,6 @@ public class ResultDialog extends JDialog {
 	private JLabel roundNow;
 	private LottoData[] lottoDatas;
 
-
 	public ResultDialog(LottoRecord lottoRecord, JFrame mainFrame) {
 		this.lottoRecord = lottoRecord;
 		this.mainFrame = mainFrame;
@@ -88,22 +87,6 @@ public class ResultDialog extends JDialog {
 		setSize(550, 190 + count * 60);
 		setResizable(false);
 		setLocationRelativeTo(mainFrame);
-	}
-
-	private void update() {	resultDialogSetting();
-//		showRound(); 업데이트
-		roundText = String.valueOf(listIndex + 1) + "회 당첨 결과";
-		roundNow.setText(roundText);
-
-		remove(showWinNumPnl);
-		showLottoResultNum();
-		
-		remove(winMoneyLabel);
-		resultMoney = 0;
-		showWinMoney();
-		
-		remove(resultPanel);
-		showResultPaenl();
 	}
 
 	private void showRound() {
@@ -199,7 +182,8 @@ public class ResultDialog extends JDialog {
 		for (int i = 0; i < lblCode.length; i++) {
 			if (lottoRecord.getLottoDatas(0)[i] != null) {
 				char c = (char) ('A' + i);
-				lblCode[i] = new JLabel(String.valueOf(c) + " (" + lottoRecord.getLottoDatas(0)[i].getMode().getKorean() + ")");
+				lblCode[i] = new JLabel(
+						String.valueOf(c) + " (" + lottoRecord.getLottoDatas(0)[i].getMode().getKorean() + ")");
 				lblCode[i].setBounds(5, i * 60 - 3, 120, 60);
 				setColorCenterFont(lblCode[i], Color.BLACK, JLabel.CENTER, 20);
 				resultPanel.add(lblCode[i]);
@@ -325,7 +309,6 @@ public class ResultDialog extends JDialog {
 		return lbl;
 	}
 
-
 	// lottoDatas를 받아서 결과 다이얼로그를 보여주는 메소드
 	public static void showDialog(LottoRecord lottoRecord, JFrame mainFrame) {
 		ResultDialog resultDialog = new ResultDialog(lottoRecord, mainFrame);
@@ -348,6 +331,22 @@ public class ResultDialog extends JDialog {
 		boolean success = LottoRecordIO.writeLottoRecords(file, lottoRecord);
 		if (!success)
 			System.out.println("기록 실패");
+	}
+
+	private void update() {
+		resultDialogSetting();
+		roundText = String.valueOf(listIndex + 1) + "회 당첨 결과";
+		roundNow.setText(roundText);
+
+		remove(showWinNumPnl);
+		showLottoResultNum();
+
+		remove(winMoneyLabel);
+		resultMoney = 0;
+		showWinMoney();
+
+		remove(resultPanel);
+		showResultPaenl();
 	}
 
 	// 테스트용 당첨 결과를 임의로 정해주는 메서드
