@@ -14,4 +14,16 @@ public enum Mode {
 	public String getKorean() {
 		return korean;
 	}
+
+	public static Mode getMode(String s) {
+		switch (s) {
+		case "AUTO":
+			return AUTO;
+		case "SEMI":
+			return SEMI;
+		case "MANUAL":
+			return MANUAL;
+		}
+		return null;
+	}
 }
