@@ -92,11 +92,11 @@ public class NewMainFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		if (o.equals(buyBtn)) {
-			LottoData[] ld = PurchaseDialog.showDialog(NewMainFrame.this);
+			LottoData[] ld = PurchaseDialog.showDialog(lottoRecordList, this);
 			if (ld != null)
 				curLottoRecord.addBuyLotto(ld);
 		} else if (o.equals(resultBtn)) {
-			ResultDialog.showDialog(curLottoRecord, NewMainFrame.this);
+			ResultDialog.showDialog(curLottoRecord, this);
 			lottoRecordList.add(curLottoRecord);
 			curGameLbl.setText((lottoRecordList.size() + 1) + "회");
 			curLottoRecord = new LottoRecord(lottoRecordList.size() + 1);
@@ -155,5 +155,9 @@ public class NewMainFrame extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		new NewMainFrame().setVisible(true);
+	}
+
+	public LottoRecord getCurLottoRecord() {
+		return curLottoRecord;
 	}
 }
