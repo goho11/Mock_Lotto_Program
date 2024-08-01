@@ -1,8 +1,7 @@
 package lottoTeam3;
 
-import java.util.Arrays;
-
 public class LottoData {
+	private static LottoData copy;
 	private int[] nums = new int[6];
 	private Mode mode;
 
@@ -10,6 +9,10 @@ public class LottoData {
 		super();
 		this.nums = nums;
 		this.mode = mode;
+	}
+
+	public static LottoData getCopy() {
+		return copy;
 	}
 
 	public int[] getNums() {
