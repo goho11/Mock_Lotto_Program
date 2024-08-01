@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
@@ -22,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class PurchaseDialog extends JDialog implements ActionListener {
+	private List<LottoRecord> lottoRecordList;
 	private JLabel[][] lblNums = new JLabel[5][6]; // 로또 숫자 라벨
 	private JLabel[][] lblCircles = new JLabel[5][6]; // 로또 원 아이콘 라벨
 	private JButton[] btnAmend = new JButton[5]; // 수정 버튼
@@ -39,8 +41,8 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 	private LottoData copyData;
 	private boolean buy = false;
 
-	public PurchaseDialog(JFrame frame) {
-		setTitle("로또 구매");
+	public PurchaseDialog(List<LottoRecord> lottoRecordList, JFrame frame) {
+		this.lottoRecordList = lottoRecordList;
 		JPanel pnlNorth = new JPanel(); // 플로우 레이아웃으로
 		initNorth(pnlNorth); // 상단 패널 전체 생성
 		JPanel pnlCenter = new JPanel(null); // 앱솔루트 레이아웃으로
@@ -52,7 +54,13 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		add(pnlNorth, "North"); // 상단 패널 추가
 		add(pnlSouth, "South"); // 하단 패널 추가
 
+		dialogSetting(frame);
+	}
+
+	private void dialogSetting(JFrame frame) {
+		setTitle("로또 구매");
 		pack(); // 화면 크기를 패널 크기에 맞춤
+		setResizable(false);
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setModal(true);
 		setLocationRelativeTo(frame);
@@ -344,8 +352,8 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		}
 	}
 
-	public static LottoData[] showDialog(JFrame frame) {
-		PurchaseDialog pd = new PurchaseDialog(frame);
+	public static LottoData[] showDialog(List<LottoRecord> lottoRecordList, JFrame frame) {
+		PurchaseDialog pd = new PurchaseDialog(lottoRecordList, frame);
 		pd.setVisible(true);
 		if (pd.buy)
 			return pd.lottoDatas;

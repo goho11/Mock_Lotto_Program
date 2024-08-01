@@ -7,8 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 
 public class NewMainFrame extends JFrame implements ActionListener {
 	private List<LottoRecord> lottoRecordList;
-	private LottoRecord curLottoRecord = new LottoRecord();
+	private LottoRecord curLottoRecord;
 	private LottoData[] lottoDatas;
 	private LottoData[] lottoDataNull = new LottoData[5];
 	private JButton buyBtn;
@@ -28,19 +28,21 @@ public class NewMainFrame extends JFrame implements ActionListener {
 	private JButton endBtn;
 	private JButton btnPrev;
 	private JButton btnCur;
+	private JLabel curGameLbl;
 
 	public NewMainFrame() {
 		super("로또 프로그램");
 
 		lottoDatas = testLotto();
 
-		lottoRecordList = new ArrayList<>();
+		readLottoRecords();
+		curLottoRecord = new LottoRecord(lottoRecordList.size() + 1);
 		getContentPane().setBackground(Color.WHITE);
 
 		JLabel lblLotto = new JLabel(new ImageIcon(NewMainFrame.class.getResource("/resource/lotto.png")));
 		add(lblLotto, "North");
 
-		JLabel curGameLbl = new JLabel("1회차");
+		curGameLbl = new JLabel((lottoRecordList.size() + 1) + "회");
 		curGameLbl.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 25));
 		curGameLbl.setHorizontalAlignment(JLabel.CENTER);
 		add(curGameLbl, "West");
@@ -68,9 +70,9 @@ public class NewMainFrame extends JFrame implements ActionListener {
 				frameClose(); // 종료 확인 다이알로그를 처리하는 메서드
 			}
 		});
-
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		pack();
+		setResizable(false);
 		// 임시로 가운데에서 창 나오도록, setSize와 Pack(); 이후에 작성해야 한다.
 		setLocation((1920 - getWidth()) / 2, (1080 - getHeight()) / 2);
 	}
@@ -90,14 +92,14 @@ public class NewMainFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		if (o.equals(buyBtn)) {
-			LottoData[] ld = PurchaseDialog.showDialog(NewMainFrame.this);
+			LottoData[] ld = PurchaseDialog.showDialog(lottoRecordList, this);
 			if (ld != null)
 				curLottoRecord.addBuyLotto(ld);
-			System.out.println(curLottoRecord);
 		} else if (o.equals(resultBtn)) {
-			ResultDialog.showDialog(lottoDatas, NewMainFrame.this);
+			ResultDialog.showDialog(curLottoRecord, this);
 			lottoRecordList.add(curLottoRecord);
-			curLottoRecord = new LottoRecord();
+			curGameLbl.setText((lottoRecordList.size() + 1) + "회");
+			curLottoRecord = new LottoRecord(lottoRecordList.size() + 1);
 		} else if (o.equals(endBtn)) {
 			frameClose();
 		}
@@ -139,7 +141,23 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		return lottoDatas;
 	}
 
+	public void readLottoRecords() {
+		File file = new File(".//lotto.txt");
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		lottoRecordList = LottoRecordIO.readLottoRecord(file);
+	}
+
 	public static void main(String[] args) {
 		new NewMainFrame().setVisible(true);
+	}
+
+	public LottoRecord getCurLottoRecord() {
+		return curLottoRecord;
 	}
 }
