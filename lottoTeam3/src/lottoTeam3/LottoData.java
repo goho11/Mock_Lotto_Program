@@ -1,7 +1,5 @@
 package lottoTeam3;
 
-import java.util.Arrays;
-
 public class LottoData {
 	private int[] nums = new int[6];
 	private Mode mode;

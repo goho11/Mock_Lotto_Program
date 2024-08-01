@@ -74,7 +74,7 @@ public class ResultDialog extends JDialog {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		// resultDialog에서 사용할 변수 lottoDatas를 listIndex에 따라 변경
-		lottoDatas = lottoRecord.getBuyLotto().get(listIndex);
+		lottoDatas = lottoRecord.getLottoDatas(listIndex);
 
 		// 구매한 로또 개수만큼 창 크기 조절
 		int count = 0;
@@ -99,7 +99,7 @@ public class ResultDialog extends JDialog {
 		add(roundNow);
 
 		comboBox = new JComboBox<>();
-		for (int i = 0; i < lottoRecord.getBuyLotto().size(); i++) {
+		for (int i = 0; i < lottoRecord.getPuchaseNum(); i++) {
 			comboBox.addItem(String.valueOf(i + 1) + "회 당첨 결과");
 		}
 		comboBox.setPreferredSize(new Dimension(100, 30));
@@ -182,8 +182,7 @@ public class ResultDialog extends JDialog {
 		for (int i = 0; i < lblCode.length; i++) {
 			if (lottoRecord.getLottoDatas(0)[i] != null) {
 				char c = (char) ('A' + i);
-				lblCode[i] = new JLabel(
-						String.valueOf(c) + " (" + lottoRecord.getLottoDatas(0)[i].getMode().getKorean() + ")");
+				lblCode[i] = new JLabel(String.valueOf(c) + " (" + lottoRecord.getLottoDatas(0)[i].getMode().getKorean() + ")");
 				lblCode[i].setBounds(5, i * 60 - 3, 120, 60);
 				setColorCenterFont(lblCode[i], Color.BLACK, JLabel.CENTER, 20);
 				resultPanel.add(lblCode[i]);
