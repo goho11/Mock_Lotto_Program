@@ -18,6 +18,7 @@ public class LottoRecord {
 	public void SetLottery(List<Integer> lotteryNums, int lotteryBonus) {
 		this.lotteryNums = lotteryNums;
 		this.lotteryBonus = lotteryBonus;
+		int a = buyLotto.get(3)[2].getNums()[1];
 	}
 
 	public void addBuyLotto(LottoData[] lottoDatas) {
@@ -25,7 +26,12 @@ public class LottoRecord {
 	}
 
 	public static LottoRecord tryParse(String line) {
+		line.split("/");
 		return null;
+	}
+
+	public boolean hasBought() {
+		return !buyLotto.isEmpty();
 	}
 
 	@Override

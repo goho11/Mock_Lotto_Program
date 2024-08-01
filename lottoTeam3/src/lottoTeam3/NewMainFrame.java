@@ -2,11 +2,13 @@ package lottoTeam3;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -16,11 +18,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class NewMainFrame extends JFrame {
+public class NewMainFrame extends JFrame implements ActionListener {
 	private List<LottoRecord> lottoRecordList;
+	private LottoRecord curLottoRecord = new LottoRecord();
 	private LottoData[] lottoDatas;
 	private LottoData[] lottoDataNull = new LottoData[5];
-	private LottoRecord curLottoRecord = new LottoRecord();
+	private JButton buyBtn;
+	private JButton resultBtn;
+	private JButton endBtn;
+	private JButton btnPrev;
+	private JButton btnCur;
 
 	public NewMainFrame() {
 		super("로또 프로그램");
@@ -33,41 +40,25 @@ public class NewMainFrame extends JFrame {
 		JLabel lblLotto = new JLabel(new ImageIcon(NewMainFrame.class.getResource("/resource/lotto.png")));
 		add(lblLotto, "North");
 
+		JLabel curGameLbl = new JLabel("1회차");
+		curGameLbl.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 25));
+		curGameLbl.setHorizontalAlignment(JLabel.CENTER);
+		add(curGameLbl, "West");
+
 		JLabel countTicketsLbl = new JLabel("구매 장 수 X 장");
-		countTicketsLbl.setFont(new Font(countTicketsLbl.getFont().getName(), Font.PLAIN, 24));
+		countTicketsLbl.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 25));
 		countTicketsLbl.setHorizontalAlignment(JLabel.CENTER);
 		add(countTicketsLbl);
-		JButton buyBtn = new JButton("구매");
-		buyBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				LottoData[] ld = PurchaseDialog.showDialog(NewMainFrame.this);
-				if (ld != null)
-					curLottoRecord.addBuyLotto(ld);
-				System.out.println(curLottoRecord);
-			}
-		});
-		JButton resultBtn = new JButton("결과");
-		resultBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ResultDialog.showDialog(lottoDatas, NewMainFrame.this);
-			}
-		});
-		JButton endBtn = new JButton("종료");
-		endBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				frameClose();
-			}
-		});
 
 		JPanel southPnl = new JPanel();
 		southPnl.setBackground(Color.WHITE);
 
-		southPnl.add(buyBtn, "South");
-		southPnl.add(resultBtn, "South");
-		southPnl.add(endBtn, "South");
+		btnCur = createMyButton("현재 구매 확인", southPnl);
+		btnPrev = createMyButton("이전 회차 확인", southPnl);
+		buyBtn = createMyButton("구매", southPnl);
+		resultBtn = createMyButton("추첨", southPnl);
+		endBtn = createMyButton("종료", southPnl);
+
 		add(southPnl, "South");
 
 		// x를 눌렀을 때 종료 확인 다이알로그가 생성되게 윈도우리스너 추가
@@ -82,6 +73,34 @@ public class NewMainFrame extends JFrame {
 		pack();
 		// 임시로 가운데에서 창 나오도록, setSize와 Pack(); 이후에 작성해야 한다.
 		setLocation((1920 - getWidth()) / 2, (1080 - getHeight()) / 2);
+	}
+
+	private JButton createMyButton(String text, JPanel pnl) {
+		JButton btn = new JButton(text);
+		btn.setMargin(new Insets(0, 2, 0, 2));
+		btn.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
+		btn.setBackground(Color.WHITE);
+		btn.setFocusable(false);
+		btn.addActionListener(this);
+		pnl.add(btn);
+		return btn;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if (o.equals(buyBtn)) {
+			LottoData[] ld = PurchaseDialog.showDialog(NewMainFrame.this);
+			if (ld != null)
+				curLottoRecord.addBuyLotto(ld);
+			System.out.println(curLottoRecord);
+		} else if (o.equals(resultBtn)) {
+			ResultDialog.showDialog(lottoDatas, NewMainFrame.this);
+			lottoRecordList.add(curLottoRecord);
+			curLottoRecord = new LottoRecord();
+		} else if (o.equals(endBtn)) {
+			frameClose();
+		}
 	}
 
 	// 종료확인 다이얼로그 표시

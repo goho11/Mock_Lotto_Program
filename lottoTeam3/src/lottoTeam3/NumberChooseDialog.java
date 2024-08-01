@@ -26,7 +26,6 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 	private JButton btnCheck;
 	private JButton btnReset;
 	private JButton btnAuto;
-	private FontHolder fontHolder = new FontHolder();
 	private boolean buy = false;
 	private Mode mode = Mode.AUTO; // 기본은 자동모드
 
@@ -92,7 +91,7 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 	private void settingPanelB(JPanel pnlB) {
 		countText = new JLabel("개수: " + count);
 		countText.setBorder(new LineBorder(new Color(122, 138, 153), 1));
-		countText.setFont(fontHolder.getDeriveFont(Font.PLAIN, 17));
+		countText.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 17));
 		countText.setPreferredSize(new Dimension(54, 26));
 		countText.setHorizontalAlignment(JLabel.CENTER);
 
@@ -115,7 +114,7 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 		JButton btnMenu = new JButton(text);
 		btnMenu.setFocusable(false); // 가운데 선택시 상자 제거
 		btnMenu.setMargin(insets); // 여백
-		btnMenu.setFont(fontHolder.getDeriveFont(Font.PLAIN, fontSize)); // 폰트, 크기
+		btnMenu.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, fontSize)); // 폰트, 크기
 		btnMenu.addActionListener(this); // 버튼 액션
 		btnMenu.setBackground(Color.WHITE); // 색상
 		pnlB.add(btnMenu); // 패널B에 추가

@@ -22,7 +22,6 @@ public class ResultDialog extends JDialog {
 	private int resultMoney;
 	private int bonus;
 
-	private FontHolder fontHolder = new FontHolder();
 	private LottoData[] lottoDatas;
 	private JFrame mainFrame;
 
@@ -61,7 +60,6 @@ public class ResultDialog extends JDialog {
 
 		setModal(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(mainFrame);
 
 		// 구매한 로또 개수만큼 창 크기 조절
 		int count = 0;
@@ -72,6 +70,7 @@ public class ResultDialog extends JDialog {
 			count++;
 		}
 		setSize(550, 190 + count * 60);
+		setLocationRelativeTo(mainFrame);
 	}
 
 	private void showRound() {
@@ -202,7 +201,7 @@ public class ResultDialog extends JDialog {
 		lbl.setForeground(color);
 		lbl.setHorizontalAlignment(alignment);
 		lbl.setVerticalAlignment(alignment);
-		lbl.setFont(fontHolder.getDeriveFont(Font.PLAIN, fontSize));
+		lbl.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, fontSize));
 	}
 
 	private int equalsNum(int[] lottoArr) {

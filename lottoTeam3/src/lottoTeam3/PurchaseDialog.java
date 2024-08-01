@@ -9,11 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -28,12 +28,11 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 	private JButton[] btnDelete = new JButton[5]; // 삭제 버튼
 	private JButton[] btnCopy = new JButton[5];
 	private JButton[] btnPaste = new JButton[5];
-	private FontHolder fontHolder = new FontHolder(); // 폰트 홀더
 	private JLabel lblPrice; // 가격 라벨
 	private int buyCount; // 구매 갯수
 	private JButton btnConfirm; // 결과 버튼
 	private JButton btnReset; // 초기화 버튼
-	private JButton btnExit; // 종료 버튼
+	private JButton btnCancel; // 종료 버튼
 	private LottoData[] lottoDatas = new LottoData[5]; // 로또 정보
 	private JButton btnAuto;
 	private JLabel[] lblModes;
@@ -54,8 +53,9 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		add(pnlSouth, "South"); // 하단 패널 추가
 
 		pack(); // 화면 크기를 패널 크기에 맞춤
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE); // x를 눌러도 꺼지지 않게
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setModal(true);
+		setLocationRelativeTo(frame);
 
 		// x를 눌렀을 때 종료 확인 다이알로그가 생성되게 윈도우리스너 추가
 		addWindowListener(new WindowAdapter() { // 윈도우 어댑터를 사용하여 필요한 메서드만 구현
@@ -64,7 +64,6 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 				dialogClose(); // 종료 확인 다이알로그를 처리하는 메서드
 			}
 		});
-		setLocation((1920 - getWidth()) / 2, (1080 - getHeight()) / 2);
 	}
 
 	private void initSouth(JPanel pnl) {
@@ -74,13 +73,13 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		lblPrice = new JLabel("총 가격: " + (buyCount * 1000) + "원"); // 가격 패널 생성
 		lblPrice.setBounds(35, 25, 150, 30); // 가격 패널 크기 설정
 //		lblPrice.setBorder(BorderFactory.createLineBorder(Color.black)); // 라벨 크기 확인을 위한 테두리 테스트
-		lblPrice.setFont(fontHolder.getDeriveFont(Font.PLAIN, 20)); // 가격 라벨 폰트설정
+		lblPrice.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20)); // 가격 라벨 폰트설정
 		pnl.add(lblPrice); // 가격 라벨 추가
 
-		btnAuto = createMyButton("자동", new Rectangle(310, 25, 50, 30), pnl); // 메서드를 사용하여 자동 버튼 생성
-		btnConfirm = createMyButton("확인", new Rectangle(375, 25, 50, 30), pnl); // 메서드를 사용하여 결과 버튼 생성
-		btnReset = createMyButton("초기화", new Rectangle(440, 25, 70, 30), pnl); // 메서드를 사용하여 초기화 버튼 생성
-		btnExit = createMyButton("종료", new Rectangle(525, 25, 50, 30), pnl); // 메서드를 사용하여 종료 버튼 생성
+		btnAuto = createMyButton("자동", new Rectangle(470, 25, 50, 30), pnl); // 메서드를 사용하여 자동 버튼 생성
+		btnReset = createMyButton("초기화", new Rectangle(530, 25, 70, 30), pnl); // 메서드를 사용하여 초기화 버튼 생성
+		btnConfirm = createMyButton("구매", new Rectangle(620, 25, 50, 30), pnl); // 메서드를 사용하여 결과 버튼 생성
+		btnCancel = createMyButton("취소", new Rectangle(680, 25, 50, 30), pnl); // 메서드를 사용하여 종료 버튼 생성
 		btnResDisable(); // 초기화 결과 버튼 비활성화
 	}
 
@@ -93,7 +92,7 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 			char c = (char) ('A' + i); // A문자를 i씩 증가시켜서 A~E까지 char에 대입
 			lblModes[i] = new JLabel(String.valueOf(c)); // 문자 c로 라벨 생성
 			lblModes[i].setBounds(10, i * 60 - 3, 90, 60); // 라벨 바운드 설정
-			lblModes[i].setFont(fontHolder.getDeriveFont(Font.PLAIN, 20)); // 폰트 설정
+			lblModes[i].setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20)); // 폰트 설정
 			lblModes[i].setHorizontalAlignment(JLabel.CENTER);
 			pnl.add(lblModes[i]); // 라벨 추가
 		}
@@ -106,7 +105,7 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 //				lblNums[i][j].setBorder(BorderFactory.createLineBorder(Color.RED)); // 테두리 테스트
 				lblNums[i][j].setForeground(Color.WHITE); // 폰트 색상 흰색으로 설정
 				lblNums[i][j].setHorizontalAlignment(JLabel.CENTER); // 라벨 안의 글자 가운데 정렬
-				lblNums[i][j].setFont(fontHolder.getDeriveFont(Font.PLAIN, 20)); // 폰트 설정
+				lblNums[i][j].setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20)); // 폰트 설정
 				pnl.add(lblNums[i][j]); // 라벨 추가
 			}
 		}
@@ -152,15 +151,18 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		btn.setBounds(r); // 버튼 바운드 설정
 		btn.setMargin(new Insets(0, 0, 0, 0)); // 버튼 여백
 		btn.setFocusable(false); // 버튼 포커스 안되게 설정 (클릭할 때 네모 뜸)
-		btn.setFont(fontHolder.getDeriveFont(Font.PLAIN, 20)); // 버튼 폰트 설정
+		btn.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20)); // 버튼 폰트 설정
 		btn.addActionListener(this); // 버튼 액션 리스너 추가
 		pnl.add(btn); // 패널에 버튼 추가
 		return btn; // 버튼 반환
 	}
 
 	private void initNorth(JPanel pnl) {
-		pnl.setPreferredSize(new Dimension(0, 30)); // 상단 패널 세로 크기 90으로 설정
+		pnl.setPreferredSize(new Dimension(0, 90)); // 상단 패널 세로 크기 90으로 설정
 		pnl.setBackground(Color.WHITE); // 패널 배경 흰색으로 설정
+
+		JLabel lblLotto = new JLabel(new ImageIcon(PurchaseDialog.class.getResource("/resource/lotto.png"))); // 로또 아이콘 라벨 생성
+		pnl.add(lblLotto); // 라벨 추가
 	}
 
 	@Override
@@ -239,7 +241,7 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 			dispose();
 		} else if (o.equals(btnReset)) { // 초기화 버튼
 			reset();
-		} else if (o.equals(btnExit)) { // 종료 버튼
+		} else if (o.equals(btnCancel)) { // 종료 버튼
 			dialogClose();
 		}
 	}
