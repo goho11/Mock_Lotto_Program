@@ -16,7 +16,6 @@ public class LottoRecordIO {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(source));
-			br.readLine();
 			String line;
 			while ((line = br.readLine()) != null) {
 				try {
@@ -42,7 +41,7 @@ public class LottoRecordIO {
 		return list;
 	}
 
-	public boolean writeLottoRecords(File dest, LottoRecord lottoRecord) {
+	public static boolean writeLottoRecords(File dest, LottoRecord lottoRecord) {
 		boolean exists = dest.exists();
 		PrintWriter pw = null;
 		try {
@@ -50,7 +49,7 @@ public class LottoRecordIO {
 
 			pw.println(lottoRecord);
 		} catch (IOException e) {
-			throw new RuntimeException("출력 도중에 문제가 생겨서, 파일 기록을 추가할 수 없었습니다.");
+			System.out.println("출력 도중에 문제가 생겨서, 파일 기록을 추가할 수 없었습니다.");
 		} finally {
 			if (pw != null) {
 				pw.close();
