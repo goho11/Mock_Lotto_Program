@@ -30,6 +30,11 @@ public class LottoData {
 
 	@Override
 	public String toString() {
-		return "LottoData [nums=" + Arrays.toString(nums) + ", mode=" + mode + "]";
+		StringBuilder stringBuilder = new StringBuilder();
+		for (int i : nums) {
+			stringBuilder.append(i).append(' ');
+		}
+		stringBuilder.append(mode);
+		return stringBuilder.toString();
 	}
 }
