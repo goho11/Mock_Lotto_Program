@@ -50,6 +50,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		countTicketsLbl.setHorizontalAlignment(JLabel.CENTER);
 		add(countTicketsLbl);
 
+
 		JPanel southPnl = new JPanel();
 		southPnl.setBackground(Color.WHITE);
 

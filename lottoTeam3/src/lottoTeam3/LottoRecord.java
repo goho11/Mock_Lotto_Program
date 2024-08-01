@@ -9,6 +9,10 @@ public class LottoRecord {
 	private int lotteryBonus; // 당첨 보너스 번호
 	private List<LottoData[]> buyLotto; // 구매자가 선택한 번호
 
+	public List<LottoData[]> getBuyLotto() {
+		return buyLotto;
+	}
+
 	public LottoRecord() {
 		lotteryNums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6));
 		buyLotto = new ArrayList<>();
