@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -12,6 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,9 +25,17 @@ public class ResultDialog extends JDialog {
 	private String[] resultString = new String[5];
 	private int resultMoney;
 	private int bonus;
+	private String roundText;
+	private int listIndex;
 
 	private LottoRecord lottoRecord;
 	private JFrame mainFrame;
+	private JComboBox<String> comboBox;
+	private JPanel showWinNumPnl;
+	private JLabel winMoneyLabel;
+	private JPanel resultPanel;
+	private JLabel roundNow;
+	private LottoData[] lottoDatas;
 
 	public ResultDialog(LottoRecord lottoRecord, JFrame mainFrame) {
 		this.lottoRecord = lottoRecord;
@@ -62,6 +73,9 @@ public class ResultDialog extends JDialog {
 		setModal(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+		// resultDialog에서 사용할 변수 lottoDatas를 listIndex에 따라 변경
+		lottoDatas = lottoRecord.getLottoDatas(listIndex);
+
 		// 구매한 로또 개수만큼 창 크기 조절
 		int count = 0;
 		for (LottoData lottoData : lottoRecord.getLottoDatas(0)) {
@@ -76,15 +90,35 @@ public class ResultDialog extends JDialog {
 	}
 
 	private void showRound() {
-		JLabel roundNow = new JLabel("777회");
-		roundNow.setPreferredSize(new Dimension(100, 30));
+
+		roundText = String.valueOf(listIndex + 1) + "회 당첨 결과";
+		roundNow = new JLabel(roundText);
+		roundNow.setPreferredSize(new Dimension(150, 30));
 		setColorCenterFont(roundNow, Color.BLACK, JLabel.CENTER, 20);
+		roundNow.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		add(roundNow);
+
+		comboBox = new JComboBox<>();
+		for (int i = 0; i < lottoRecord.getPuchaseNum(); i++) {
+			comboBox.addItem(String.valueOf(i + 1) + "회 당첨 결과");
+		}
+		comboBox.setPreferredSize(new Dimension(100, 30));
+		add(comboBox);
+
+		comboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String s = comboBox.getSelectedItem().toString();
+				listIndex = Integer.parseInt(s.substring(0, s.indexOf("회"))) - 1;
+				System.out.println(listIndex);
+//				comboBox.getSelectedIndex();
+				update();
+			}
+		});
 	}
 
 	private void showLottoResultNum() {
-		// 당첨 번호 아이콘 6개 + 1 패널 생성
-		JPanel showWinNumPnl = new JPanel(null);
+		showWinNumPnl = new JPanel(null);
 		showWinNumPnl.setPreferredSize(new Dimension(490, 70));
 		showWinNumPnl.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		showWinNumPnl.setBackground(Color.WHITE);
@@ -124,7 +158,7 @@ public class ResultDialog extends JDialog {
 	}
 
 	private void showWinMoney() {
-		JLabel winMoneyLabel = new JLabel();
+		winMoneyLabel = new JLabel();
 
 		// 당첨금
 		calculateMoney();
@@ -140,8 +174,7 @@ public class ResultDialog extends JDialog {
 	}
 
 	private void showResultPaenl() {
-		// 결과창을 보여줄 패널 생성
-		JPanel resultPanel = new JPanel(null);
+		resultPanel = new JPanel(null);
 		resultPanel.setPreferredSize(new Dimension(540, 300));
 		resultPanel.setBackground(Color.WHITE);
 
@@ -187,7 +220,7 @@ public class ResultDialog extends JDialog {
 			}
 		}
 
-		// 1등, 2등, 3등, 4등, 5등, 꽝(디폴트) cnffur
+		// 1등, 2등, 3등, 4등, 5등, 꽝(디폴트)
 		JLabel[] lblResult = new JLabel[5];
 		for (int i = 0; i < lblCode.length; i++) {
 			if (lottoRecord.getLottoDatas(0)[i] != null) {
@@ -298,6 +331,22 @@ public class ResultDialog extends JDialog {
 		boolean success = LottoRecordIO.writeLottoRecords(file, lottoRecord);
 		if (!success)
 			System.out.println("기록 실패");
+	}
+
+	private void update() {
+		resultDialogSetting();
+		roundText = String.valueOf(listIndex + 1) + "회 당첨 결과";
+		roundNow.setText(roundText);
+
+		remove(showWinNumPnl);
+		showLottoResultNum();
+
+		remove(winMoneyLabel);
+		resultMoney = 0;
+		showWinMoney();
+
+		remove(resultPanel);
+		showResultPaenl();
 	}
 
 	// 테스트용 당첨 결과를 임의로 정해주는 메서드

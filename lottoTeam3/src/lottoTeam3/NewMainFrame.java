@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 
 public class NewMainFrame extends JFrame implements ActionListener {
 	private List<LottoRecord> lottoRecordList;
-	private LottoRecord curLottoRecord = new LottoRecord();
+	private LottoRecord curLottoRecord;
 	private LottoData[] lottoDatas;
 	private LottoData[] lottoDataNull = new LottoData[5];
 	private JButton buyBtn;
@@ -28,6 +28,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 	private JButton endBtn;
 	private JButton btnPrev;
 	private JButton btnCur;
+	private JLabel curGameLbl;
 
 	public NewMainFrame() {
 		super("로또 프로그램");
@@ -35,12 +36,13 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		lottoDatas = testLotto();
 
 		readLottoRecords();
+		curLottoRecord = new LottoRecord(lottoRecordList.size() + 1);
 		getContentPane().setBackground(Color.WHITE);
 
 		JLabel lblLotto = new JLabel(new ImageIcon(NewMainFrame.class.getResource("/resource/lotto.png")));
 		add(lblLotto, "North");
 
-		JLabel curGameLbl = new JLabel("1회차");
+		curGameLbl = new JLabel((lottoRecordList.size() + 1) + "회");
 		curGameLbl.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 25));
 		curGameLbl.setHorizontalAlignment(JLabel.CENTER);
 		add(curGameLbl, "West");
@@ -96,7 +98,8 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		} else if (o.equals(resultBtn)) {
 			ResultDialog.showDialog(curLottoRecord, NewMainFrame.this);
 			lottoRecordList.add(curLottoRecord);
-			curLottoRecord = new LottoRecord();
+			curGameLbl.setText((lottoRecordList.size() + 1) + "회");
+			curLottoRecord = new LottoRecord(lottoRecordList.size() + 1);
 		} else if (o.equals(endBtn)) {
 			frameClose();
 		}
