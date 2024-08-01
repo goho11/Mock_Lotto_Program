@@ -49,6 +49,7 @@ public class ResultDialog extends JDialog {
 		setting();
 		setLocationRelativeTo(mainFrame);
 		// 결과 dialog 설정
+
 //		resultDialogSetting();
 //		setLocationRelativeTo(mainFrame);
 //
@@ -82,6 +83,7 @@ public class ResultDialog extends JDialog {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		// resultDialog에서 사용할 변수 lottoDatas를 listIndex에 따라 변경
+
 		lottoDatas = lottoRecord.getLottoDatas(listIndex);
 
 		// 구매한 로또 개수만큼 창 크기 조절
@@ -116,10 +118,8 @@ public class ResultDialog extends JDialog {
 		comboBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String s = comboBox.getSelectedItem().toString();
-				listIndex = Integer.parseInt(s.substring(0, s.indexOf("회"))) - 1;
+				listIndex = comboBox.getSelectedIndex();
 				System.out.println(listIndex);
-//				comboBox.getSelectedIndex();
 				update();
 				setting();
 			}
@@ -326,6 +326,7 @@ public class ResultDialog extends JDialog {
 		RandomResult();
 		// 테스트용
 //		ManualResult();
+//		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
 		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
 		lottoRecord.SetLottery(Arrays.asList(resultArray), bonus);
 		writeCurLottoRecord();
@@ -377,10 +378,12 @@ public class ResultDialog extends JDialog {
 		resultPanel.setBackground(Color.WHITE);
 
 		// A (반자동) 출력
+
 		lblCodes = new JLabel[5];
 		for (int i = 0; i < lblCodes.length; i++) {
 			if (lottoDatas[i] != null) {
 				char c = (char) ('A' + i);
+
 				lblCodes[i] = new JLabel(String.valueOf(c) + " (" + lottoDatas[i].getMode().getKorean() + ")");
 				lblCodes[i].setBounds(5, i * 60 - 3, 120, 60);
 				setColorCenterFont(lblCodes[i], Color.BLACK, JLabel.CENTER, 20);
@@ -397,6 +400,8 @@ public class ResultDialog extends JDialog {
 			for (int j = 0; j < 6; j++) {
 				// 로또 데이터에서 배열 추출
 				int[] lottoArr = lottoDatas[i].getNums();
+
+				JLabel[][] lblNums = new JLabel[5][6];
 				lblNums[i][j] = new JLabel("" + lottoArr[j]);
 				lblNums[i][j].setBounds(j * 60 + 110, i * 60 - 3, 60, 60);
 				setColorCenterFont(lblNums[i][j], Color.WHITE, JLabel.CENTER, 17);
@@ -419,6 +424,7 @@ public class ResultDialog extends JDialog {
 		}
 
 		// 1등, 2등, 3등, 4등, 5등, 꽝(디폴트)
+
 		lblResults = new JLabel[5];
 		for (int i = 0; i < lblCodes.length; i++) {
 			if (lottoDatas[i] != null) {
