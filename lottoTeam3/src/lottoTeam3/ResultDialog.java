@@ -111,6 +111,7 @@ public class ResultDialog extends JDialog {
 				String s = comboBox.getSelectedItem().toString();
 				listIndex = Integer.parseInt(s.substring(0, s.indexOf("회"))) - 1;
 				System.out.println(listIndex);
+//				comboBox.getSelectedIndex();
 				update();
 			}
 		});
