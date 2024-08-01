@@ -1,14 +1,14 @@
 package lottoTeam3;
 
+import java.util.Arrays;
+
 public class LottoData {
 	private int[] nums = new int[6];
-	private boolean buy;
 	private Mode mode;
 
-	public LottoData(int[] nums, boolean buy, Mode mode) {
+	public LottoData(int[] nums, Mode mode) {
 		super();
 		this.nums = nums;
-		this.buy = buy;
 		this.mode = mode;
 	}
 
@@ -20,14 +20,6 @@ public class LottoData {
 		this.nums = nums;
 	}
 
-	public boolean isBuy() {
-		return buy;
-	}
-
-	public void setBuy(boolean buy) {
-		this.buy = buy;
-	}
-
 	public Mode getMode() {
 		return mode;
 	}
@@ -36,4 +28,8 @@ public class LottoData {
 		this.mode = mode;
 	}
 
+	@Override
+	public String toString() {
+		return "LottoData [nums=" + Arrays.toString(nums) + ", mode=" + mode + "]";
+	}
 }

@@ -30,7 +30,7 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 	private boolean buy = false;
 	private Mode mode = Mode.AUTO; // 기본은 자동모드
 
-	public NumberChooseDialog(LottoData prevLottoData, JFrame frame) {
+	public NumberChooseDialog(LottoData prevLottoData, JDialog dialog) {
 		setTitle("번호 선택");
 
 		JPanel pnl = new JPanel(new BorderLayout());
@@ -48,14 +48,14 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 		pnl.add(pnlB, "South");
 		add(pnl);
 
-		settingDailog(frame);
+		settingDailog(dialog);
 	}
 
 	// JFrame 위치 - frame은 메인창 위치 의미
-	private void settingDailog(JFrame frame) {
-		int x = frame.getX();
-		int y = frame.getY();
-		int width = frame.getWidth();
+	private void settingDailog(JDialog dialog) {
+		int x = dialog.getX();
+		int y = dialog.getY();
+		int width = dialog.getWidth();
 		setLocation(x + width, y);
 		setSize(421, 280);
 
@@ -189,7 +189,7 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 		}
 
 		// 자동 모드 - 랜덤 번호 6개 선택됨
-		if (o.equals(btnAuto)) {			
+		if (o.equals(btnAuto)) {
 			for (Random r = new Random(); count < 6;) {
 				int n = r.nextInt(45);
 				if (btns[n].getBackground().equals(Color.WHITE)) {
@@ -228,11 +228,10 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 	}
 
 	// '확인'클릭시 번호 6개를 LottoData로 전달
-	public static LottoData showDialog(LottoData inputlotto, JFrame frame) {
-		NumberChooseDialog nc = new NumberChooseDialog(inputlotto, frame);
+	public static LottoData showDialog(LottoData inputlotto, JDialog dialog) {
+		NumberChooseDialog nc = new NumberChooseDialog(inputlotto, dialog);
 		nc.setVisible(true);
-		LottoData lottoData = nc.getLottoData();
-		return lottoData;
+		return nc.getLottoData();
 	}
 
 	// 창을 끄면 선택된 숫자가 전달됨
@@ -245,7 +244,9 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 					j++;
 				}
 			}
+			return new LottoData(nums, mode);
+		} else {
+			return null;
 		}
-		return new LottoData(nums, buy, mode);
 	}
 }

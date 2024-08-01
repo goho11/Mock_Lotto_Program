@@ -1,10 +1,13 @@
 package lottoTeam3;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,13 +17,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class NewMainFrame extends JFrame {
+	private List<LottoRecord> lottoRecordList;
 	private LottoData[] lottoDatas;
 	private LottoData[] lottoDataNull = new LottoData[5];
+	private LottoRecord curLottoRecord = new LottoRecord();
 
 	public NewMainFrame() {
 		super("로또 프로그램");
 
 		lottoDatas = testLotto();
+
+		lottoRecordList = new ArrayList<>();
 		getContentPane().setBackground(Color.WHITE);
 
 		JLabel lblLotto = new JLabel(new ImageIcon(NewMainFrame.class.getResource("/resource/lotto.png")));
@@ -30,12 +37,14 @@ public class NewMainFrame extends JFrame {
 		countTicketsLbl.setFont(new Font(countTicketsLbl.getFont().getName(), Font.PLAIN, 24));
 		countTicketsLbl.setHorizontalAlignment(JLabel.CENTER);
 		add(countTicketsLbl);
-
 		JButton buyBtn = new JButton("구매");
 		buyBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				NumberChooseDialog.showDialog(lottoDataNull[0], NewMainFrame.this);
+				LottoData[] ld = PurchaseDialog.showDialog(NewMainFrame.this);
+				if (ld != null)
+					curLottoRecord.addBuyLotto(ld);
+				System.out.println(curLottoRecord);
 			}
 		});
 		JButton resultBtn = new JButton("결과");
@@ -88,19 +97,19 @@ public class NewMainFrame extends JFrame {
 		LottoData[] lottoDatas = new LottoData[5];
 
 		int[] arr = new int[] { 1, 11, 21, 31, 41, 33 };
-		LottoData testData = new LottoData(arr, true, Mode.AUTO);
+		LottoData testData = new LottoData(arr, Mode.AUTO);
 
 		int[] arr1 = new int[] { 1, 11, 21, 31, 41, 7 };
-		LottoData testData1 = new LottoData(arr1, true, Mode.SEMI);
+		LottoData testData1 = new LottoData(arr1, Mode.SEMI);
 
 		int[] arr2 = new int[] { 1, 11, 21, 31, 41, 45 };
-		LottoData testData2 = new LottoData(arr2, true, Mode.MANUAL);
+		LottoData testData2 = new LottoData(arr2, Mode.MANUAL);
 
 		int[] arr3 = new int[] { 1, 11, 21, 7, 41, 27 };
-		LottoData testData3 = new LottoData(arr3, true, Mode.MANUAL);
+		LottoData testData3 = new LottoData(arr3, Mode.MANUAL);
 
 		int[] arr4 = new int[] { 2, 7, 21, 31, 38, 45 };
-		LottoData testData4 = new LottoData(arr4, true, Mode.MANUAL);
+		LottoData testData4 = new LottoData(arr4, Mode.MANUAL);
 
 		lottoDatas[0] = testData;
 		lottoDatas[1] = testData1;

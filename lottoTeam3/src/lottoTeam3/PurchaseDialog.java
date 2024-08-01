@@ -9,17 +9,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class MainFrame extends JFrame implements ActionListener {
+public class PurchaseDialog extends JDialog implements ActionListener {
 	private JLabel[][] lblNums = new JLabel[5][6]; // 로또 숫자 라벨
 	private JLabel[][] lblCircles = new JLabel[5][6]; // 로또 원 아이콘 라벨
 	private JButton[] btnAmend = new JButton[5]; // 수정 버튼
@@ -29,15 +31,16 @@ public class MainFrame extends JFrame implements ActionListener {
 	private FontHolder fontHolder = new FontHolder(); // 폰트 홀더
 	private JLabel lblPrice; // 가격 라벨
 	private int buyCount; // 구매 갯수
-	private JButton btnResult; // 결과 버튼
+	private JButton btnConfirm; // 결과 버튼
 	private JButton btnReset; // 초기화 버튼
 	private JButton btnExit; // 종료 버튼
 	private LottoData[] lottoDatas = new LottoData[5]; // 로또 정보
 	private JButton btnAuto;
 	private JLabel[] lblModes;
 	private LottoData copyData;
+	private boolean buy = false;
 
-	public MainFrame() {
+	public PurchaseDialog(JFrame frame) {
 		setTitle("로또 구매");
 		JPanel pnlNorth = new JPanel(); // 플로우 레이아웃으로
 		initNorth(pnlNorth); // 상단 패널 전체 생성
@@ -51,13 +54,14 @@ public class MainFrame extends JFrame implements ActionListener {
 		add(pnlSouth, "South"); // 하단 패널 추가
 
 		pack(); // 화면 크기를 패널 크기에 맞춤
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); // x를 눌러도 꺼지지 않게
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE); // x를 눌러도 꺼지지 않게
+		setModal(true);
 
 		// x를 눌렀을 때 종료 확인 다이알로그가 생성되게 윈도우리스너 추가
 		addWindowListener(new WindowAdapter() { // 윈도우 어댑터를 사용하여 필요한 메서드만 구현
 			@Override
 			public void windowClosing(WindowEvent e) { // x를 누를 때
-				frameClose(); // 종료 확인 다이알로그를 처리하는 메서드
+				dialogClose(); // 종료 확인 다이알로그를 처리하는 메서드
 			}
 		});
 		setLocation((1920 - getWidth()) / 2, (1080 - getHeight()) / 2);
@@ -74,7 +78,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		pnl.add(lblPrice); // 가격 라벨 추가
 
 		btnAuto = createMyButton("자동", new Rectangle(310, 25, 50, 30), pnl); // 메서드를 사용하여 자동 버튼 생성
-		btnResult = createMyButton("결과", new Rectangle(375, 25, 50, 30), pnl); // 메서드를 사용하여 결과 버튼 생성
+		btnConfirm = createMyButton("확인", new Rectangle(375, 25, 50, 30), pnl); // 메서드를 사용하여 결과 버튼 생성
 		btnReset = createMyButton("초기화", new Rectangle(440, 25, 70, 30), pnl); // 메서드를 사용하여 초기화 버튼 생성
 		btnExit = createMyButton("종료", new Rectangle(525, 25, 50, 30), pnl); // 메서드를 사용하여 종료 버튼 생성
 		btnResDisable(); // 초기화 결과 버튼 비활성화
@@ -166,7 +170,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < btnAmend.length; i++) { // 수정 버튼
 			if (o.equals(btnAmend[i])) {
 				LottoData input = NumberChooseDialog.showDialog(lottoDatas[i], this);
-				if (!input.isBuy())
+				if (input == null)
 					return;
 				if (lottoDatas[i] == null) { // 로또 추가라면
 					buyLottoSetting(i);
@@ -229,13 +233,14 @@ public class MainFrame extends JFrame implements ActionListener {
 				}
 			}
 			setPriceLabel(); // 가격 라벨 변경
-		} else if (o.equals(btnResult)) { // 결과 버튼
-			ResultDialog.showDialog(lottoDatas, MainFrame.this); // 결과 다이얼로그 출력
-			reset();
+		} else if (o.equals(btnConfirm)) { // 결과 버튼
+//			ResultDialog.showDialog(lottoDatas, PurchaseDialog.this); // 결과 다이얼로그 출력
+			buy = true;
+			dispose();
 		} else if (o.equals(btnReset)) { // 초기화 버튼
 			reset();
 		} else if (o.equals(btnExit)) { // 종료 버튼
-			frameClose(); // 종료 다이얼로그 메서드 실행
+			dialogClose();
 		}
 	}
 
@@ -285,7 +290,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private void btnResEnable() {
 		if (buyCount == 0) {
 			btnReset.setEnabled(true); // 리셋 버튼 활성화
-			btnResult.setEnabled(true); // 결과 버튼 활성화
+			btnConfirm.setEnabled(true); // 결과 버튼 활성화
 		}
 	}
 
@@ -295,7 +300,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		while (set.size() < 6) {
 			set.add(random.nextInt(45) + 1);
 		}
-		return new LottoData(set.stream().mapToInt(Integer::intValue).toArray(), true, Mode.AUTO);
+		return new LottoData(set.stream().mapToInt(Integer::intValue).toArray(), Mode.AUTO);
 	}
 
 	private void reset() {
@@ -326,18 +331,23 @@ public class MainFrame extends JFrame implements ActionListener {
 
 	private void btnResDisable() {
 		btnReset.setEnabled(false); // 초기화 버튼 비활성화
-		btnResult.setEnabled(false); // 결과 버튼 비활성화
+		btnConfirm.setEnabled(false); // 결과 버튼 비활성화
 	}
 
-	private void frameClose() {
-		int input = JOptionPane.showOptionDialog(MainFrame.this, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION,
+	private void dialogClose() {
+		int input = JOptionPane.showOptionDialog(PurchaseDialog.this, "구매를 취소하시겠습니까?", "취소", JOptionPane.YES_NO_OPTION,
 				JOptionPane.ERROR_MESSAGE, null, null, null); // 종료 확인 다이알로그 출력 및 값 대입
 		if (input == JOptionPane.YES_OPTION) { // 종료 확인을 눌렀을 때
 			dispose(); // 창 사라지게
 		}
 	}
 
-	public static void main(String[] args) {
-		new MainFrame().setVisible(true); // 메인 프레임 생성후 출력
+	public static LottoData[] showDialog(JFrame frame) {
+		PurchaseDialog pd = new PurchaseDialog(frame);
+		pd.setVisible(true);
+		if (pd.buy)
+			return pd.lottoDatas;
+		else
+			return null;
 	}
 }

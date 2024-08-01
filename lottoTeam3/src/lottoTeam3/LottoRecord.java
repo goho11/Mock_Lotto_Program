@@ -1,16 +1,18 @@
 package lottoTeam3;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LottoRecord {
 	private List<Integer> lotteryNums;
 	private int lotteryBonus;
-	private List<LottoData> buyLotto;
+	private List<LottoData[]> buyLotto;
 	private List<Integer> prizeMoney;
 	private int totalPrizeMoney;
 
 	public LottoRecord() {
+		lotteryNums = new ArrayList<>();
+		buyLotto = new ArrayList<>();
 	}
 
 	public void SetLottery(List<Integer> lotteryNums, int lotteryBonus) {
@@ -19,18 +21,24 @@ public class LottoRecord {
 	}
 
 	public void addBuyLotto(LottoData[] lottoDatas) {
-		buyLotto.addAll(Arrays.asList(lottoDatas));
+		buyLotto.add(lottoDatas);
 	}
 
 	public static LottoRecord tryParse(String line) {
-
 		return null;
 	}
 
 	@Override
 	public String toString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (LottoData[] lottoDatas : buyLotto) {
+			for (LottoData lottoData : lottoDatas) {
+				stringBuilder.append(lottoData).append(' ');
+			}
+			stringBuilder.append('\n');
+		}
 
-		return null;
+		return stringBuilder.toString();
 	}
 
 }
