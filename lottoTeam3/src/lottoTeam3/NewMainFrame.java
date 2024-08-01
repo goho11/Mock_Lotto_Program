@@ -51,7 +51,7 @@ public class NewMainFrame extends JFrame {
 		resultBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ResultDialog.showDialog(lottoDatas, NewMainFrame.this);
+				ResultDialog.showDialog(curLottoRecord, NewMainFrame.this);
 			}
 		});
 		JButton endBtn = new JButton("종료");

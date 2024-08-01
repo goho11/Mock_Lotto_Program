@@ -4,11 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LottoRecord {
+	// 해당 회차 우승 번호 저장
 	private List<Integer> lotteryNums;
+	// 해당 회차 보너스 따로 저장
 	private int lotteryBonus;
+	// 해당 회차 구매한 로또 목록들
 	private List<LottoData[]> buyLotto;
+	
 	private List<Integer> prizeMoney;
 	private int totalPrizeMoney;
+
+	public List<LottoData[]> getBuyLotto() {
+		return buyLotto;
+	}
 
 	public LottoRecord() {
 		lotteryNums = new ArrayList<>();
