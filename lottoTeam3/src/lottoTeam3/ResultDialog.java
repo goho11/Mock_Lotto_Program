@@ -46,14 +46,14 @@ public class ResultDialog extends JDialog {
 		this.mainFrame = mainFrame;
 
 		// 필요한 component 초기화
-		init();
+		initComponents();
 
 		// component의 내용을 설정
 		setAndUpdate();
 
 	}
 
-	private void init() {
+	private void initComponents() {
 
 		// resultDiaglog 세팅
 		iniResultDialog();
@@ -77,7 +77,7 @@ public class ResultDialog extends JDialog {
 		setTitle("로또 결과창");
 
 		// 요소들 끼리 간격 설정 (중앙정렬, hgap, vgap)
-		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 5));
+		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
 		getContentPane().setBackground(Color.WHITE);
 
 		setModal(true);
@@ -90,14 +90,13 @@ public class ResultDialog extends JDialog {
 		roundNow = new JLabel();
 		roundNow.setPreferredSize(new Dimension(150, 30));
 		setColorCenterFont(roundNow, Color.BLACK, JLabel.CENTER, 20);
-		roundNow.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		add(roundNow);
 
 		comboBox = new JComboBox<>();
 		for (int i = 0; i < lottoRecord.getPuchaseNum(); i++) {
-			comboBox.addItem(String.valueOf(i + 1) + "회 당첨 결과");
+			comboBox.addItem(String.valueOf(i + 1) + "번 로또 결과");
 		}
-		comboBox.setPreferredSize(new Dimension(100, 30));
+		comboBox.setPreferredSize(new Dimension(110, 30));
 		add(comboBox);
 
 		// 드랍 다운 버튼 리스너 설정
@@ -226,7 +225,7 @@ public class ResultDialog extends JDialog {
 	}
 
 	private void setRoundLblAndDropdown() {
-		roundText = String.valueOf(listIndex + 1) + "회 당첨 결과";
+		roundText = String.valueOf(lottoRecord.getLottoRound()) + "회 당첨 결과";
 		roundNow.setText(roundText);
 	}
 

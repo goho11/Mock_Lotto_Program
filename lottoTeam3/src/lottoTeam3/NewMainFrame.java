@@ -21,8 +21,6 @@ import javax.swing.JPanel;
 public class NewMainFrame extends JFrame implements ActionListener {
 	private List<LottoRecord> lottoRecordList;
 	private LottoRecord curLottoRecord;
-	private LottoData[] lottoDatas;
-	private LottoData[] lottoDataNull = new LottoData[5];
 	private JButton buyBtn;
 	private JButton resultBtn;
 	private JButton endBtn;
@@ -32,8 +30,6 @@ public class NewMainFrame extends JFrame implements ActionListener {
 
 	public NewMainFrame() {
 		super("로또 프로그램");
-
-		lottoDatas = testLotto();
 
 		readLottoRecords();
 		curLottoRecord = new LottoRecord(lottoRecordList.size() + 1);
@@ -47,6 +43,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		curGameLbl.setHorizontalAlignment(JLabel.CENTER);
 		add(curGameLbl, "West");
 
+		
 		JLabel countTicketsLbl = new JLabel("구매 장 수 X 장");
 		countTicketsLbl.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 25));
 		countTicketsLbl.setHorizontalAlignment(JLabel.CENTER);
@@ -112,33 +109,6 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		if (input == JOptionPane.YES_OPTION) { // 종료 확인을 눌렀을 때
 			dispose(); // 창 사라지게
 		}
-	}
-
-	public LottoData[] testLotto() {
-		LottoData[] lottoDatas = new LottoData[5];
-
-		int[] arr = new int[] { 1, 11, 21, 31, 41, 33 };
-		LottoData testData = new LottoData(arr, Mode.AUTO);
-
-		int[] arr1 = new int[] { 1, 11, 21, 31, 41, 7 };
-		LottoData testData1 = new LottoData(arr1, Mode.SEMI);
-
-		int[] arr2 = new int[] { 1, 11, 21, 31, 41, 45 };
-		LottoData testData2 = new LottoData(arr2, Mode.MANUAL);
-
-		int[] arr3 = new int[] { 1, 11, 21, 7, 41, 27 };
-		LottoData testData3 = new LottoData(arr3, Mode.MANUAL);
-
-		int[] arr4 = new int[] { 2, 7, 21, 31, 38, 45 };
-		LottoData testData4 = new LottoData(arr4, Mode.MANUAL);
-
-		lottoDatas[0] = testData;
-		lottoDatas[1] = testData1;
-		lottoDatas[2] = testData2;
-		lottoDatas[3] = testData3;
-		lottoDatas[4] = testData4;
-
-		return lottoDatas;
 	}
 
 	public void readLottoRecords() {
