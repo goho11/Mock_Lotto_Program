@@ -4,16 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
 
-import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -81,9 +77,9 @@ public class PurchasedLottoDialog extends JDialog {
 
 		comboBox = new JComboBox<>();
 		for (int i = 0; i < lottoRecord.getPuchaseNum(); i++) {
-			comboBox.addItem(String.valueOf(i + 1) + "번 로또 결과");
+			comboBox.addItem(String.valueOf(i + 1) + "번 로또");
 		}
-		comboBox.setPreferredSize(new Dimension(110, 30));
+		comboBox.setPreferredSize(new Dimension(75, 30));
 		add(comboBox);
 
 		// 드랍 다운 버튼 리스너 설정
@@ -92,13 +88,10 @@ public class PurchasedLottoDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				listIndex = comboBox.getSelectedIndex();
 				setAndUpdate();
-				System.out.println(Arrays.toString(lottoDatas));
-						
+//				System.out.println(Arrays.toString(lottoDatas));
 			}
 		});
 	}
-
-	
 
 	private void iniResultPanel() {
 		resultPanel = new JPanel(null);
@@ -129,7 +122,17 @@ public class PurchasedLottoDialog extends JDialog {
 				resultPanel.add(lblCircles[i][j]);
 			}
 		}
-
+		// 1등, 2등, 3등, 4등, 5등, 꽝(디폴트)
+		for (int i = 0; i < 5; i++) {
+			JButton copyBtn = new JButton("복사");
+			copyBtn.setBounds(480, i * 60 + 10, 40, 30);
+			copyBtn.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
+			copyBtn.setMargin(new Insets(0, 0, 0, 0));
+			copyBtn.setForeground(Color.BLACK);
+			copyBtn.setBackground(Color.WHITE);
+			copyBtn.setFocusable(false);
+			resultPanel.add(copyBtn);
+		}
 		// 결과 패널을 메인프레임에 추가
 		add(resultPanel);
 	}
@@ -151,11 +154,11 @@ public class PurchasedLottoDialog extends JDialog {
 			}
 			count++;
 		}
-		setSize(550, 180 + count * 60);
+		setSize(550, 65 + count * 60);
 	}
 
 	private void setRoundLblAndDropdown() {
-		roundText = String.valueOf(lottoRecord.getLottoRound()) + "회 당첨 결과";
+		roundText = String.valueOf("현재 구매한 로또 ");
 		roundNow.setText(roundText);
 	}
 
@@ -175,7 +178,7 @@ public class PurchasedLottoDialog extends JDialog {
 				// 로또 데이터에서 배열 추출
 				int[] lottoArr = lottoDatas[i].getNums();
 				lblNums[i][j].setText("" + lottoArr[j]);
-					setToColor(lblCircles[i][j], lottoArr[j]);
+				setToColor(lblCircles[i][j], lottoArr[j]);
 			}
 		}
 	}
@@ -222,17 +225,6 @@ public class PurchasedLottoDialog extends JDialog {
 		JLabel lbl = new JLabel();
 		lbl.setIcon(LottoCircle.BLACK.getImageIcon());
 		return lbl;
-	}
-
-	private void setToBlack(JLabel lbl) {
-		lbl.setIcon(LottoCircle.BLACK.getImageIcon());
-	}
-
-	public void writeCurLottoRecord() {
-		File file = new File(".//lotto.txt");
-		boolean success = LottoRecordIO.writeLottoRecords(file, lottoRecord);
-		if (!success)
-			System.out.println("기록 실패");
 	}
 
 	// lottoDatas를 받아서 결과 다이얼로그를 보여주는 메소드

@@ -91,7 +91,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		if (o.equals(btnPrev)) {
 			PrevLottoDialog.showDialog(this, lottoRecordList);
 		} else if (o.equals(btnCur)) {
-
+			PurchasedLottoDialog.showDialog(curLottoRecord, this);
 		} else if (o.equals(buyBtn)) {
 			LottoData[] ld = PurchaseDialog.showDialog(lottoRecordList, curLottoRecord, this);
 			if (ld != null)
