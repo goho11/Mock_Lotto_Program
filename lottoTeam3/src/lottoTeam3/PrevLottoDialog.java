@@ -19,28 +19,48 @@ import javax.swing.JPanel;
 public class PrevLottoDialog extends JDialog {
 
 	private List<LottoRecord> lottoRecordList;
-	private JComboBox<String> comboBox;
+	private JComboBox<String> comboBoxHwe;
+	private JComboBox<String> comboBoxBeon;
 
 	public PrevLottoDialog(Window window, List<LottoRecord> lottoRecordList) {
 		this.lottoRecordList = lottoRecordList;
-		JPanel pnl = new JPanel(null);
-		pnl.setPreferredSize(new Dimension(500, 500));
-		pnl.setBackground(Color.white);
-		JLabel lblhwe = new JLabel("이전 회차 선택");
-		lblhwe.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		lblhwe.setBounds(10, 10, 120, 30);
-		lblhwe.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
-		pnl.add(lblhwe);
-		comboBox = new JComboBox<>();
-		for (int i = 0; i < lottoRecordList.size(); i++) {
-			comboBox.addItem((i + 1000) + "회");
-		}
-		comboBox.setBounds(140, 10, 100, 30);
-		comboBox.setBackground(Color.white);
-		comboBox.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
-		pnl.add(comboBox);
+		JPanel pnlNorth = new JPanel();
+		pnlNorth.setBackground(Color.white);
+		pnlNorth.setPreferredSize(new Dimension(0, 40));
 
-		add(pnl);
+		JLabel lblHwe = new JLabel("이전 회차 선택");
+//		lblHwe.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		lblHwe.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
+		pnlNorth.add(lblHwe);
+
+		comboBoxHwe = new JComboBox<>();
+		for (int i = 0; i < lottoRecordList.size(); i++) {
+			comboBoxHwe.addItem((i + 1000) + "회");
+		}
+		comboBoxHwe.setBackground(Color.WHITE);
+		comboBoxHwe.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
+		pnlNorth.add(comboBoxHwe);
+
+		JLabel lblBeon = new JLabel("구매 번호 선택");
+		lblBeon.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
+		pnlNorth.add(lblBeon);
+
+		comboBoxBeon = new JComboBox<>();
+		for (int i = 0; i < lottoRecordList.get(0).getPuchaseNum(); i++) {
+			comboBoxBeon.addItem(i + "번");
+		}
+		comboBoxBeon.setBackground(Color.WHITE);
+		comboBoxBeon.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
+		pnlNorth.add(comboBoxBeon);
+
+		JPanel pnlCenter = new JPanel(null);
+		pnlCenter.setPreferredSize(new Dimension(500, 500));
+		pnlCenter.setBackground(Color.WHITE);
+		pnlCenter.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		add(pnlNorth, "North");
+
+		add(pnlCenter);
+
 		setTitle("이전 회차 확인");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		pack();
