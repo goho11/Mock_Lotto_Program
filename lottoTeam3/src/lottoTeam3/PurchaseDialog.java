@@ -238,9 +238,21 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 			}
 		}
 		if (o.equals(btnPrev)) {
+			boolean prev = LottoData.getCopy() == null;
 			PrevLottoDialog.showDialog(lottoRecordList, this);
+			if (prev && LottoData.getCopy() != null) {
+				for (int j = 0; j <= buyCount && j < btnPaste.length; j++) {
+					btnPaste[j].setEnabled(true);
+				}
+			}
 		} else if (o.equals(btnCur)) {
-
+			boolean prev = LottoData.getCopy() == null;
+			PurchasedLottoDialog.showDialog(curLottoRecord, this);
+			if (prev && LottoData.getCopy() != null) {
+				for (int j = 0; j <= buyCount && j < btnPaste.length; j++) {
+					btnPaste[j].setEnabled(true);
+				}
+			}
 		} else if (o.equals(btnAuto)) { // 자동 버튼
 			btnResEnable(); // 결과 리셋 버튼 활성화
 			while (buyCount < 5) {

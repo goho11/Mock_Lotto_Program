@@ -37,11 +37,13 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 	private JLabel lblResultBonusCircle;
 	private JLabel winMoneyLabel;
 	private int resultMoney;
-	private int indexHwe = 0;
+	private int indexHwe;
 	private JButton[] btnCopy;
+	private JLabel lblBeon;
 
 	private PrevLottoDialog(Window window, List<LottoRecord> lottoRecordList) {
 		this.lottoRecordList = lottoRecordList;
+		indexHwe = lottoRecordList.size() - 1;
 		lotteryNums = lottoRecordList.get(indexHwe).getLotteryNums();
 		lotteryBonus = lottoRecordList.get(indexHwe).getLotteryBonus();
 		lottoDatas = lottoRecordList.get(indexHwe).getLottoDatas(0);
@@ -118,13 +120,14 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		for (int i = 0; i < lottoRecordList.size(); i++) {
 			comboBoxHwe.addItem((i + 1) + "회");
 		}
+		comboBoxHwe.setSelectedIndex(indexHwe);
 		comboBoxHwe.setBackground(Color.WHITE);
 		comboBoxHwe.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
 		comboBoxHwe.addActionListener(this);
 		comboBoxHwe.setFocusable(false);
 		pnl.add(comboBoxHwe);
 
-		JLabel lblBeon = new JLabel("구매 번호 선택");
+		lblBeon = new JLabel("구매 번호 선택");
 		lblBeon.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
 		pnl.add(lblBeon);
 
@@ -137,6 +140,14 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		comboBoxBeon.addActionListener(this);
 		comboBoxBeon.setFocusable(false);
 		pnl.add(comboBoxBeon);
+
+		if (lottoRecordList.get(indexHwe).getPuchaseNum() == 0) {
+			comboBoxBeon.setVisible(false);
+			lblBeon.setVisible(false);
+		} else {
+			comboBoxBeon.setVisible(true);
+			lblBeon.setVisible(true);
+		}
 	}
 
 	private void resize() {
@@ -167,6 +178,14 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 			lottoDatas = lottoRecordList.get(indexHwe).getLottoDatas(0);
 
 			comboBoxBeon.removeAllItems();
+			if (lottoRecordList.get(indexHwe).getPuchaseNum() == 0) {
+				comboBoxBeon.setVisible(false);
+				lblBeon.setVisible(false);
+			} else {
+				comboBoxBeon.setVisible(true);
+				lblBeon.setVisible(true);
+			}
+
 			for (int i = 0; i < lottoRecordList.get(indexHwe).getPuchaseNum(); i++) {
 				comboBoxBeon.addItem((i + 1) + "번");
 			}
