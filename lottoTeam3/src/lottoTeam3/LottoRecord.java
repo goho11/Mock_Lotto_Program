@@ -14,6 +14,14 @@ public class LottoRecord {
 		return lottoRound;
 	}
 
+	public List<Integer> getLotteryNums() {
+		return lotteryNums;
+	}
+
+	public int getLotteryBonus() {
+		return lotteryBonus;
+	}
+
 	public LottoRecord(int lottoRound) {
 		this.lottoRound = lottoRound;
 		buyLotto = new ArrayList<>();
@@ -38,7 +46,11 @@ public class LottoRecord {
 		}
 		lottoRecord.lotteryNums = Arrays.asList(iNums);
 		lottoRecord.lotteryBonus = Integer.parseInt(splitFields[2]);
+		if (splitFields.length < 4)
+			return lottoRecord;
+
 		String[] splitBuy = splitFields[3].split("\\+");
+
 		for (int i = 0; i < splitBuy.length; i++) {
 			LottoData[] lottoDatas = new LottoData[5];
 			String[] splitGame = splitBuy[i].substring(1, splitBuy[i].length() - 1).split(", ");
