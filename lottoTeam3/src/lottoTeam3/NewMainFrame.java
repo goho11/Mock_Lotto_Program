@@ -109,10 +109,8 @@ public class NewMainFrame extends JFrame implements ActionListener {
 			buyBtn.setText("구매(" + curLottoRecord.getPuchaseNum() + "장)");
 		} else if (o.equals(endBtn)) {
 			frameClose();
-		}
-		// 현재 구매 확인 : 선택한 번호가 적용된 창 출력
-		else if (o.equals(btnCur)) {
-
+		} else if (o.equals(btnCur)) {
+			PurchasedLottoDialog.showDialog(curLottoRecord, this);
 		} else if (o.equals(btnPrev)) {
 			PrevLottoDialog.showDialog(this, lottoRecordList);
 		}
