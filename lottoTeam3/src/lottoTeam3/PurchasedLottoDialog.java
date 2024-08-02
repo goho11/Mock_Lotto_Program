@@ -8,6 +8,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,7 +32,9 @@ public class PurchasedLottoDialog extends JDialog {
 	private JLabel[] lblCodes;
 	private JLabel[][] lblNums;
 	private JLabel[][] lblCircles;
-	private JLabel[] lblResults;
+	private JLabel winMoneyLabel;
+	private int buyLottoMoney;
+	private int buyCount;
 
 	public PurchasedLottoDialog(LottoRecord lottoRecord, JFrame mainFrame) {
 		this.lottoRecord = lottoRecord;
@@ -50,6 +55,9 @@ public class PurchasedLottoDialog extends JDialog {
 
 		// 회차 라벨, 회차 선택 가능한 드랍다운 버튼 세팅
 		iniRoundLblAndDropdown();
+
+		// 당첨금액을 표시해주는 라벨 생성. 계산은 여기서 하지 않음
+		iniWinMoneyLbl();
 
 		// 당첨 결과 패널 생성
 		iniResultPanel();
@@ -91,6 +99,13 @@ public class PurchasedLottoDialog extends JDialog {
 				setAndUpdate();
 			}
 		});
+	}
+	
+	private void iniWinMoneyLbl() {
+		winMoneyLabel = new JLabel();
+		setColorCenterFont(winMoneyLabel, Color.BLACK, JLabel.CENTER, 17);
+		winMoneyLabel.setPreferredSize(new Dimension(400, 30));
+		add(winMoneyLabel);
 	}
 
 	private void iniResultPanel() {
@@ -155,6 +170,8 @@ public class PurchasedLottoDialog extends JDialog {
 		setResultDialog();
 
 		setRoundLblAndDropdown();
+		
+		setBuyLottoMoneyLbl();
 
 		setResultPanel();
 	}
@@ -168,7 +185,7 @@ public class PurchasedLottoDialog extends JDialog {
 			}
 			count++;
 		}
-		setSize(550, 65 + count * 60);
+		setSize(550, 100 + count * 60);
 	}
 
 	private void setRoundLblAndDropdown() {
@@ -177,6 +194,24 @@ public class PurchasedLottoDialog extends JDialog {
 
 		comboBox.setSelectedIndex(lottoRecord.getPuchaseNum() - 1);
 	}
+	
+	private void setBuyLottoMoneyLbl() {
+		List<LottoData[]> data = lottoRecord.getBuyLotto();
+		
+		for (LottoData[] lottoDataArray : data) {
+			for (LottoData lottoData : lottoDataArray) {
+				if (lottoData != null) {
+					buyCount++;
+				}
+			}
+		}
+		buyLottoMoney = 500 * buyCount;
+	
+		DecimalFormat decimalFormat = new DecimalFormat("#,###");
+		String formattedNumber = decimalFormat.format(buyLottoMoney);
+		winMoneyLabel.setText("총 구매 금액: " + formattedNumber + "원");
+	}
+
 
 	private void setResultPanel() {
 		// A (반자동) 출력
