@@ -16,7 +16,7 @@ public class LottoData {
 	}
 
 	public static void setCopy(LottoData lottoData) {
-		copy = lottoData;
+		copy = new LottoData(lottoData.nums, Mode.MANUAL);
 	}
 
 	public int[] getNums() {

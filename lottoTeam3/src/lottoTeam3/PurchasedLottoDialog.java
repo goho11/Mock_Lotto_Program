@@ -5,9 +5,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,7 +21,7 @@ public class PurchasedLottoDialog extends JDialog {
 	private int listIndex;
 
 	private LottoRecord lottoRecord;
-	private JFrame mainFrame;
+	private Window window;
 	private JComboBox<String> comboBox;
 	private JPanel resultPanel;
 	private JLabel roundNow;
@@ -31,9 +31,9 @@ public class PurchasedLottoDialog extends JDialog {
 	private JLabel[][] lblCircles;
 	private JLabel[] lblResults;
 
-	public PurchasedLottoDialog(LottoRecord lottoRecord, JFrame mainFrame) {
+	public PurchasedLottoDialog(LottoRecord lottoRecord, Window window) {
 		this.lottoRecord = lottoRecord;
-		this.mainFrame = mainFrame;
+		this.window = window;
 
 		// 필요한 component 초기화
 		initComponents();
@@ -66,7 +66,7 @@ public class PurchasedLottoDialog extends JDialog {
 
 		setModal(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(mainFrame);
+		setLocationRelativeTo(window);
 		setResizable(false);
 	}
 
@@ -137,9 +137,9 @@ public class PurchasedLottoDialog extends JDialog {
 			copyBtn.setBackground(Color.WHITE);
 			copyBtn.setFocusable(false);
 			resultPanel.add(copyBtn);
-			
+
 			int countNum = i;
-			
+
 			copyBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -148,8 +148,7 @@ public class PurchasedLottoDialog extends JDialog {
 				}
 			});
 		}
-		
-		
+
 	}
 
 	private void setAndUpdate() {
@@ -243,8 +242,8 @@ public class PurchasedLottoDialog extends JDialog {
 	}
 
 	// lottoDatas를 받아서 결과 다이얼로그를 보여주는 메소드
-	public static void showDialog(LottoRecord lottoRecord, JFrame mainFrame) {
-		PurchasedLottoDialog resultDialog = new PurchasedLottoDialog(lottoRecord, mainFrame);
+	public static void showDialog(LottoRecord lottoRecord, Window window) {
+		PurchasedLottoDialog resultDialog = new PurchasedLottoDialog(lottoRecord, window);
 		resultDialog.setVisible(true);
 	}
 }

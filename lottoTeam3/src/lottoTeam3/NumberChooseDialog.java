@@ -91,10 +91,10 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 	// 패널B 셋팅
 	private void settingPanelB(JPanel pnlB) {
 		countText = new JLabel("개수: " + count);
-		countText.setBorder(new LineBorder(new Color(122, 138, 153), 1));
+//		countText.setBorder(new LineBorder(new Color(122, 138, 153), 1));
 		countText.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 17));
 		countText.setPreferredSize(new Dimension(54, 26));
-		countText.setHorizontalAlignment(JLabel.CENTER);
+//		countText.setHorizontalAlignment(JLabel.CENTER);
 
 		pnlB.add(countText);
 		pnlB.setBackground(Color.WHITE);
