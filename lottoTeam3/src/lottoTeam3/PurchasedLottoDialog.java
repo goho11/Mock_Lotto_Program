@@ -53,6 +53,7 @@ public class PurchasedLottoDialog extends JDialog {
 
 		// 당첨 결과 패널 생성
 		iniResultPanel();
+		createCopyBtn();
 	}
 
 	private void iniResultDialog() {
@@ -88,7 +89,6 @@ public class PurchasedLottoDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				listIndex = comboBox.getSelectedIndex();
 				setAndUpdate();
-//				System.out.println(Arrays.toString(lottoDatas));
 			}
 		});
 	}
@@ -122,7 +122,12 @@ public class PurchasedLottoDialog extends JDialog {
 				resultPanel.add(lblCircles[i][j]);
 			}
 		}
-		// 1등, 2등, 3등, 4등, 5등, 꽝(디폴트)
+
+		// 결과 패널을 메인프레임에 추가
+		add(resultPanel);
+	}
+
+	private void createCopyBtn() {
 		for (int i = 0; i < 5; i++) {
 			JButton copyBtn = new JButton("복사");
 			copyBtn.setBounds(480, i * 60 + 10, 40, 30);
@@ -132,9 +137,19 @@ public class PurchasedLottoDialog extends JDialog {
 			copyBtn.setBackground(Color.WHITE);
 			copyBtn.setFocusable(false);
 			resultPanel.add(copyBtn);
+			
+			int countNum = i;
+			
+			copyBtn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					LottoData.setCopy(lottoDatas[countNum]);
+					return;
+				}
+			});
 		}
-		// 결과 패널을 메인프레임에 추가
-		add(resultPanel);
+		
+		
 	}
 
 	private void setAndUpdate() {
