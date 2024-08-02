@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 
 public class PurchaseDialog extends JDialog implements ActionListener {
 	private List<LottoRecord> lottoRecordList;
+	private LottoRecord curLottoRecord;
 	private JLabel[][] lblNums = new JLabel[5][6]; // 로또 숫자 라벨
 	private JLabel[][] lblCircles = new JLabel[5][6]; // 로또 원 아이콘 라벨
 	private JButton[] btnAmend = new JButton[5]; // 수정 버튼
@@ -38,11 +39,13 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 	private LottoData[] lottoDatas = new LottoData[5]; // 로또 정보
 	private JButton btnAuto;
 	private JLabel[] lblModes;
-	private LottoData copyData;
+	private JButton btnPrev;
+	private JButton btnCur;
 	private boolean buy = false;
 
-	public PurchaseDialog(List<LottoRecord> lottoRecordList, JFrame frame) {
+	public PurchaseDialog(List<LottoRecord> lottoRecordList, LottoRecord curLottoRecord, JFrame frame) {
 		this.lottoRecordList = lottoRecordList;
+		this.curLottoRecord = curLottoRecord;
 		JPanel pnlNorth = new JPanel(); // 플로우 레이아웃으로
 		initNorth(pnlNorth); // 상단 패널 전체 생성
 		JPanel pnlCenter = new JPanel(null); // 앱솔루트 레이아웃으로
@@ -84,6 +87,10 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		lblPrice.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20)); // 가격 라벨 폰트설정
 		pnl.add(lblPrice); // 가격 라벨 추가
 
+		btnPrev = createMyButton("이전 회차 확인", new Rectangle(190, 25, 125, 30), pnl);
+		btnCur = createMyButton("현재 구매 확인", new Rectangle(325, 25, 125, 30), pnl);
+		if (!curLottoRecord.hasBought())
+			btnCur.setEnabled(false);
 		btnAuto = createMyButton("자동", new Rectangle(470, 25, 50, 30), pnl); // 메서드를 사용하여 자동 버튼 생성
 		btnReset = createMyButton("초기화", new Rectangle(530, 25, 70, 30), pnl); // 메서드를 사용하여 초기화 버튼 생성
 		btnConfirm = createMyButton("구매", new Rectangle(620, 25, 50, 30), pnl); // 메서드를 사용하여 결과 버튼 생성
@@ -147,8 +154,8 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 
 		for (int i = 0; i < btnPaste.length; i++) {
 			btnPaste[i] = createMyButton("붙여넣기", new Rectangle(650, i * 60 + 13, 80, 30), pnl); // 메서드를 사용하여 삭제 버튼 생성 및
-																								// 설정
-			btnPaste[i].setEnabled(false); // 모든 삭제 버튼 비활성화
+			if (i != 0 || LottoData.getCopy() == null) // 설정
+				btnPaste[i].setEnabled(false); // 모든 삭제 버튼 비활성화
 		}
 	}
 
@@ -207,28 +214,34 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 				return;
 			}
 		}
-		for (int i = 0; i < btnCopy.length; i++) {
+
+		for (int i = 0; i < btnCopy.length; i++) { // 복사 버튼
 			if (o.equals(btnCopy[i])) {
-				if (copyData == null) {
+				if (LottoData.getCopy() == null) {
 					for (int j = 0; j <= buyCount && j < btnPaste.length; j++) {
 						btnPaste[j].setEnabled(true);
 					}
 				}
-				copyData = lottoDatas[i];
+				LottoData.setCopy(lottoDatas[i]);
 				return;
 			}
 		}
-		for (int i = 0; i < btnPaste.length; i++) {
+
+		for (int i = 0; i < btnPaste.length; i++) { // 붙여넣기 버튼
 			if (o.equals(btnPaste[i])) {
 				if (lottoDatas[i] == null) {
 					buyLottoSetting(i);
 				}
-				lottoDatas[i] = copyData;
+				lottoDatas[i] = LottoData.getCopy();
 				changeLabels(i);
 				return;
 			}
 		}
-		if (o.equals(btnAuto)) { // 자동 버튼
+		if (o.equals(btnPrev)) {
+			PrevLottoDialog.showDialog(this, lottoRecordList);
+		} else if (o.equals(btnCur)) {
+
+		} else if (o.equals(btnAuto)) { // 자동 버튼
 			btnResEnable(); // 결과 리셋 버튼 활성화
 			while (buyCount < 5) {
 				lottoDatas[buyCount] = createRandomLottoData();
@@ -238,7 +251,7 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 				btnCopy[buyCount].setEnabled(true);
 				if (++buyCount < btnAmend.length) {
 					btnAmend[buyCount].setEnabled(true); // 다음 수정 버튼 활성화
-					if (copyData != null)
+					if (LottoData.getCopy() != null)
 						btnPaste[buyCount].setEnabled(true);
 				}
 			}
@@ -265,7 +278,7 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		btnCopy[i].setEnabled(true);
 		if (i + 1 < 5) {
 			btnAmend[i + 1].setEnabled(true); // 다음 수정 버튼 활성화
-			if (copyData != null)
+			if (LottoData.getCopy() != null)
 				btnPaste[i + 1].setEnabled(true);
 		}
 	}
@@ -330,7 +343,7 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		changeLabels(line);
 		if (line + 1 < btnAmend.length) {
 			btnAmend[line + 1].setEnabled(false); // 다음 수정 버튼 비활성화
-			if (copyData != null)
+			if (LottoData.getCopy() != null)
 				btnPaste[line + 1].setEnabled(false);
 		}
 	}
@@ -352,8 +365,8 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		}
 	}
 
-	public static LottoData[] showDialog(List<LottoRecord> lottoRecordList, JFrame frame) {
-		PurchaseDialog pd = new PurchaseDialog(lottoRecordList, frame);
+	public static LottoData[] showDialog(List<LottoRecord> lottoRecordList, LottoRecord curLottoRecord, JFrame frame) {
+		PurchaseDialog pd = new PurchaseDialog(lottoRecordList, curLottoRecord, frame);
 		pd.setVisible(true);
 		if (pd.buy)
 			return pd.lottoDatas;

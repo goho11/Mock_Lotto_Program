@@ -91,8 +91,12 @@ public class NewMainFrame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-		if (o.equals(buyBtn)) {
-			LottoData[] ld = PurchaseDialog.showDialog(lottoRecordList, this);
+		if (o.equals(btnPrev)) {
+			PrevLottoDialog.showDialog(this, lottoRecordList);
+		} else if (o.equals(btnCur)) {
+
+		} else if (o.equals(buyBtn)) {
+			LottoData[] ld = PurchaseDialog.showDialog(lottoRecordList, curLottoRecord, this);
 			if (ld != null)
 				curLottoRecord.addBuyLotto(ld);
 		} else if (o.equals(resultBtn)) {
