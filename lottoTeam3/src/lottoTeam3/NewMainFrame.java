@@ -54,7 +54,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		btnPrev = createMyButton("이전 회차 확인", new Insets(0, 0, 0, 0), pnlBtn, 30, new Rectangle(220, 90, 200, 80));
 		endBtn = createMyButton("종료", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(120, 190, 200, 50));
 		btnCur.setEnabled(false);
-		resultBtn.setEnabled(false);
+		resultBtn.setEnabled(true);
 		btnPrev.setEnabled(false);
 
 		pnl.add(pnlPic, "North");

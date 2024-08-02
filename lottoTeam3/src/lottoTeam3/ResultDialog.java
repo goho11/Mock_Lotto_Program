@@ -44,13 +44,26 @@ public class ResultDialog extends JDialog {
 	public ResultDialog(LottoRecord lottoRecord, JFrame mainFrame) {
 		this.lottoRecord = lottoRecord;
 		this.mainFrame = mainFrame;
+		
+		// 로또 구매 기록이 없을 경우 당첨 번호만 랜덤으로 생성해서 저장
+		if (lottoRecord.getLottoDatas(0) == null) {
+			iniResultDialog();
+//			iniRoundLblAndDropdown();
+			roundNow = new JLabel();
+			roundNow.setPreferredSize(new Dimension(150, 30));
+			setColorCenterFont(roundNow, Color.BLACK, JLabel.CENTER, 20);
+			add(roundNow);
 
-		// 필요한 component 초기화
-		initComponents();
+			iniLottoResultNum();
+			setSize(550, 150);
+			setRoundLblAndDropdown();
+		} else {
+			// 필요한 component 초기화
+			initComponents();
 
-		// component의 내용을 설정
-		setAndUpdate();
-
+			// component의 내용을 설정
+			setAndUpdate();
+		}
 	}
 
 	private void initComponents() {
