@@ -79,7 +79,7 @@ public class GGG extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		if (o.equals(buyBtn)) { // 구매
-			LottoData[] ld = PurchaseDialog.showDialog(lottoRecordList, this);
+			LottoData[] ld = PurchaseDialog.showDialog(lottoRecordList, curLottoRecord, this);
 			// ***화면을 처음 키면 구매만 활성화 적용으로
 			// 현재 구매 클릭후 안사면 비활성화됨
 			settingBtnWhenSellectAll(true);
@@ -98,7 +98,7 @@ public class GGG extends JFrame implements ActionListener {
 		}
 		// 현재 구매 확인 : 선택한 번호가 적용된 창 출력
 		if (o.equals(btnCur)) {
-			
+
 		}
 	}
 
