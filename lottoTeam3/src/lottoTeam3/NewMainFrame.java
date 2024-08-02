@@ -48,10 +48,14 @@ public class NewMainFrame extends JFrame implements ActionListener {
 
 		buyBtn = createMyButton("구매(" + curLottoRecord.getPuchaseNum() + "장)", new Insets(0, 0, 0, 0), pnlBtn, 30,
 				new Rectangle(20, 10, 200, 80));
-		resultBtn = createMyButton("추첨", new Insets(0, 0, 0, 0), pnlBtn, 30, new Rectangle(20, 90, 200, 80));
+		resultBtn = createMyButton("추첨(" + curLottoRecord.getLottoRound() + "회차)", new Insets(0, 0, 0, 0), pnlBtn, 30,
+				new Rectangle(20, 90, 200, 80));
 		btnCur = createMyButton("현재 구매 확인", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(220, 10, 200, 80));
 		btnPrev = createMyButton("이전 회차 확인", new Insets(0, 0, 0, 0), pnlBtn, 30, new Rectangle(220, 90, 200, 80));
 		endBtn = createMyButton("종료", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(120, 190, 200, 50));
+		btnCur.setEnabled(false);
+		resultBtn.setEnabled(false);
+		btnPrev.setEnabled(false);
 
 		pnl.add(pnlPic, "North");
 		pnl.add(pnlBtn);
@@ -83,30 +87,25 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		return btn;
 	}
 
-	public void settingBtnWhenSellectAll(boolean b) {
-		resultBtn.setEnabled(!b); // 추첨
-		btnCur.setEnabled(!b); // 현재 구매 확인
-		btnPrev.setEnabled(!b); // 이전 회차 확인
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		if (o.equals(buyBtn)) { // 구매
 			LottoData[] ld = PurchaseDialog.showDialog(lottoRecordList, curLottoRecord, this);
-			// ***화면을 처음 키면 구매만 활성화 적용으로
-			// 현재 구매 클릭후 안사면 비활성화됨
-			settingBtnWhenSellectAll(true);
 			if (ld != null) {
 				curLottoRecord.addBuyLotto(ld);
 				buyBtn.setText("구매(" + curLottoRecord.getPuchaseNum() + "장)");
-				settingBtnWhenSellectAll(false);
+				btnCur.setEnabled(true);
+				resultBtn.setEnabled(true);
 			}
 		} else if (o.equals(resultBtn)) { // 추첨
 			ResultDialog.showDialog(curLottoRecord, this);
-//			lottoRecordList.add(curLottoRecord);
-			curLottoRecord = new LottoRecord(1);
+			lottoRecordList.add(curLottoRecord);
+			curLottoRecord = new LottoRecord(lottoRecordList.size() + 1);
 			buyBtn.setText("구매(" + curLottoRecord.getPuchaseNum() + "장)");
+			resultBtn.setText("추첨(" + curLottoRecord.getLottoRound() + "회차)");
+			btnPrev.setEnabled(true);
+			btnCur.setEnabled(false);
 		} else if (o.equals(endBtn)) {
 			frameClose();
 		}
