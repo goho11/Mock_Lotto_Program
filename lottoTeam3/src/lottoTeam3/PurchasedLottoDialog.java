@@ -137,9 +137,9 @@ public class PurchasedLottoDialog extends JDialog {
 			copyBtn.setBackground(Color.WHITE);
 			copyBtn.setFocusable(false);
 			resultPanel.add(copyBtn);
-			
+
 			int countNum = i;
-			
+
 			copyBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -148,8 +148,7 @@ public class PurchasedLottoDialog extends JDialog {
 				}
 			});
 		}
-		
-		
+
 	}
 
 	private void setAndUpdate() {
@@ -175,6 +174,8 @@ public class PurchasedLottoDialog extends JDialog {
 	private void setRoundLblAndDropdown() {
 		roundText = String.valueOf("현재 구매한 로또 ");
 		roundNow.setText(roundText);
+
+		comboBox.setSelectedIndex(lottoRecord.getPuchaseNum() - 1);
 	}
 
 	private void setResultPanel() {
