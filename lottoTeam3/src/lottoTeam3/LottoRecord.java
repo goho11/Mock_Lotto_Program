@@ -11,7 +11,7 @@ public class LottoRecord {
 	private List<LottoData[]> buyLotto; // 구매자가 선택한 번호
 
 	public int getLottoRound() {
-		return lottoRound;
+		return lottoRound -1;
 	}
 
 	public LottoRecord(int lottoRound) {
