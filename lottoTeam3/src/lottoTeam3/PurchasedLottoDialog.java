@@ -20,19 +20,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class ResultDialog extends JDialog {
-	private Set<Integer> resultTreeSet;
-	private String[] resultString = new String[5];
-	private int resultMoney;
-	private int bonus;
+public class PurchasedLottoDialog extends JDialog {
 	private String roundText;
 	private int listIndex;
 
 	private LottoRecord lottoRecord;
 	private JFrame mainFrame;
 	private JComboBox<String> comboBox;
-	private JPanel showWinNumPnl;
-	private JLabel winMoneyLabel;
 	private JPanel resultPanel;
 	private JLabel roundNow;
 	private LottoData[] lottoDatas;
@@ -41,7 +35,7 @@ public class ResultDialog extends JDialog {
 	private JLabel[][] lblCircles;
 	private JLabel[] lblResults;
 
-	public ResultDialog(LottoRecord lottoRecord, JFrame mainFrame) {
+	public PurchasedLottoDialog(LottoRecord lottoRecord, JFrame mainFrame) {
 		this.lottoRecord = lottoRecord;
 		this.mainFrame = mainFrame;
 
@@ -60,13 +54,6 @@ public class ResultDialog extends JDialog {
 
 		// 회차 라벨, 회차 선택 가능한 드랍다운 버튼 세팅
 		iniRoundLblAndDropdown();
-
-		// 첫번째 회차 당첨 번호를 랜덤으로 돌려서 생성해서 보여준다.
-		// 동시에 당첨 번호를 기록한다.
-		iniLottoResultNum();
-
-		// 당첨금액을 표시해주는 라벨 생성. 계산은 여기서 하지 않음
-		iniWinMoneyLbl();
 
 		// 당첨 결과 패널 생성
 		iniResultPanel();
@@ -105,56 +92,13 @@ public class ResultDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				listIndex = comboBox.getSelectedIndex();
 				setAndUpdate();
+				System.out.println(Arrays.toString(lottoDatas));
+						
 			}
 		});
 	}
 
-	private void iniLottoResultNum() {
-		showWinNumPnl = new JPanel(null);
-		showWinNumPnl.setPreferredSize(new Dimension(490, 70));
-		showWinNumPnl.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-		showWinNumPnl.setBackground(Color.WHITE);
-		add(showWinNumPnl);
-
-		// 랜덤으로 결정된 당첨 결과를 resultTreeSet에 적용
-		RandomResult();
-		Integer[] resultArray = resultTreeSet.toArray(new Integer[6]);
-		lottoRecord.SetLottery(Arrays.asList(resultArray), bonus);
-
-		// 당첨 결과를 lotto.txt에 저장
-		writeCurLottoRecord();
-
-		for (int i = 0; i < resultArray.length; i++) {
-			JLabel lblResultNum = new JLabel("" + resultArray[i]);
-			setColorCenterFont(lblResultNum, Color.WHITE, JLabel.CENTER, 17);
-			lblResultNum.setBounds(i * 60 + 10, 6 - 3, 60, 60);
-			showWinNumPnl.add(lblResultNum);
-
-			JLabel lblResultCircle = numToColor(resultArray[i]);
-			lblResultCircle.setBounds(i * 60 + 10, 6, 60, 60);
-			showWinNumPnl.add(lblResultCircle);
-		}
-		JLabel lblPlus = new JLabel(" + ");
-		setColorCenterFont(lblPlus, Color.BLACK, JLabel.CENTER, 25);
-		lblPlus.setBounds(6 * 60 + 20, 20, 30, 30);
-		showWinNumPnl.add(lblPlus);
-
-		JLabel lblResultNum = new JLabel("" + bonus);
-		setColorCenterFont(lblResultNum, Color.WHITE, JLabel.CENTER, 17);
-		lblResultNum.setBounds(7 * 60, 6 - 3, 60, 60);
-		showWinNumPnl.add(lblResultNum);
-
-		JLabel lblResultCircle = numToColor(bonus);
-		lblResultCircle.setBounds(7 * 60, 6, 60, 60);
-		showWinNumPnl.add(lblResultCircle);
-	}
-
-	private void iniWinMoneyLbl() {
-		winMoneyLabel = new JLabel();
-		setColorCenterFont(winMoneyLabel, Color.BLACK, JLabel.CENTER, 17);
-		winMoneyLabel.setPreferredSize(new Dimension(300, 30));
-		add(winMoneyLabel);
-	}
+	
 
 	private void iniResultPanel() {
 		resultPanel = new JPanel(null);
@@ -174,6 +118,7 @@ public class ResultDialog extends JDialog {
 		lblCircles = new JLabel[5][6];
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 6; j++) {
+				// 로또 데이터에서 배열 추출
 				lblNums[i][j] = new JLabel();
 				lblNums[i][j].setBounds(j * 60 + 110, i * 60 - 3, 60, 60);
 				setColorCenterFont(lblNums[i][j], Color.WHITE, JLabel.CENTER, 17);
@@ -184,14 +129,7 @@ public class ResultDialog extends JDialog {
 				resultPanel.add(lblCircles[i][j]);
 			}
 		}
-		// 1등, 2등, 3등, 4등, 5등, 꽝(디폴트)
-		lblResults = new JLabel[5];
-		for (int i = 0; i < lblResults.length; i++) {
-			lblResults[i] = new JLabel();
-			lblResults[i].setBounds(460, i * 60 - 3, 60, 60);
-			setColorCenterFont(lblResults[i], Color.BLACK, JLabel.CENTER, 20);
-			resultPanel.add(lblResults[i]);
-		}
+
 		// 결과 패널을 메인프레임에 추가
 		add(resultPanel);
 	}
@@ -201,17 +139,10 @@ public class ResultDialog extends JDialog {
 
 		setRoundLblAndDropdown();
 
-		// iniLottoResultNum는 필요없다. 당첨 결과는 그대로
-
-		setWinMoneyLbl();
-
 		setResultPanel();
 	}
 
 	private void setResultDialog() {
-		for (int i = 0; i < resultString.length; i++) {
-			resultString[i] = "꽝";
-		}
 		lottoDatas = lottoRecord.getLottoDatas(listIndex);
 		int count = 0;
 		for (LottoData lottoData : lottoDatas) {
@@ -226,17 +157,6 @@ public class ResultDialog extends JDialog {
 	private void setRoundLblAndDropdown() {
 		roundText = String.valueOf(lottoRecord.getLottoRound()) + "회 당첨 결과";
 		roundNow.setText(roundText);
-	}
-
-	private void setWinMoneyLbl() {
-		// 회차 별로 당첨 금액을 계산하기 위해서
-		resultMoney = 0;
-		// 당첨금 계산
-		calculateMoney();
-
-		DecimalFormat decimalFormat = new DecimalFormat("#,###");
-		String formattedNumber = decimalFormat.format(resultMoney);
-		winMoneyLabel.setText("당첨금액: " + formattedNumber + "원");
 	}
 
 	private void setResultPanel() {
@@ -255,22 +175,7 @@ public class ResultDialog extends JDialog {
 				// 로또 데이터에서 배열 추출
 				int[] lottoArr = lottoDatas[i].getNums();
 				lblNums[i][j].setText("" + lottoArr[j]);
-
-				if (resultTreeSet.contains(lottoArr[j])) {
 					setToColor(lblCircles[i][j], lottoArr[j]);
-				} else {
-					setToBlack(lblCircles[i][j]);
-				}
-				if (resultString[i].equals("2등")) {
-					if (lottoArr[j] == bonus) {
-						setToColor(lblCircles[i][j], lottoArr[j]);
-					}
-				}
-			}
-		}
-		for (int i = 0; i < lblResults.length; i++) {
-			if (lottoDatas[i] != null) {
-				lblResults[i].setText(resultString[i]);
 			}
 		}
 	}
@@ -280,51 +185,6 @@ public class ResultDialog extends JDialog {
 		lbl.setHorizontalAlignment(alignment);
 		lbl.setVerticalAlignment(alignment);
 		lbl.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, fontSize));
-	}
-
-	private int equalsNum(int[] lottoArr) {
-		int count = 0;
-		for (int i = 0; i < lottoArr.length; i++) {
-			if (resultTreeSet.contains(lottoArr[i])) {
-				count++;
-			}
-		}
-		return count;
-	}
-
-	private void calculateMoney() {
-		for (int i = 0; i < 5; i++) {
-			if (lottoDatas[i] != null) {
-				int[] lottoArr = lottoDatas[i].getNums();
-				int count = equalsNum(lottoArr);
-
-				// 1등, 6개 번호 일치
-				if (count == 6) {
-					resultMoney += 100_000_000;
-					resultString[i] = "1등";
-				} else if (count == 5) {
-					// 3등, 5개 번호 일치
-					resultMoney += 3_000_000;
-					resultString[i] = "3등";
-
-					// 2등, 5개 번호 일치 + 보너스 볼과 번호 일치
-					for (int j = 0; j < lottoArr.length; j++) {
-						if (lottoArr[j] == bonus) {
-							resultMoney += 17_000_000;
-							resultString[i] = "2등";
-						}
-					}
-					// 4등, 4개 번호 일치
-				} else if (count == 4) {
-					resultMoney += 50_000;
-					resultString[i] = "4등";
-					// 5등, 3개 번호 일치
-				} else if (count == 3) {
-					resultMoney += 5_000;
-					resultString[i] = "5등";
-				}
-			}
-		}
 	}
 
 	// yellow blue red gray green 순서
@@ -368,17 +228,6 @@ public class ResultDialog extends JDialog {
 		lbl.setIcon(LottoCircle.BLACK.getImageIcon());
 	}
 
-	public void RandomResult() {
-		Random random = new Random();
-		resultTreeSet = new TreeSet<>();
-		while (resultTreeSet.size() < 6) {
-			resultTreeSet.add(random.nextInt(45) + 1);
-		}
-		do {
-			bonus = random.nextInt(45) + 1;
-		} while (resultTreeSet.contains(bonus));
-	}
-
 	public void writeCurLottoRecord() {
 		File file = new File(".//lotto.txt");
 		boolean success = LottoRecordIO.writeLottoRecords(file, lottoRecord);
@@ -388,13 +237,7 @@ public class ResultDialog extends JDialog {
 
 	// lottoDatas를 받아서 결과 다이얼로그를 보여주는 메소드
 	public static void showDialog(LottoRecord lottoRecord, JFrame mainFrame) {
-		ResultDialog resultDialog = new ResultDialog(lottoRecord, mainFrame);
+		PurchasedLottoDialog resultDialog = new PurchasedLottoDialog(lottoRecord, mainFrame);
 		resultDialog.setVisible(true);
-	}
-
-	// 테스트용 당첨 결과를 임의로 정해주는 메서드
-	private void ManualResult() {
-		resultTreeSet = new TreeSet<>(Arrays.asList(1, 11, 21, 31, 41, 45));
-		bonus = 7;
 	}
 }
