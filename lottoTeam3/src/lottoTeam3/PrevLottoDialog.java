@@ -141,12 +141,13 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 
 	private void resize() {
 		int count = 0;
-		for (LottoData lottoData : lottoDatas) {
-			if (lottoData == null) {
-				break;
+		if (lottoDatas != null)
+			for (LottoData lottoData : lottoDatas) {
+				if (lottoData == null) {
+					break;
+				}
+				count++;
 			}
-			count++;
-		}
 		setSize(600, 190 + count * 60);
 	}
 
@@ -204,6 +205,8 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 	}
 
 	private void settingResults() {
+		if (lottoDatas == null)
+			return;
 		for (int i = 0; i < lblCodes.length; i++) {
 			if (lottoDatas[i] != null) {
 				char c = (char) ('A' + i);
@@ -335,6 +338,8 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 	}
 
 	private void calculateMoney() {
+		if (lottoDatas == null)
+			return;
 		for (int i = 0; i < 5; i++) {
 			if (lottoDatas[i] != null) {
 				int[] lottoArr = lottoDatas[i].getNums();
@@ -389,7 +394,7 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		lbl.setIcon(LottoCircle.BLACK.getImageIcon());
 	}
 
-	public static void showDialog(Window window, List<LottoRecord> lottoRecordList) {
+	public static void showDialog(List<LottoRecord> lottoRecordList, Window window) {
 		PrevLottoDialog prevLottoDialog = new PrevLottoDialog(window, lottoRecordList);
 		prevLottoDialog.setVisible(true);
 	}

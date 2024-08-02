@@ -55,7 +55,8 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		endBtn = createMyButton("종료", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(120, 190, 200, 50));
 		btnCur.setEnabled(false);
 		resultBtn.setEnabled(true);
-		btnPrev.setEnabled(false);
+		if (lottoRecordList.size() == 0)
+			btnPrev.setEnabled(false);
 
 		pnl.add(pnlPic, "North");
 		pnl.add(pnlBtn);
@@ -107,11 +108,11 @@ public class NewMainFrame extends JFrame implements ActionListener {
 			btnPrev.setEnabled(true);
 			btnCur.setEnabled(false);
 		} else if (o.equals(btnPrev)) {
-			PrevLottoDialog.showDialog(this, lottoRecordList);
+			PrevLottoDialog.showDialog(lottoRecordList, this);
 		}
 		// 현재 구매 확인 : 선택한 번호가 적용된 창 출력
 		else if (o.equals(btnCur)) {
-
+			PurchasedLottoDialog.showDialog(curLottoRecord, this);
 		} else if (o.equals(endBtn)) {
 			frameClose();
 		}

@@ -238,7 +238,7 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 			}
 		}
 		if (o.equals(btnPrev)) {
-			PrevLottoDialog.showDialog(this, lottoRecordList);
+			PrevLottoDialog.showDialog(lottoRecordList, this);
 		} else if (o.equals(btnCur)) {
 
 		} else if (o.equals(btnAuto)) { // 자동 버튼
