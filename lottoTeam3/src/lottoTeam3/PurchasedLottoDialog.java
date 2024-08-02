@@ -202,8 +202,6 @@ public class PurchasedLottoDialog extends JDialog {
 	private void setRoundLblAndDropdown() {
 		roundText = String.valueOf("현재 구매한 로또 ");
 		roundNow.setText(roundText);
-
-		comboBox.setSelectedIndex(lottoRecord.getPuchaseNum() - 1);
 	}
 
 	private void setResultPanel() {
