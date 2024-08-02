@@ -166,8 +166,8 @@ public class NumberChooseDialog extends JDialog implements ActionListener {
 					}
 				}
 				setCount();
-				// void return : 해당 함수 빠져 나오기(break와 비슷함)
 				return;
+				// void return : 해당 함수 빠져 나오기(break와 비슷함)
 			}
 		}
 

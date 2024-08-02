@@ -15,6 +15,10 @@ public class LottoData {
 		return copy;
 	}
 
+	public static void setCopy(LottoData lottoData) {
+		copy = lottoData;
+	}
+
 	public int[] getNums() {
 		return nums;
 	}
