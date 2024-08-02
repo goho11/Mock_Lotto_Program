@@ -116,6 +116,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		} else if (o.equals(endBtn)) {
 			frameClose();
 		}
+//			StaticDialog.showDialog(lottoRecordList, this);
 	}
 
 	// 종료확인 다이얼로그 표시

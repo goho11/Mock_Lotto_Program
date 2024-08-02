@@ -87,16 +87,20 @@ public class PurchasedLottoDialog extends JDialog {
 			comboBox.addItem(String.valueOf(i + 1) + "번 로또");
 		}
 		comboBox.setPreferredSize(new Dimension(75, 30));
+		comboBox.setSelectedIndex(lottoRecord.getPuchaseNum() - 1);
 		add(comboBox);
+		listIndex = lottoRecord.getPuchaseNum() - 1;
 
 		// 드랍 다운 버튼 리스너 설정
 		comboBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				listIndex = comboBox.getSelectedIndex();
+				System.out.println("hi");
 				setAndUpdate();
 			}
 		});
+
 	}
 
 	private void iniBuyLottoMoneyLbl() {
