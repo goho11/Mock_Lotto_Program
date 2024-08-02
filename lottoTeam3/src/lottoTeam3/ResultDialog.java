@@ -209,9 +209,6 @@ public class ResultDialog extends JDialog {
 	}
 
 	private void setResultDialog() {
-		for (int i = 0; i < resultString.length; i++) {
-			resultString[i] = "꽝";
-		}
 		lottoDatas = lottoRecord.getLottoDatas(listIndex);
 		int count = 0;
 		for (LottoData lottoData : lottoDatas) {
@@ -322,6 +319,8 @@ public class ResultDialog extends JDialog {
 				} else if (count == 3) {
 					resultMoney += 5_000;
 					resultString[i] = "5등";
+				} else {
+					resultString[i] = "꽝";
 				}
 			}
 		}
@@ -344,7 +343,7 @@ public class ResultDialog extends JDialog {
 		return lbl;
 	}
 
-	public void setToColor(JLabel lbl, int n) {
+	private void setToColor(JLabel lbl, int n) {
 		if (n <= 10) {
 			lbl.setIcon(LottoCircle.YELLOW.getImageIcon());
 		} else if (10 < n && n <= 20) {
@@ -358,7 +357,7 @@ public class ResultDialog extends JDialog {
 		}
 	}
 
-	public JLabel numToBlack() {
+	private JLabel numToBlack() {
 		JLabel lbl = new JLabel();
 		lbl.setIcon(LottoCircle.BLACK.getImageIcon());
 		return lbl;

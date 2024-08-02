@@ -104,7 +104,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 			}
 		} else if (o.equals(resultBtn)) { // 추첨
 			ResultDialog.showDialog(curLottoRecord, this);
-//			lottoRecordList.add(curLottoRecord);
+			lottoRecordList.add(curLottoRecord);
 			curLottoRecord = new LottoRecord(1);
 			buyBtn.setText("구매(" + curLottoRecord.getPuchaseNum() + "장)");
 		} else if (o.equals(endBtn)) {
@@ -120,8 +120,8 @@ public class NewMainFrame extends JFrame implements ActionListener {
 
 	// 종료확인 다이얼로그 표시
 	private void frameClose() {
-		int input = JOptionPane.showOptionDialog(this, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION,
-				JOptionPane.ERROR_MESSAGE, null, null, null); // 종료 확인 다이알로그 출력 및 값 대입
+		int input = JOptionPane.showOptionDialog(this, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE,
+				null, null, null); // 종료 확인 다이알로그 출력 및 값 대입
 		if (input == JOptionPane.YES_OPTION) { // 종료 확인을 눌렀을 때
 			dispose(); // 창 사라지게
 		}
