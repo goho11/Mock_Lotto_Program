@@ -203,6 +203,7 @@ public class PurchasedLottoDialog extends JDialog {
 				}
 			}
 		}
+		// 이유는 모르겠지만 카운트를 반으로 나눠야 한다.
 		buyLottoMoney = 500 * buyCount;
 	
 		DecimalFormat decimalFormat = new DecimalFormat("#,###");
