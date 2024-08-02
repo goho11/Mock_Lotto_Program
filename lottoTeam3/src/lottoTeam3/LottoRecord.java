@@ -22,6 +22,10 @@ public class LottoRecord {
 		return lotteryBonus;
 	}
 
+	public List<LottoData[]> getBuyLotto() {
+		return buyLotto;
+	}
+
 	public LottoRecord(int lottoRound) {
 		this.lottoRound = lottoRound;
 		buyLotto = new ArrayList<>();
