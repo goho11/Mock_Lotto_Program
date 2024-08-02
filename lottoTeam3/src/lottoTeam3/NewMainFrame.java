@@ -29,6 +29,8 @@ public class NewMainFrame extends JFrame implements ActionListener {
 	private JButton btnPrev;
 	private JButton btnCur;
 	private JButton endBtn;
+	private JButton btnMoneyCheck; // 금액조회: 투자금, 수익금, 순이익
+	private JButton btnStats; // 통계
 
 	public NewMainFrame() {
 		super("가상 로또 시뮬레이션");
@@ -42,7 +44,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 
 		pnlPic.setBackground(Color.WHITE);
 		pnlBtn.setBackground(Color.WHITE);
-		pnlBtn.setPreferredSize(new Dimension(450, 255));
+		pnlBtn.setPreferredSize(new Dimension(440, 350));
 		JLabel lblLotto = new JLabel(new ImageIcon(NewMainFrame.class.getResource("/resource/lotto.png")));
 		pnlPic.add(lblLotto);
 
@@ -52,9 +54,11 @@ public class NewMainFrame extends JFrame implements ActionListener {
 				new Rectangle(20, 90, 200, 80));
 		btnCur = createMyButton("현재 구매 확인", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(220, 10, 200, 80));
 		btnPrev = createMyButton("이전 회차 확인", new Insets(0, 0, 0, 0), pnlBtn, 30, new Rectangle(220, 90, 200, 80));
-		endBtn = createMyButton("종료", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(120, 190, 200, 50));
+		btnMoneyCheck = createMyButton("금액조회", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(20, 170, 200, 80));
+		btnStats = createMyButton("통계", new Insets(0, 0, 0, 0), pnlBtn, 30, new Rectangle(220, 170, 200, 80));
+		endBtn = createMyButton("종료", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(120, 280, 200, 50));
+		btnMoneyCheck.setEnabled(false);
 		btnCur.setEnabled(false);
-		resultBtn.setEnabled(true);
 		if (lottoRecordList.size() == 0)
 			btnPrev.setEnabled(false);
 
@@ -98,6 +102,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 				buyBtn.setText("구매(" + curLottoRecord.getPuchaseNum() + "장)");
 				btnCur.setEnabled(true);
 				resultBtn.setEnabled(true);
+				btnMoneyCheck.setEnabled(true);
 			}
 		} else if (o.equals(resultBtn)) { // 추첨
 			ResultDialog.showDialog(curLottoRecord, this);
@@ -113,6 +118,10 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		// 현재 구매 확인 : 선택한 번호가 적용된 창 출력
 		else if (o.equals(btnCur)) {
 			PurchasedLottoDialog.showDialog(curLottoRecord, this);
+		} else if (o.equals(btnMoneyCheck)) {
+			// 수익금 조회
+		} else if (o.equals(btnStats)) {
+			// 투자금 조회
 		} else if (o.equals(endBtn)) {
 			frameClose();
 		}
@@ -121,8 +130,8 @@ public class NewMainFrame extends JFrame implements ActionListener {
 
 	// 종료확인 다이얼로그 표시
 	private void frameClose() {
-		int input = JOptionPane.showOptionDialog(this, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE,
-				null, null, null); // 종료 확인 다이알로그 출력 및 값 대입
+		int input = JOptionPane.showOptionDialog(this, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION,
+				JOptionPane.ERROR_MESSAGE, null, null, null); // 종료 확인 다이알로그 출력 및 값 대입
 		if (input == JOptionPane.YES_OPTION) { // 종료 확인을 눌렀을 때
 			dispose(); // 창 사라지게
 		}
