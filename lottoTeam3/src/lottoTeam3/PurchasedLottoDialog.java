@@ -96,7 +96,6 @@ public class PurchasedLottoDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				listIndex = comboBox.getSelectedIndex();
-				System.out.println("hi");
 				setAndUpdate();
 			}
 		});
