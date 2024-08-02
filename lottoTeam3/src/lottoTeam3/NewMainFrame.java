@@ -106,12 +106,14 @@ public class NewMainFrame extends JFrame implements ActionListener {
 			resultBtn.setText("추첨(" + curLottoRecord.getLottoRound() + "회차)");
 			btnPrev.setEnabled(true);
 			btnCur.setEnabled(false);
-		} else if (o.equals(endBtn)) {
-			frameClose();
-		} else if (o.equals(btnCur)) {
-			PurchasedLottoDialog.showDialog(curLottoRecord, this);
 		} else if (o.equals(btnPrev)) {
 			PrevLottoDialog.showDialog(this, lottoRecordList);
+		}
+		// 현재 구매 확인 : 선택한 번호가 적용된 창 출력
+		else if (o.equals(btnCur)) {
+
+		} else if (o.equals(endBtn)) {
+			frameClose();
 		}
 	}
 
