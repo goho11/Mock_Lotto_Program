@@ -119,6 +119,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		} else if (o.equals(btnMoneyCheck)) {
 			// 수익금 조회
 		} else if (o.equals(btnStats)) {
+			StaticDialog.showDialog(lottoRecordList, this);
 			// 투자금 조회
 		} else if (o.equals(endBtn)) {
 			frameClose();
