@@ -40,6 +40,51 @@ public class LottoRecord {
 		buyLotto.add(lottoDatas);
 	}
 
+	public int getProceeds() {
+		int result = 0;
+		for (LottoData[] lottoDatas : buyLotto) {
+			for (LottoData lottoData : lottoDatas) {
+				if (lottoData == null)
+					break;
+				int[] nums = lottoData.getNums();
+				int count = 0;
+				for (int i = 0; i < nums.length; i++) {
+					if (lotteryNums.contains(nums[i]))
+						count++;
+				}
+				if (count == 6) {
+					result += 100_000_000;
+				} else if (count == 5) {
+					boolean second = false;
+					for (int i = 0; i < nums.length; i++) {
+						if (lotteryBonus == nums[i]) {
+							second = true;
+							break;
+						}
+					}
+					result += second ? 17_000_000 : 3_000_000;
+				} else if (count == 4) {
+					result += 50_000;
+				} else if (count == 3) {
+					result += 5_000;
+				}
+			}
+		}
+		return result;
+	}
+
+	public int getInvestment() {
+		int result = 0;
+		for (LottoData[] lottoDatas : buyLotto) {
+			for (LottoData lottoData : lottoDatas) {
+				if (lottoData == null)
+					break;
+				result += 1000;
+			}
+		}
+		return result;
+	}
+
 	public static LottoRecord tryParse(String line) {
 		String[] splitFields = line.split("/");
 		LottoRecord lottoRecord = new LottoRecord(Integer.parseInt(splitFields[0]));

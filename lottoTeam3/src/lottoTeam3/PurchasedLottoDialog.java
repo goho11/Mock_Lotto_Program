@@ -64,7 +64,7 @@ public class PurchasedLottoDialog extends JDialog {
 
 	private void iniResultDialog() {
 		// 창 제일 위에 이름 어떻게 하지
-		setTitle("로또 결과창");
+		setTitle("구매 중인 로또");
 
 		// 요소들 끼리 간격 설정 (중앙정렬, hgap, vgap)
 		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));

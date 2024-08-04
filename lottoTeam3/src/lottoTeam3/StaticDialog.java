@@ -1,23 +1,26 @@
 package lottoTeam3;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
-import java.awt.ScrollPane;
-import java.awt.Window;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.plaf.ScrollPaneUI;
 
 public class StaticDialog extends JDialog {
 	private int[] numCounts = new int[45];
 	private int[] bonusCounts = new int[45];
 
-	private StaticDialog(List<LottoRecord> lottoRecordList, Window window) {
+	private StaticDialog(List<LottoRecord> lottoRecordList, JFrame frame) {
 		for (int i = 0; i < lottoRecordList.size(); i++) {
 			LottoRecord lr = lottoRecordList.get(i);
 			for (Integer integer : lr.getLotteryNums()) {
@@ -26,26 +29,32 @@ public class StaticDialog extends JDialog {
 			bonusCounts[lr.getLotteryBonus() - 1]++;
 		}
 		int size = lottoRecordList.size();
-		JPanel pnl = new JPanel(null);
-		pnl.setBackground(Color.WHITE);
-		pnl.setPreferredSize(new Dimension(0, 80));
-		add(pnl, "North");
-		ScrollPane pnlS = new ScrollPane();
-		JPanel pnlC = new JPanel(null);
-		pnlC.setPreferredSize(new Dimension(620, 900));
-		pnlC.setBackground(Color.WHITE);
-		pnlS.add(pnlC);
-		add(pnlS);
-		setTitle("로또 통계");
-		setSize(660, 500);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		JPanel pnlNorth = new JPanel(null);
+		pnlNorth.setBackground(Color.WHITE);
+		pnlNorth.setPreferredSize(new Dimension(0, 80));
 
-		initAttribute(size, pnl);
-		initTuples(size, pnlC);
+		initNorth(size, pnlNorth);
+
+		JPanel pnlCenter = new JPanel(null);
+		pnlCenter.setPreferredSize(new Dimension(620, 900));
+		pnlCenter.setBackground(Color.WHITE);
+
+		initCenter(size, pnlCenter);
+
+		JScrollPane sp = new JScrollPane(pnlCenter);
+		sp.getVerticalScrollBar().setUnitIncrement(10);
+		add(pnlNorth, "North");
+		add(sp);
+
+		setTitle("로또 통계");
+		setSize(650, 483);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setLocation(frame.getX() + frame.getWidth(), frame.getY());
+		setResizable(false);
 
 	}
 
-	private void initTuples(int size, JPanel pnlC) {
+	private void initCenter(int size, JPanel pnlC) {
 		JLabel[][] lblNums = new JLabel[3][45];
 		JLabel[][] lblCounts = new JLabel[3][45];
 		JLabel[][] lblPercents = new JLabel[3][45];
@@ -61,7 +70,7 @@ public class StaticDialog extends JDialog {
 		}
 	}
 
-	private void initAttribute(int size, JPanel pnl) {
+	private void initNorth(int size, JPanel pnl) {
 		JLabel lblTitle = createMyLabel("로또 통계 (총 " + size + "회)", new Rectangle(0, 0, 630, 35), 30, pnl);
 		lblTitle.setHorizontalAlignment(JLabel.CENTER);
 		JLabel lblNumStatc = createMyLabel("당첨 번호 통계", new Rectangle(0, 35, 210, 25), 22, pnl);
@@ -90,8 +99,8 @@ public class StaticDialog extends JDialog {
 		return lbl;
 	}
 
-	public static void showDialog(List<LottoRecord> lottoRecordList, Window window) {
-		new StaticDialog(lottoRecordList, window).setVisible(true);
+	public static void showDialog(List<LottoRecord> lottoRecordList, JFrame frame) {
+		new StaticDialog(lottoRecordList, frame).setVisible(true);
 	}
 
 }

@@ -346,6 +346,7 @@ public class ResultDialog extends JDialog {
 						if (lottoArr[j] == bonus) {
 							resultMoney += 17_000_000;
 							resultString[i] = "2등";
+							break;
 						}
 					}
 					// 4등, 4개 번호 일치

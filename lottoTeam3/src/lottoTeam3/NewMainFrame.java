@@ -54,7 +54,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 				new Rectangle(20, 90, 200, 80));
 		btnCur = createMyButton("현재 구매 확인", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(220, 10, 200, 80));
 		btnPrev = createMyButton("이전 회차 확인", new Insets(0, 0, 0, 0), pnlBtn, 30, new Rectangle(220, 90, 200, 80));
-		btnMoneyCheck = createMyButton("금액조회", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(20, 170, 200, 80));
+		btnMoneyCheck = createMyButton("손익결산", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(20, 170, 200, 80));
 		btnStats = createMyButton("통계", new Insets(0, 0, 0, 0), pnlBtn, 30, new Rectangle(220, 170, 200, 80));
 		endBtn = createMyButton("종료", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(120, 280, 200, 50));
 		btnCur.setEnabled(false);
@@ -121,6 +121,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		else if (o.equals(btnCur)) {
 			PurchasedLottoDialog.showDialog(curLottoRecord, this);
 		} else if (o.equals(btnMoneyCheck)) {
+			ProfitDialog.showDialog(lottoRecordList, this);
 			// 수익금 조회
 		} else if (o.equals(btnStats)) {
 			StaticDialog.showDialog(lottoRecordList, this);
