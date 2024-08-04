@@ -385,4 +385,14 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		else
 			return null;
 	}
+	
+	public LottoData[] purchaseMany(int lottoNum) {
+		LottoData[] lottoDatas = new LottoData[lottoNum];
+		for(int i=0; i<lottoNum; i++) {
+			lottoDatas[i] = createRandomLottoData();
+			buyLottoSetting(i);
+		}
+		
+		return lottoDatas;
+	}
 }
