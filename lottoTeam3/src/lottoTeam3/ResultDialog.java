@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -44,7 +45,7 @@ public class ResultDialog extends JDialog {
 	public ResultDialog(LottoRecord lottoRecord, JFrame mainFrame) {
 		this.lottoRecord = lottoRecord;
 		this.mainFrame = mainFrame;
-		
+
 		// 로또 구매 기록이 없을 경우 당첨 번호만 랜덤으로 생성해서 저장
 		if (lottoRecord.getLottoDatas(0) == null) {
 			iniResultDialog();
@@ -100,6 +101,8 @@ public class ResultDialog extends JDialog {
 	}
 
 	private void iniRoundLblAndDropdown() {
+		JButton btnPrev = new JButton("◀");
+		add(btnPrev);
 		roundNow = new JLabel();
 		roundNow.setPreferredSize(new Dimension(150, 30));
 		setColorCenterFont(roundNow, Color.BLACK, JLabel.CENTER, 20);
@@ -111,13 +114,34 @@ public class ResultDialog extends JDialog {
 		}
 		comboBox.setPreferredSize(new Dimension(110, 30));
 		add(comboBox);
+		JButton btnNext = new JButton("▶");
+		add(btnNext);
+		btnPrev.setEnabled(false);
+		if (comboBox.getItemCount() <= 1) {
+			btnPrev.setVisible(false);
+			btnNext.setVisible(false);
+		}
 
+		btnPrev.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				comboBox.setSelectedIndex(comboBox.getSelectedIndex() - 1);
+			}
+		});
+		btnNext.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				comboBox.setSelectedIndex(comboBox.getSelectedIndex() + 1);
+			}
+		});
 		// 드랍 다운 버튼 리스너 설정
 		comboBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				listIndex = comboBox.getSelectedIndex();
 				setAndUpdate();
+				btnPrev.setEnabled(listIndex > 0);
+				btnNext.setEnabled(listIndex < comboBox.getItemCount() - 1);
 			}
 		});
 	}

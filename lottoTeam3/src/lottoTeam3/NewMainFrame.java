@@ -57,10 +57,11 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		btnMoneyCheck = createMyButton("금액조회", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(20, 170, 200, 80));
 		btnStats = createMyButton("통계", new Insets(0, 0, 0, 0), pnlBtn, 30, new Rectangle(220, 170, 200, 80));
 		endBtn = createMyButton("종료", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(120, 280, 200, 50));
-		btnMoneyCheck.setEnabled(false);
 		btnCur.setEnabled(false);
-		if (lottoRecordList.size() == 0)
+		if (lottoRecordList.size() == 0) {
 			btnPrev.setEnabled(false);
+			btnMoneyCheck.setEnabled(false);
+		}
 
 		pnl.add(pnlPic, "North");
 		pnl.add(pnlBtn);
@@ -111,6 +112,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 			buyBtn.setText("구매(" + curLottoRecord.getPuchaseNum() + "장)");
 			resultBtn.setText("추첨(" + curLottoRecord.getLottoRound() + "회차)");
 			btnPrev.setEnabled(true);
+			btnMoneyCheck.setEnabled(true);
 			btnCur.setEnabled(false);
 		} else if (o.equals(btnPrev)) {
 			PrevLottoDialog.showDialog(lottoRecordList, this);

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.ScrollPane;
 import java.awt.Window;
 import java.util.List;
 
@@ -25,12 +26,42 @@ public class StaticDialog extends JDialog {
 			bonusCounts[lr.getLotteryBonus() - 1]++;
 		}
 		int size = lottoRecordList.size();
-
 		JPanel pnl = new JPanel(null);
 		pnl.setBackground(Color.WHITE);
-		pnl.setPreferredSize(new Dimension(630, 990));
-		add(pnl);
+		pnl.setPreferredSize(new Dimension(0, 80));
+		add(pnl, "North");
+		ScrollPane pnlS = new ScrollPane();
+		JPanel pnlC = new JPanel(null);
+		pnlC.setPreferredSize(new Dimension(620, 900));
+		pnlC.setBackground(Color.WHITE);
+		pnlS.add(pnlC);
+		add(pnlS);
+		setTitle("로또 통계");
+		setSize(660, 500);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+		initAttribute(size, pnl);
+		initTuples(size, pnlC);
+
+	}
+
+	private void initTuples(int size, JPanel pnlC) {
+		JLabel[][] lblNums = new JLabel[3][45];
+		JLabel[][] lblCounts = new JLabel[3][45];
+		JLabel[][] lblPercents = new JLabel[3][45];
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 45; j++) {
+				lblNums[i][j] = createMyLabel((j + 1) + "번", new Rectangle(i * 210, j * 20, 70, 20), 20, pnlC);
+				int count = i == 0 ? numCounts[j] : i == 1 ? bonusCounts[j] : numCounts[j] + bonusCounts[j];
+				lblCounts[i][j] = createMyLabel(count + "회", new Rectangle(i * 210 + 70, j * 20, 70, 20), 20, pnlC);
+				int total = size == 0 ? 1 : i == 0 ? size * 6 : i == 1 ? size : size * 7;
+				lblPercents[i][j] = createMyLabel(String.format("%.1f%%", count * 100.0 / total),
+						new Rectangle(i * 210 + 140, j * 20, 70, 20), 20, pnlC);
+			}
+		}
+	}
+
+	private void initAttribute(int size, JPanel pnl) {
 		JLabel lblTitle = createMyLabel("로또 통계 (총 " + size + "회)", new Rectangle(0, 0, 630, 35), 30, pnl);
 		lblTitle.setHorizontalAlignment(JLabel.CENTER);
 		JLabel lblNumStatc = createMyLabel("당첨 번호 통계", new Rectangle(0, 35, 210, 25), 22, pnl);
@@ -48,22 +79,6 @@ public class StaticDialog extends JDialog {
 			lblCountTitle[i] = createMyLabel("횟수", new Rectangle(i * 210 + 70, 60, 70, 20), 18, pnl);
 			lblPercentTitle[i] = createMyLabel("통계", new Rectangle(i * 210 + 140, 60, 70, 20), 18, pnl);
 		}
-		JLabel[][] lblNums = new JLabel[3][45];
-		JLabel[][] lblCounts = new JLabel[3][45];
-		JLabel[][] lblPercents = new JLabel[3][45];
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 45; j++) {
-				lblNums[i][j] = createMyLabel((j + 1) + "번", new Rectangle(i * 210, j * 20 + 80, 70, 20), 20, pnl);
-				int count = i == 0 ? numCounts[j] : i == 1 ? bonusCounts[j] : numCounts[j] + bonusCounts[j];
-				lblCounts[i][j] = createMyLabel(count + "회", new Rectangle(i * 210 + 70, j * 20 + 80, 70, 20), 20, pnl);
-				int total = size == 0 ? 1 : i == 0 ? size * 6 : i == 1 ? size : size * 7;
-				lblPercents[i][j] = createMyLabel(String.format("%.1f%%", count * 100.0 / total),
-						new Rectangle(i * 210 + 140, j * 20 + 80, 70, 20), 20, pnl);
-			}
-		}
-		pack();
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
 	}
 
 	private JLabel createMyLabel(String text, Rectangle r, int fontSize, JPanel pnl) {

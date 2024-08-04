@@ -1,6 +1,7 @@
 package lottoTeam3;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
@@ -40,13 +41,15 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 	private int indexHwe;
 	private JButton[] btnCopy;
 	private JLabel lblBeon;
+	private JButton btnPrevHwe;
+	private JButton btnNextHwe;
+	private JButton btnNextBeon;
+	private JButton btnPrevBeon;
 
 	private PrevLottoDialog(Window window, List<LottoRecord> lottoRecordList) {
 		this.lottoRecordList = lottoRecordList;
 		indexHwe = lottoRecordList.size() - 1;
-		lotteryNums = lottoRecordList.get(indexHwe).getLotteryNums();
-		lotteryBonus = lottoRecordList.get(indexHwe).getLotteryBonus();
-		lottoDatas = lottoRecordList.get(indexHwe).getLottoDatas(0);
+		setLottoDatas();
 
 		JPanel pnlNorth = new JPanel();
 		initNorth(pnlNorth);
@@ -95,7 +98,7 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 	}
 
 	private void initNorth(JPanel pnl) {
-		pnl.setBorder(new EmptyBorder(10, 0, 0, 0));
+//		pnl.setBorder(new EmptyBorder(10, 0, 0, 0));
 		pnl.setBackground(Color.white);
 		pnl.setPreferredSize(new Dimension(0, 160));
 
@@ -105,31 +108,58 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 
 		initWinMoneyLabel(pnl);
 
+		settingCombos();
+
 		settingWinNumPnl();
 
 		settingWinMoneyLabel();
 	}
 
+	private void settingCombos() {
+		btnNextHwe.setEnabled(indexHwe < lottoRecordList.size() - 1);
+		btnPrevHwe.setEnabled(indexHwe > 0);
+		btnNextBeon.setEnabled(lottoRecordList.get(indexHwe).getPuchaseNum() > 1);
+		btnPrevBeon.setEnabled(false);
+
+		beonEnable(comboBoxBeon.getItemCount() != 0);
+	}
+
 	private void initCombos(JPanel pnl) {
+		JPanel pnlCombo = new JPanel(null);
+		pnlCombo.setBackground(Color.WHITE);
+//		pnlCombo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		pnlCombo.setPreferredSize(new Dimension(550, 35));
+		btnPrevHwe = createMoveButton("◀", pnlCombo);
+		btnPrevHwe.setBounds(0, 0, 30, 35);
 		JLabel lblHwe = new JLabel("이전 회차 선택");
 //		lblHwe.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		lblHwe.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
-		pnl.add(lblHwe);
+		lblHwe.setBounds(30, 0, 120, 35);
+		lblHwe.setHorizontalAlignment(JLabel.CENTER);
+
+		pnlCombo.add(lblHwe);
 
 		comboBoxHwe = new JComboBox<>();
 		for (int i = 0; i < lottoRecordList.size(); i++) {
 			comboBoxHwe.addItem((i + 1) + "회");
 		}
 		comboBoxHwe.setSelectedIndex(indexHwe);
+		comboBoxHwe.setAlignmentX(Component.CENTER_ALIGNMENT);
 		comboBoxHwe.setBackground(Color.WHITE);
 		comboBoxHwe.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
 		comboBoxHwe.addActionListener(this);
 		comboBoxHwe.setFocusable(false);
-		pnl.add(comboBoxHwe);
+		comboBoxHwe.setBounds(150, 0, 90, 35);
+		pnlCombo.add(comboBoxHwe);
+		btnNextHwe = createMoveButton("▶", pnlCombo);
+		btnNextHwe.setBounds(240, 0, 30, 35);
 
+		btnPrevBeon = createMoveButton("◀", pnlCombo);
+		btnPrevBeon.setBounds(280, 0, 30, 35);
 		lblBeon = new JLabel("구매 번호 선택");
 		lblBeon.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
-		pnl.add(lblBeon);
+		lblBeon.setBounds(310, 0, 120, 35);
+		pnlCombo.add(lblBeon);
 
 		comboBoxBeon = new JComboBox<>();
 		for (int i = 0; i < lottoRecordList.get(indexHwe).getPuchaseNum(); i++) {
@@ -139,15 +169,29 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		comboBoxBeon.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
 		comboBoxBeon.addActionListener(this);
 		comboBoxBeon.setFocusable(false);
-		pnl.add(comboBoxBeon);
+		comboBoxBeon.setBounds(430, 0, 90, 35);
+		pnlCombo.add(comboBoxBeon);
+		btnNextBeon = createMoveButton("▶", pnlCombo);
+		btnNextBeon.setBounds(520, 0, 30, 35);
+		pnl.add(pnlCombo);
 
-		if (lottoRecordList.get(indexHwe).getPuchaseNum() == 0) {
-			comboBoxBeon.setVisible(false);
-			lblBeon.setVisible(false);
-		} else {
-			comboBoxBeon.setVisible(true);
-			lblBeon.setVisible(true);
-		}
+	}
+
+	private void beonEnable(boolean b) {
+		btnPrevBeon.setVisible(b);
+		comboBoxBeon.setVisible(b);
+		lblBeon.setVisible(b);
+		btnNextBeon.setVisible(b);
+	}
+
+	private JButton createMoveButton(String text, JPanel pnl) {
+		JButton btn = new JButton(text);
+		btn.setBackground(Color.WHITE);
+		btn.setMargin(new Insets(0, 3, 0, 3));
+		btn.setFocusable(false);
+		btn.addActionListener(this);
+		pnl.add(btn);
+		return btn;
 	}
 
 	private void resize() {
@@ -173,23 +217,15 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		}
 		if (o.equals(comboBoxHwe)) {
 			indexHwe = comboBoxHwe.getSelectedIndex();
-			lotteryNums = lottoRecordList.get(indexHwe).getLotteryNums();
-			lotteryBonus = lottoRecordList.get(indexHwe).getLotteryBonus();
-			lottoDatas = lottoRecordList.get(indexHwe).getLottoDatas(0);
+			setLottoDatas();
 
 			comboBoxBeon.removeAllItems();
-			if (lottoRecordList.get(indexHwe).getPuchaseNum() == 0) {
-				comboBoxBeon.setVisible(false);
-				lblBeon.setVisible(false);
-			} else {
-				comboBoxBeon.setVisible(true);
-				lblBeon.setVisible(true);
-			}
 
 			for (int i = 0; i < lottoRecordList.get(indexHwe).getPuchaseNum(); i++) {
 				comboBoxBeon.addItem((i + 1) + "번");
 			}
 
+			settingCombos();
 			settingWinNumPnl();
 			settingWinMoneyLabel();
 			settingResults();
@@ -199,11 +235,27 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 			if (indexBeon < 0)
 				return;
 			lottoDatas = lottoRecordList.get(indexHwe).getLottoDatas(indexBeon);
+			btnPrevBeon.setEnabled(indexBeon > 0);
+			btnNextBeon.setEnabled(indexBeon < lottoRecordList.get(indexHwe).getPuchaseNum() - 1);
 
 			settingWinMoneyLabel();
 			settingResults();
 			resize();
+		} else if (o.equals(btnPrevHwe)) {
+			comboBoxHwe.setSelectedIndex(comboBoxHwe.getSelectedIndex() - 1);
+		} else if (o.equals(btnNextHwe)) {
+			comboBoxHwe.setSelectedIndex(comboBoxHwe.getSelectedIndex() + 1);
+		} else if (o.equals(btnPrevBeon)) {
+			comboBoxBeon.setSelectedIndex(comboBoxBeon.getSelectedIndex() - 1);
+		} else if (o.equals(btnNextBeon)) {
+			comboBoxBeon.setSelectedIndex(comboBoxBeon.getSelectedIndex() + 1);
 		}
+	}
+
+	private void setLottoDatas() {
+		lotteryNums = lottoRecordList.get(indexHwe).getLotteryNums();
+		lotteryBonus = lottoRecordList.get(indexHwe).getLotteryBonus();
+		lottoDatas = lottoRecordList.get(indexHwe).getLottoDatas(0);
 	}
 
 	private void settingWinMoneyLabel() {

@@ -77,6 +77,8 @@ public class PurchasedLottoDialog extends JDialog {
 	}
 
 	private void iniRoundLblAndDropdown() {
+		JButton btnPrev = new JButton("◀");
+		add(btnPrev);
 		roundNow = new JLabel();
 		roundNow.setPreferredSize(new Dimension(150, 30));
 		setColorCenterFont(roundNow, Color.BLACK, JLabel.CENTER, 20);
@@ -89,14 +91,35 @@ public class PurchasedLottoDialog extends JDialog {
 		comboBox.setPreferredSize(new Dimension(75, 30));
 		comboBox.setSelectedIndex(lottoRecord.getPuchaseNum() - 1);
 		add(comboBox);
+		JButton btnNext = new JButton("▶");
+		add(btnNext);
 		listIndex = lottoRecord.getPuchaseNum() - 1;
+		btnNext.setEnabled(false);
+		if (comboBox.getItemCount() <= 1) {
+			btnPrev.setVisible(false);
+			btnNext.setVisible(false);
+		}
 
+		btnPrev.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				comboBox.setSelectedIndex(comboBox.getSelectedIndex() - 1);
+			}
+		});
+		btnNext.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				comboBox.setSelectedIndex(comboBox.getSelectedIndex() + 1);
+			}
+		});
 		// 드랍 다운 버튼 리스너 설정
 		comboBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				listIndex = comboBox.getSelectedIndex();
 				setAndUpdate();
+				btnPrev.setEnabled(listIndex > 0);
+				btnNext.setEnabled(listIndex < comboBox.getItemCount() - 1);
 			}
 		});
 
