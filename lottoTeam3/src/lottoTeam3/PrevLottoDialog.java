@@ -27,7 +27,6 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 	private JLabel[][] lblNums;
 	private JLabel[][] lblCircles;
 	private JLabel[] lblResults;
-	private String[] resultString = new String[5];
 	private LottoData[] lottoDatas;
 	private List<Integer> lotteryNums;
 	private int lotteryBonus;
@@ -36,7 +35,6 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 	private JLabel lblResultBonus;
 	private JLabel lblResultBonusCircle;
 	private JLabel winMoneyLabel;
-	private int resultMoney;
 	private int indexHwe;
 	private JButton[] btnCopy;
 	private JLabel lblBeon;
@@ -260,9 +258,9 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 	}
 
 	private void settingWinMoneyLabel() {
-		resultMoney = 0;
 		// 당첨금 계산
-		calculateMoney();
+		int resultMoney = 0;
+		resultMoney += lottoRecordList.get(indexHwe).getPrize(indexBeon);
 
 		DecimalFormat decimalFormat = new DecimalFormat("#,###");
 		String formattedNumber = decimalFormat.format(resultMoney);
@@ -299,7 +297,7 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 				} else {
 					setToBlack(lblCircles[i][j]);
 				}
-				if (resultString[i].equals("2등")) {
+				if (lottoRecordList.get(indexHwe).getLottoRank(indexBeon, i) == 2) {
 					if (lottoArr[j] == lotteryBonus) {
 						setToColor(lblCircles[i][j], lottoArr[j]);
 					}
@@ -308,7 +306,8 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		}
 		for (int i = 0; i < lblResults.length; i++) {
 			if (lottoDatas[i] != null) {
-				lblResults[i].setText(resultString[i]);
+				int rank = lottoRecordList.get(indexHwe).getLottoRank(indexBeon, i);
+				lblResults[i].setText(rank == 6 ? "꽝" : rank + "등");
 			}
 		}
 	}
@@ -407,45 +406,6 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 			}
 		}
 		return count;
-	}
-
-	private void calculateMoney() {
-		if (lottoDatas == null)
-			return;
-		for (int i = 0; i < 5; i++) {
-			if (lottoDatas[i] != null) {
-				int[] lottoArr = lottoDatas[i].getNums();
-				int count = equalsNum(lottoArr);
-
-				// 1등, 6개 번호 일치
-				if (count == 6) {
-					resultMoney += 100_000_000;
-					resultString[i] = "1등";
-				} else if (count == 5) {
-					// 3등, 5개 번호 일치
-					resultMoney += 3_000_000;
-					resultString[i] = "3등";
-
-					// 2등, 5개 번호 일치 + 보너스 볼과 번호 일치
-					for (int j = 0; j < lottoArr.length; j++) {
-						if (lottoArr[j] == lotteryBonus) {
-							resultMoney += 17_000_000;
-							resultString[i] = "2등";
-						}
-					}
-					// 4등, 4개 번호 일치
-				} else if (count == 4) {
-					resultMoney += 50_000;
-					resultString[i] = "4등";
-					// 5등, 3개 번호 일치
-				} else if (count == 3) {
-					resultMoney += 5_000;
-					resultString[i] = "5등";
-				} else {
-					resultString[i] = "꽝";
-				}
-			}
-		}
 	}
 
 	private void setToColor(JLabel lbl, int n) {
