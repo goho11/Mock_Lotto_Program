@@ -24,7 +24,7 @@ import javax.swing.JPanel;
 public class ResultDialog extends JDialog {
 	private Set<Integer> resultTreeSet;
 	private String[] resultString = new String[5];
-//	private int resultMoney;
+	private int resultMoney;
 	private int bonus;
 	private String roundText;
 	private int listIndex;
@@ -263,22 +263,11 @@ public class ResultDialog extends JDialog {
 	}
 
 	private void setWinMoneyLbl() {
+		// 회차 별로 당첨 금액을 계산하기 위해서
+		resultMoney = 0;
+		// 당첨금 계산
 		calculateMoney();
-		Integer[] ranks = lottoRecord.getRankList().get(listIndex);
-		int resultMoney = 0;
-		for (int i = 0; i < ranks.length; i++) {
-			if (ranks[i] == 1) {
-				resultMoney += 100_000_000;
-			} else if (ranks[i] == 2) {
-				resultMoney += 20_000_000;
-			} else if (ranks[i] == 3) {
-				resultMoney += 3_000_000;
-			} else if (ranks[i] == 4) {
-				resultMoney += 50_000;
-			} else if (ranks[i] == 5) {
-				resultMoney += 5_000;
-			}
-		}
+
 		DecimalFormat decimalFormat = new DecimalFormat("#,###");
 		String formattedNumber = decimalFormat.format(resultMoney);
 		winMoneyLabel.setText("당첨금액: " + formattedNumber + "원");
@@ -345,23 +334,28 @@ public class ResultDialog extends JDialog {
 
 				// 1등, 6개 번호 일치
 				if (count == 6) {
+					resultMoney += 100_000_000;
 					resultString[i] = "1등";
 				} else if (count == 5) {
 					// 3등, 5개 번호 일치
+					resultMoney += 3_000_000;
 					resultString[i] = "3등";
 
 					// 2등, 5개 번호 일치 + 보너스 볼과 번호 일치
 					for (int j = 0; j < lottoArr.length; j++) {
 						if (lottoArr[j] == bonus) {
+							resultMoney += 17_000_000;
 							resultString[i] = "2등";
 							break;
 						}
 					}
 					// 4등, 4개 번호 일치
 				} else if (count == 4) {
+					resultMoney += 50_000;
 					resultString[i] = "4등";
 					// 5등, 3개 번호 일치
 				} else if (count == 3) {
+					resultMoney += 5_000;
 					resultString[i] = "5등";
 				} else {
 					resultString[i] = "꽝";
