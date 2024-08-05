@@ -43,7 +43,7 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 	private JButton btnCur;
 	private boolean buy = false;
 
-	public PurchaseDialog(List<LottoRecord> lottoRecordList, LottoRecord curLottoRecord, JFrame frame) {
+	private PurchaseDialog(List<LottoRecord> lottoRecordList, LottoRecord curLottoRecord, JFrame frame) {
 		this.lottoRecordList = lottoRecordList;
 		this.curLottoRecord = curLottoRecord;
 		JPanel pnlNorth = new JPanel(); // 플로우 레이아웃으로
@@ -329,13 +329,21 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 		}
 	}
 
-	private LottoData createRandomLottoData() {
+	private static LottoData createRandomLottoData() {
 		Random random = new Random();
 		Set<Integer> set = new TreeSet<>();
 		while (set.size() < 6) {
 			set.add(random.nextInt(45) + 1);
 		}
 		return new LottoData(set.stream().mapToInt(Integer::intValue).toArray(), Mode.AUTO);
+	}
+
+	public static LottoData[] createAuto() {
+		LottoData[] lottoDatas = new LottoData[5];
+		for (int j = 0; j < lottoDatas.length; j++) {
+			lottoDatas[j] = createRandomLottoData();
+		}
+		return lottoDatas;
 	}
 
 	private void reset() {

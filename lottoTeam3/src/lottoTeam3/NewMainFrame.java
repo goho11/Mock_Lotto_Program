@@ -12,6 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -29,8 +30,10 @@ public class NewMainFrame extends JFrame implements ActionListener {
 	private JButton btnPrev;
 	private JButton btnCur;
 	private JButton endBtn;
-	private JButton btnMoneyCheck; // 금액조회: 투자금, 수익금, 순이익
-	private JButton btnStats; // 통계
+	private JButton btnMoneyCheck;
+	private JButton btnStats;
+	private JButton btnManyBuy;
+	private JFrame frame;
 
 	public NewMainFrame() {
 		super("가상 로또 시뮬레이션");
@@ -56,7 +59,8 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		btnPrev = createMyButton("이전 회차 확인", new Insets(0, 0, 0, 0), pnlBtn, 30, new Rectangle(220, 90, 200, 80));
 		btnMoneyCheck = createMyButton("손익결산", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(20, 170, 200, 80));
 		btnStats = createMyButton("통계", new Insets(0, 0, 0, 0), pnlBtn, 30, new Rectangle(220, 170, 200, 80));
-		endBtn = createMyButton("종료", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(120, 280, 200, 50));
+		btnManyBuy = createMyButton("대량구매", new Insets(0, 0, 0, 0), pnlBtn, 30, new Rectangle(20, 250, 200, 80));
+		endBtn = createMyButton("종료", new Insets(0, 0, 0, 0), pnlBtn, 34, new Rectangle(220, 250, 200, 80));
 		btnCur.setEnabled(false);
 		if (lottoRecordList.size() == 0) {
 			btnPrev.setEnabled(false);
@@ -103,7 +107,6 @@ public class NewMainFrame extends JFrame implements ActionListener {
 				buyBtn.setText("구매(" + curLottoRecord.getPuchaseNum() + "장)");
 				btnCur.setEnabled(true);
 				resultBtn.setEnabled(true);
-				btnMoneyCheck.setEnabled(true);
 			}
 		} else if (o.equals(resultBtn)) { // 추첨
 			ResultDialog.showDialog(curLottoRecord, this);
@@ -125,9 +128,27 @@ public class NewMainFrame extends JFrame implements ActionListener {
 			// 수익금 조회
 		} else if (o.equals(btnStats)) {
 			StaticDialog.showDialog(lottoRecordList, this);
-			// 투자금 조회
-		} else if (o.equals(endBtn)) {
+		} else if (o.equals(endBtn)) { // 종료
 			frameClose();
+		} else if (o.equals(btnManyBuy)) { // 대량구매
+			// 구매하고자 하는 금액만큼 모두 자동으로 구입
+			String input = JOptionPane.showInputDialog(frame, "구매할 로또 장수를 입력하세요");
+			try {
+				int lottoCount = Integer.parseInt(input);
+				if (lottoCount < 1) {
+					JOptionPane.showMessageDialog(frame, "1이상을 입력하세요");
+				} else {
+					for (int i = 0; i < lottoCount; i++) {
+						curLottoRecord.addBuyLotto(PurchaseDialog.createAuto());
+					}
+
+					buyBtn.setText("구매(" + curLottoRecord.getPuchaseNum() + "장)");
+					btnCur.setEnabled(true);
+					resultBtn.setEnabled(true);
+				}
+			} catch (Exception e2) {
+				JOptionPane.showMessageDialog(frame, "숫자를 입력하세요");
+			}
 		}
 	}
 

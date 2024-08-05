@@ -129,15 +129,16 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		pnlCombo.setBackground(Color.WHITE);
 //		pnlCombo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		pnlCombo.setPreferredSize(new Dimension(550, 35));
-		btnPrevHwe = createMoveButton("◀", pnlCombo);
-		btnPrevHwe.setBounds(0, 0, 30, 35);
 		JLabel lblHwe = new JLabel("이전 회차 선택");
 //		lblHwe.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		lblHwe.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
-		lblHwe.setBounds(30, 0, 120, 35);
+		lblHwe.setBounds(0, 0, 120, 35);
 		lblHwe.setHorizontalAlignment(JLabel.CENTER);
 
 		pnlCombo.add(lblHwe);
+
+		btnPrevHwe = createMoveButton("◀", pnlCombo);
+		btnPrevHwe.setBounds(120, 0, 30, 35);
 
 		comboBoxHwe = new JComboBox<>();
 		for (int i = 0; i < lottoRecordList.size(); i++) {
@@ -154,13 +155,13 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		btnNextHwe = createMoveButton("▶", pnlCombo);
 		btnNextHwe.setBounds(240, 0, 30, 35);
 
-		btnPrevBeon = createMoveButton("◀", pnlCombo);
-		btnPrevBeon.setBounds(280, 0, 30, 35);
 		lblBeon = new JLabel("구매 번호 선택");
 		lblBeon.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
-		lblBeon.setBounds(310, 0, 120, 35);
+		lblBeon.setBounds(280, 0, 120, 35);
 		pnlCombo.add(lblBeon);
 
+		btnPrevBeon = createMoveButton("◀", pnlCombo);
+		btnPrevBeon.setBounds(400, 0, 30, 35);
 		comboBoxBeon = new JComboBox<>();
 		for (int i = 0; i < lottoRecordList.get(indexHwe).getPuchaseNum(); i++) {
 			comboBoxBeon.addItem((i + 1) + "번");
