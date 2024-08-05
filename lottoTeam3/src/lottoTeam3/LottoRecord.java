@@ -9,6 +9,7 @@ public class LottoRecord {
 	private List<Integer> lotteryNums; // 당첨 번호
 	private int lotteryBonus; // 당첨 보너스 번호
 	private List<LottoData[]> buyLotto; // 구매자가 선택한 번호
+	private List<Integer[]> rankList;
 
 	public int getLottoRound() {
 		return lottoRound;

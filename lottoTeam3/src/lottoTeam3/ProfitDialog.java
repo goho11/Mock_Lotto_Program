@@ -20,12 +20,6 @@ public class ProfitDialog extends JDialog {
 	List<Integer> investmentList = new ArrayList<>();
 
 	private ProfitDialog(List<LottoRecord> lottoRecordList, JFrame frame) {
-		for (LottoRecord lottoRecord : lottoRecordList) {
-			proceedsList.add(lottoRecord.getProceeds());
-			investmentList.add(lottoRecord.getInvestment());
-		}
-		System.out.println(proceedsList);
-		System.out.println(investmentList);
 		setTitle("로또 손익결산");
 
 		JPanel pnlNorth = new JPanel(null);
@@ -60,8 +54,7 @@ public class ProfitDialog extends JDialog {
 			lblInvestment.setHorizontalAlignment(JLabel.RIGHT);
 			JLabel lblProceeds = createMyLabel(proceeds + "원", new Rectangle(190, i * 20, 130, 20), 15, pnlCenter);
 			lblProceeds.setHorizontalAlignment(JLabel.RIGHT);
-			JLabel lblProfit = createMyLabel(proceeds - investment + "원", new Rectangle(320, i * 20, 130, 20), 15,
-					pnlCenter);
+			JLabel lblProfit = createMyLabel(proceeds - investment + "원", new Rectangle(320, i * 20, 130, 20), 15, pnlCenter);
 			lblProfit.setHorizontalAlignment(JLabel.RIGHT);
 
 		}

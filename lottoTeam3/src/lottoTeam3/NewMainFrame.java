@@ -133,8 +133,8 @@ public class NewMainFrame extends JFrame implements ActionListener {
 
 	// 종료확인 다이얼로그 표시
 	private void frameClose() {
-		int input = JOptionPane.showOptionDialog(this, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION,
-				JOptionPane.ERROR_MESSAGE, null, null, null); // 종료 확인 다이알로그 출력 및 값 대입
+		int input = JOptionPane.showOptionDialog(this, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE,
+				null, null, null); // 종료 확인 다이알로그 출력 및 값 대입
 		if (input == JOptionPane.YES_OPTION) { // 종료 확인을 눌렀을 때
 			dispose(); // 창 사라지게
 		}
