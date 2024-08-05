@@ -132,24 +132,18 @@ public class NewMainFrame extends JFrame implements ActionListener {
 			frameClose();
 		} else if (o.equals(btnManyBuy)) { // 대량구매
 			// 구매하고자 하는 금액만큼 모두 자동으로 구입
-			String input = JOptionPane.showInputDialog(frame, "구매할 로또 장수를 입력하세요");
-			try {
-				int lottoCount = Integer.parseInt(input);
-				if (lottoCount < 1) {
-					JOptionPane.showMessageDialog(frame, "1이상을 입력하세요");
-				} else {
-					for (int i = 0; i < lottoCount; i++) {
-						curLottoRecord.addBuyLotto(PurchaseDialog.createAuto());
-					}
-
-					buyBtn.setText("구매(" + curLottoRecord.getPuchaseNum() + "장)");
-					btnCur.setEnabled(true);
-					resultBtn.setEnabled(true);
+			int lottoCount = BulkPurchaseDialog.showDialog(frame);
+			if (lottoCount > 0) {
+				for (int i = 0; i < lottoCount; i++) {
+					curLottoRecord.addBuyLotto(PurchaseDialog.createAuto());
 				}
-			} catch (Exception e2) {
-				JOptionPane.showMessageDialog(frame, "숫자를 입력하세요");
+
+				buyBtn.setText("구매(" + curLottoRecord.getPuchaseNum() + "장)");
+				btnCur.setEnabled(true);
+				resultBtn.setEnabled(true);
 			}
 		}
+
 	}
 
 	// 종료확인 다이얼로그 표시
