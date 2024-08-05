@@ -81,11 +81,11 @@ public class LottoRecord {
 			}
 			rankList.add(ranks);
 		}
-		for (int i = 0; i < rankList.size(); i++) {
-			Integer[] ranks = rankList.get(i);
-			System.out.print(Arrays.toString(ranks) + " ");
-		}
-		System.out.println();
+//		for (int i = 0; i < rankList.size(); i++) {
+//			Integer[] ranks = rankList.get(i);
+//			System.out.print(Arrays.toString(ranks) + " ");
+//		}
+//		System.out.println();
 	}
 
 	public void addBuyLotto(LottoData[] lottoDatas) {
