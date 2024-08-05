@@ -12,7 +12,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -22,7 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class NewMainFrame extends JFrame implements ActionListener {
+public class MainFrame extends JFrame implements ActionListener {
 	private List<LottoRecord> lottoRecordList;
 	private LottoRecord curLottoRecord;
 	private JButton buyBtn;
@@ -35,7 +34,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 	private JButton btnManyBuy;
 	private JFrame frame;
 
-	public NewMainFrame() {
+	public MainFrame() {
 		super("가상 로또 시뮬레이션");
 
 		readLottoRecords();
@@ -48,7 +47,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 		pnlPic.setBackground(Color.WHITE);
 		pnlBtn.setBackground(Color.WHITE);
 		pnlBtn.setPreferredSize(new Dimension(440, 350));
-		JLabel lblLotto = new JLabel(new ImageIcon(NewMainFrame.class.getResource("/resource/lotto.png")));
+		JLabel lblLotto = new JLabel(new ImageIcon(MainFrame.class.getResource("/resource/lotto.png")));
 		pnlPic.add(lblLotto);
 
 		buyBtn = createMyButton("구매(" + curLottoRecord.getPuchaseNum() + "장)", new Insets(0, 0, 0, 0), pnlBtn, 30,
@@ -168,7 +167,7 @@ public class NewMainFrame extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new NewMainFrame().setVisible(true);
+		new MainFrame().setVisible(true);
 	}
 
 	public LottoRecord getCurLottoRecord() {
