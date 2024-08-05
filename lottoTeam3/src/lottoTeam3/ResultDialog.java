@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
@@ -24,11 +25,12 @@ import javax.swing.JPanel;
 public class ResultDialog extends JDialog {
 	private Set<Integer> resultTreeSet;
 	private String[] resultString = new String[5];
-	private int resultMoney;
+//	private int resultMoney;
 	private int bonus;
 	private String roundText;
 	private int listIndex;
 
+	private List<Integer[]> rankList;
 	private LottoRecord lottoRecord;
 	private JFrame mainFrame;
 	private JComboBox<String> comboBox;
@@ -41,6 +43,7 @@ public class ResultDialog extends JDialog {
 	private JLabel[][] lblNums;
 	private JLabel[][] lblCircles;
 	private JLabel[] lblResults;
+	private int winCount;
 
 	public ResultDialog(LottoRecord lottoRecord, JFrame mainFrame) {
 		this.lottoRecord = lottoRecord;
@@ -72,12 +75,12 @@ public class ResultDialog extends JDialog {
 		// resultDiaglog 세팅
 		iniResultDialog();
 
-		// 회차 라벨, 회차 선택 가능한 드랍다운 버튼 세팅
-		iniRoundLblAndDropdown();
-
 		// 첫번째 회차 당첨 번호를 랜덤으로 돌려서 생성해서 보여준다.
 		// 동시에 당첨 번호를 기록한다.
 		iniLottoResultNum();
+		
+		// 회차 라벨, 회차 선택 가능한 드랍다운 버튼 세팅
+		iniRoundLblAndDropdown();
 
 		// 당첨금액을 표시해주는 라벨 생성. 계산은 여기서 하지 않음
 		iniWinMoneyLbl();
@@ -101,19 +104,42 @@ public class ResultDialog extends JDialog {
 	}
 
 	private void iniRoundLblAndDropdown() {
-		JButton btnPrev = new JButton("◀");
-		add(btnPrev);
 		roundNow = new JLabel();
 		roundNow.setPreferredSize(new Dimension(150, 30));
 		setColorCenterFont(roundNow, Color.BLACK, JLabel.CENTER, 20);
 		add(roundNow);
 
 		comboBox = new JComboBox<>();
-		for (int i = 0; i < lottoRecord.getPuchaseNum(); i++) {
-			comboBox.addItem(String.valueOf(i + 1) + "번 로또 결과");
+		for (int i = 0; i < lottoRecord.getRankList().size(); i++) {
+			Integer[] ranks = lottoRecord.getRankList().get(i);
+			for (int j = 0; j < ranks.length; j++) {
+				if (ranks[j] != null) {
+					if (ranks[j] < 6) {
+						String s = (j + i * 5) + 1 +"번 결과";
+						comboBox.addItem(s);
+						winCount++;
+					}
+				}
+			}
 		}
+		if (winCount > 0) {
+			Object o = comboBox.getSelectedItem();
+			String s = (String) o;
+			int i = Integer.parseInt(s.split("번")[0]);
+			if (i < 6) {
+				listIndex = 0;
+			} else {
+				listIndex = i / 5;
+			}
+		}
+
+//		for (int i = 0; i < lottoRecord.getPuchaseNum(); i++) {
+//			comboBox.addItem(String.valueOf(i + 1) + "번 로또 결과");
+//		}
 		comboBox.setPreferredSize(new Dimension(110, 30));
 		add(comboBox);
+		JButton btnPrev = new JButton("◀");
+		add(btnPrev);
 		JButton btnNext = new JButton("▶");
 		add(btnNext);
 		btnPrev.setEnabled(false);
@@ -125,7 +151,7 @@ public class ResultDialog extends JDialog {
 		btnPrev.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				comboBox.setSelectedIndex(comboBox.getSelectedIndex() - 1);
+					comboBox.setSelectedIndex(comboBox.getSelectedIndex() - 1);
 			}
 		});
 		btnNext.addActionListener(new ActionListener() {
@@ -138,12 +164,21 @@ public class ResultDialog extends JDialog {
 		comboBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				listIndex = comboBox.getSelectedIndex();
+				Object o = comboBox.getSelectedItem();
+				String s = (String) o;
+				int i = Integer.parseInt(s.split("번")[0]);
+				if (i < 6) {
+					listIndex = 0;
+				} else {
+					listIndex = i / 5;
+				}
+//				listIndex = comboBox.getSelectedIndex();
 				setAndUpdate();
 				btnPrev.setEnabled(listIndex > 0);
 				btnNext.setEnabled(listIndex < comboBox.getItemCount() - 1);
 			}
 		});
+		
 	}
 
 	private void iniLottoResultNum() {
@@ -242,7 +277,7 @@ public class ResultDialog extends JDialog {
 
 		setWinMoneyLbl();
 
-		setResultPanel();
+//		setResultPanel();
 	}
 
 	private void setResultDialog() {
@@ -263,14 +298,32 @@ public class ResultDialog extends JDialog {
 	}
 
 	private void setWinMoneyLbl() {
-		// 회차 별로 당첨 금액을 계산하기 위해서
-		resultMoney = 0;
-		// 당첨금 계산
 		calculateMoney();
-
-		DecimalFormat decimalFormat = new DecimalFormat("#,###");
-		String formattedNumber = decimalFormat.format(resultMoney);
-		winMoneyLabel.setText("당첨금액: " + formattedNumber + "원");
+		if (winCount > 0) {
+			Integer[] ranks = lottoRecord.getRankList().get(listIndex);
+			int resultMoney = 0;
+			for (int i = 0; i < ranks.length; i++) {
+				if (ranks[i] == 1) {
+					resultMoney += 100_000_000;
+				} else if (ranks[i] == 2) {
+					resultMoney += 20_000_000;
+				} else if (ranks[i] == 3) {
+					resultMoney += 3_000_000;
+				} else if (ranks[i] == 4) {
+					resultMoney += 50_000;
+				} else if (ranks[i] == 5) {
+					resultMoney += 5_000;
+				}
+			}
+			DecimalFormat decimalFormat = new DecimalFormat("#,###");
+			String formattedNumber = decimalFormat.format(resultMoney);
+			winMoneyLabel.setText("당첨금액: " + formattedNumber + "원");
+			setResultPanel();
+		} else {
+			winMoneyLabel.setText("꽝! 1개도 당첨되지 않으셨습니다.");
+			winMoneyLabel.setPreferredSize(new Dimension(500, 30));
+			comboBox.setVisible(false);
+		}
 	}
 
 	private void setResultPanel() {
@@ -334,28 +387,23 @@ public class ResultDialog extends JDialog {
 
 				// 1등, 6개 번호 일치
 				if (count == 6) {
-					resultMoney += 100_000_000;
 					resultString[i] = "1등";
 				} else if (count == 5) {
 					// 3등, 5개 번호 일치
-					resultMoney += 3_000_000;
 					resultString[i] = "3등";
 
 					// 2등, 5개 번호 일치 + 보너스 볼과 번호 일치
 					for (int j = 0; j < lottoArr.length; j++) {
 						if (lottoArr[j] == bonus) {
-							resultMoney += 17_000_000;
 							resultString[i] = "2등";
 							break;
 						}
 					}
 					// 4등, 4개 번호 일치
 				} else if (count == 4) {
-					resultMoney += 50_000;
 					resultString[i] = "4등";
 					// 5등, 3개 번호 일치
 				} else if (count == 3) {
-					resultMoney += 5_000;
 					resultString[i] = "5등";
 				} else {
 					resultString[i] = "꽝";
