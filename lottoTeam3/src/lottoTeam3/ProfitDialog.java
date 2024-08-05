@@ -43,15 +43,15 @@ public class ProfitDialog extends JDialog {
 		JScrollPane sp = new JScrollPane(pnlCenter);
 		sp.getVerticalScrollBar().setUnitIncrement(10);
 
-		int totalInvestment = 0;
-		int totalProceeds = 0;
+		long totalInvestment = 0;
+		long totalProceeds = 0;
 		DecimalFormat decimalFormat = new DecimalFormat("#,###");
 		String formattedInvestment;
 		String formattedProceeds;
 		String formattedProfit;
 		for (int i = 0; i < lottoRecordList.size(); i++) {
 			LottoRecord lottoRecord = lottoRecordList.get(i);
-			int investment, proceeds;
+			long investment, proceeds;
 			totalInvestment += investment = lottoRecord.getInvestment();
 			totalProceeds += proceeds = lottoRecord.getProceeds();
 			formattedInvestment = decimalFormat.format(investment);
