@@ -43,7 +43,7 @@ public class PurchaseDialog extends JDialog implements ActionListener {
 	private JButton btnCur;
 	private boolean buy = false;
 
-	public PurchaseDialog(List<LottoRecord> lottoRecordList, LottoRecord curLottoRecord, JFrame frame) {
+	private PurchaseDialog(List<LottoRecord> lottoRecordList, LottoRecord curLottoRecord, JFrame frame) {
 		this.lottoRecordList = lottoRecordList;
 		this.curLottoRecord = curLottoRecord;
 		JPanel pnlNorth = new JPanel(); // 플로우 레이아웃으로

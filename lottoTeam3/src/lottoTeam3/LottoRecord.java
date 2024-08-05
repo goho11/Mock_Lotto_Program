@@ -35,6 +35,53 @@ public class LottoRecord {
 	public void SetLottery(List<Integer> lotteryNums, int lotteryBonus) {
 		this.lotteryNums = lotteryNums;
 		this.lotteryBonus = lotteryBonus;
+		rankList = new ArrayList<>();
+		for (int i = 0; i < buyLotto.size(); i++) {
+			LottoData[] lottoDatas = buyLotto.get(i);
+			Integer[] ranks = new Integer[5];
+			for (int j = 0; j < 5; j++) {
+				if (lottoDatas[j] != null) {
+					int[] lottoArr = lottoDatas[j].getNums();
+					int count = 0;
+					for (int k = 0; k < lottoArr.length; k++) {
+						if (lotteryNums.contains(lottoArr[k])) {
+							count++;
+						}
+					}
+					int rank;
+					// 1등, 6개 번호 일치
+					if (count == 6) {
+						rank = 1;
+					} else if (count == 5) {
+						// 3등, 5개 번호 일치
+						rank = 3;
+
+						// 2등, 5개 번호 일치 + 보너스 볼과 번호 일치
+						for (int k = 0; k < lottoArr.length; k++) {
+							if (lottoArr[k] == lotteryBonus) {
+								rank = 2;
+								break;
+							}
+						}
+						// 4등, 4개 번호 일치
+					} else if (count == 4) {
+						rank = 4;
+						// 5등, 3개 번호 일치
+					} else if (count == 3) {
+						rank = 5;
+					} else {
+						rank = 6;
+					}
+					ranks[j] = rank;
+				}
+			}
+			rankList.add(ranks);
+		}
+		for (int i = 0; i < rankList.size(); i++) {
+			Integer[] ranks = rankList.get(i);
+			System.out.print(Arrays.toString(ranks) + " ");
+		}
+		System.out.println();
 	}
 
 	public void addBuyLotto(LottoData[] lottoDatas) {
