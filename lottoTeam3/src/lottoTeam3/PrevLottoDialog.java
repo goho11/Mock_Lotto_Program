@@ -43,6 +43,8 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 	private JButton btnNextBeon;
 	private JButton btnPrevBeon;
 	private int indexBeon;
+	private boolean onlyWin;
+	private JButton btnWin;
 
 	private PrevLottoDialog(Window window, List<LottoRecord> lottoRecordList) {
 		this.lottoRecordList = lottoRecordList;
@@ -98,7 +100,7 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 	private void initNorth(JPanel pnl) {
 //		pnl.setBorder(new EmptyBorder(10, 0, 0, 0));
 		pnl.setBackground(Color.white);
-		pnl.setPreferredSize(new Dimension(0, 160));
+		pnl.setPreferredSize(new Dimension(0, 195));
 
 		initCombos(pnl);
 
@@ -118,6 +120,7 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		btnPrevHwe.setEnabled(indexHwe > 0);
 		btnNextBeon.setEnabled(lottoRecordList.get(indexHwe).getPuchaseNum() > 1);
 		btnPrevBeon.setEnabled(false);
+		btnWin.setEnabled(lottoRecordList.get(indexHwe).hasWin());
 
 		beonEnable(comboBoxBeon.getItemCount() != 0);
 	}
@@ -126,40 +129,40 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		JPanel pnlCombo = new JPanel(null);
 		pnlCombo.setBackground(Color.WHITE);
 //		pnlCombo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		pnlCombo.setPreferredSize(new Dimension(550, 35));
+		pnlCombo.setPreferredSize(new Dimension(350, 70));
 		JLabel lblHwe = new JLabel("이전 회차 선택");
 //		lblHwe.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		lblHwe.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
-		lblHwe.setBounds(0, 0, 120, 35);
+		lblHwe.setBounds(25, 0, 120, 35);
 		lblHwe.setHorizontalAlignment(JLabel.CENTER);
 
 		pnlCombo.add(lblHwe);
 
 		btnPrevHwe = createMoveButton("◀", pnlCombo);
-		btnPrevHwe.setBounds(120, 0, 30, 35);
+		btnPrevHwe.setBounds(145, 0, 30, 35);
 
 		comboBoxHwe = new JComboBox<>();
 		for (int i = 0; i < lottoRecordList.size(); i++) {
 			comboBoxHwe.addItem((i + 1) + "회");
 		}
 		comboBoxHwe.setSelectedIndex(indexHwe);
-		comboBoxHwe.setAlignmentX(Component.CENTER_ALIGNMENT);
 		comboBoxHwe.setBackground(Color.WHITE);
 		comboBoxHwe.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
 		comboBoxHwe.addActionListener(this);
 		comboBoxHwe.setFocusable(false);
-		comboBoxHwe.setBounds(150, 0, 90, 35);
+		comboBoxHwe.setBounds(175, 0, 90, 35);
 		pnlCombo.add(comboBoxHwe);
 		btnNextHwe = createMoveButton("▶", pnlCombo);
-		btnNextHwe.setBounds(240, 0, 30, 35);
+		btnNextHwe.setBounds(265, 0, 30, 35);
 
 		lblBeon = new JLabel("구매 번호 선택");
 		lblBeon.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
-		lblBeon.setBounds(280, 0, 120, 35);
+		lblBeon.setBounds(0, 35, 120, 35);
+		lblBeon.setHorizontalAlignment(JLabel.CENTER);
 		pnlCombo.add(lblBeon);
 
 		btnPrevBeon = createMoveButton("◀", pnlCombo);
-		btnPrevBeon.setBounds(400, 0, 30, 35);
+		btnPrevBeon.setBounds(120, 35, 30, 35);
 		comboBoxBeon = new JComboBox<>();
 		for (int i = 0; i < lottoRecordList.get(indexHwe).getPuchaseNum(); i++) {
 			comboBoxBeon.addItem((i + 1) + "번");
@@ -168,10 +171,18 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		comboBoxBeon.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 20));
 		comboBoxBeon.addActionListener(this);
 		comboBoxBeon.setFocusable(false);
-		comboBoxBeon.setBounds(430, 0, 90, 35);
+		comboBoxBeon.setBounds(150, 35, 90, 35);
 		pnlCombo.add(comboBoxBeon);
 		btnNextBeon = createMoveButton("▶", pnlCombo);
-		btnNextBeon.setBounds(520, 0, 30, 35);
+		btnNextBeon.setBounds(240, 35, 30, 35);
+		btnWin = new JButton("당첨만");
+		btnWin.setMargin(new Insets(0, 0, 0, 0));
+		btnWin.setBounds(270, 35, 50, 35);
+		btnWin.setBackground(Color.WHITE);
+		btnWin.setFocusable(false);
+		btnWin.setFont(FontHolder.getInstance().getDeriveFont(Font.PLAIN, 16));
+		btnWin.addActionListener(this);
+		pnlCombo.add(btnWin);
 		pnl.add(pnlCombo);
 
 	}
@@ -181,6 +192,7 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 		comboBoxBeon.setVisible(b);
 		lblBeon.setVisible(b);
 		btnNextBeon.setVisible(b);
+		btnWin.setVisible(b);
 	}
 
 	private JButton createMoveButton(String text, JPanel pnl) {
@@ -202,7 +214,7 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 				}
 				count++;
 			}
-		setSize(600, 190 + count * 60);
+		setSize(600, 225 + count * 60);
 	}
 
 	@Override
@@ -215,6 +227,10 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 			}
 		}
 		if (o.equals(comboBoxHwe)) {
+			if (onlyWin) {
+				onlyWin = false;
+				btnWin.setText("당첨만");
+			}
 			indexHwe = comboBoxHwe.getSelectedIndex();
 			setLottoDatas();
 
@@ -223,19 +239,20 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 			for (int i = 0; i < lottoRecordList.get(indexHwe).getPuchaseNum(); i++) {
 				comboBoxBeon.addItem((i + 1) + "번");
 			}
-
 			settingCombos();
 			settingWinNumPnl();
 			settingWinMoneyLabel();
 			settingResults();
 			resize();
 		} else if (o.equals(comboBoxBeon)) {
-			indexBeon = comboBoxBeon.getSelectedIndex();
+			if (comboBoxBeon.getSelectedItem() == null)
+				return;
+			indexBeon = Integer.parseInt(((String) comboBoxBeon.getSelectedItem()).split("번")[0]) - 1;
 			if (indexBeon < 0)
 				return;
 			lottoDatas = lottoRecordList.get(indexHwe).getLottoDatas(indexBeon);
-			btnPrevBeon.setEnabled(indexBeon > 0);
-			btnNextBeon.setEnabled(indexBeon < lottoRecordList.get(indexHwe).getPuchaseNum() - 1);
+			btnPrevBeon.setEnabled(comboBoxBeon.getSelectedIndex() > 0);
+			btnNextBeon.setEnabled(comboBoxBeon.getSelectedIndex() < comboBoxBeon.getItemCount() - 1);
 
 			settingWinMoneyLabel();
 			settingResults();
@@ -248,6 +265,26 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 			comboBoxBeon.setSelectedIndex(comboBoxBeon.getSelectedIndex() - 1);
 		} else if (o.equals(btnNextBeon)) {
 			comboBoxBeon.setSelectedIndex(comboBoxBeon.getSelectedIndex() + 1);
+		} else if (o.equals(btnWin)) {
+			onlyWin = !onlyWin;
+			if (onlyWin) {
+				btnWin.setText("모두다");
+				comboBoxBeon.removeAllItems();
+				for (int i = 0; i < lottoRecordList.get(indexHwe).getPuchaseNum(); i++) {
+					if (lottoRecordList.get(indexHwe).isWin(i)) {
+						comboBoxBeon.addItem(String.valueOf(i + 1) + "번");
+					}
+				}
+				comboBoxBeon.setSelectedIndex(0);
+
+			} else {
+				btnWin.setText("당첨만");
+				comboBoxBeon.removeAllItems();
+				for (int i = 0; i < lottoRecordList.get(indexHwe).getPuchaseNum(); i++) {
+					comboBoxBeon.addItem(String.valueOf(i + 1) + "번");
+				}
+				comboBoxBeon.setSelectedIndex(0);
+			}
 		}
 	}
 
@@ -260,7 +297,8 @@ public class PrevLottoDialog extends JDialog implements ActionListener {
 	private void settingWinMoneyLabel() {
 		// 당첨금 계산
 		int resultMoney = 0;
-		resultMoney += lottoRecordList.get(indexHwe).getPrize(indexBeon);
+		if (comboBoxBeon.getItemCount() != 0)
+			resultMoney += lottoRecordList.get(indexHwe).getPrize(indexBeon);
 
 		DecimalFormat decimalFormat = new DecimalFormat("#,###");
 		String formattedNumber = decimalFormat.format(resultMoney);
